@@ -68,7 +68,16 @@ list.forEach(c=>{
 let d=document.createElement('div');
 d.className='card';
 d.innerHTML=`<div class="logo">${c.logo?'<img src="'+c.logo+'">':'📺'}</div><div class="name">${c.name}</div>`;
-d.onclick=()=>play(c.url);
+d.d.onclick=()=>{
+    play(c.url);
+
+    setTimeout(()=>{
+        document.querySelector('.hero').scrollIntoView({
+            behavior:'smooth',
+            block:'start'
+        });
+    },300);
+};
 grid.appendChild(d);
 })
 }
