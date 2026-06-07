@@ -66,6 +66,17 @@ video{
 </header>
 
 <video id="video" controls autoplay></video>
+ <div style="text-align:center;padding:10px;">
+<button onclick="document.getElementById('video').volume=Math.max(0,document.getElementById('video').volume-0.1)">🔉</button>
+
+<button onclick="document.getElementById('video').volume=Math.min(1,document.getElementById('video').volume+0.1)">🔊</button>
+
+<button onclick="document.getElementById('video').requestFullscreen()">⛶</button>
+
+<button onclick="document.getElementById('video').play()">▶️</button>
+
+<button onclick="document.getElementById('video').pause()">⏸️</button>
+</div>
 
 <div class="controls">
 <input type="text" id="search" placeholder="Search Channel">
