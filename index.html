@@ -205,6 +205,40 @@ render(channels);
 
 loadChannels();
 
+async function loadChannels(){
+
+channels=[];
+
+for(const file of categoryFiles){
+
+try{
+
+const res = await fetch("channels/"+file);
+const data = await res.json();
+
+const category = file.replace(".json","");
+
+data.forEach(ch=>{
+ch.category = category;
+channels.push(ch);
+});
+
+}catch(err){
+console.log(err);
+}
+
+}
+
+document.getElementById("count").innerHTML =
+"Channels: "+channels.length;
+
+loadCategories();
+render(channels);
+
+}
+
+loadChannels();
+
 function loadCategories(){
 
 let cats=[...new Set(channels.map(c=>c.category))];
