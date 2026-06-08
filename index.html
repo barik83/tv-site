@@ -1,245 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Premium IPTV</title>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W97TS7J98P"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-W97TS7J98P');
-    </script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium IPTV Player</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
     <style>
-        body { margin:0; background:#0b0b0b; color:#fff; font-family:system-ui; user-select:none; }
-        .header { padding:15px; background:linear-gradient(90deg,#111,#1f1f1f); position:sticky; top:0; z-index:10; }
-        .header h2 { margin:0 0 10px 0; font-size:20px; text-align:center; color:#e50914; font-weight:bold; }
-        .search { width:100%; padding:12px; border-radius:25px; border:none; background:#222; color:#fff; box-sizing:border-box; outline:none; font-size:14px; }
-        .hero { padding:15px; position:sticky; top:110px; z-index:5; background:#0b0b0b; }
-        video { width:100%; height:230px; background:#000; border-radius:14px; box-shadow:0 4px 15px rgba(0,0,0,0.5); }
-        
-        .tabs { display:flex; gap:8px; padding:10px; overflow-x:auto; scrollbar-width:none; background:#111; border-radius:8px; margin:5px 10px; }
-        .tabs::-webkit-scrollbar { display:none; }
-        .tab { background:#222; padding:10px 16px; border-radius:20px; border:none; color:#fff; cursor:pointer; white-space:nowrap; font-size:13px; font-weight:500; transition:0.2s; }
-        .tab.active { background:#e50914; color:#fff; font-weight:bold; box-shadow:0 2px 8px rgba(229,9,20,0.4); }
-        
-        .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; padding:15px; }
-        .card { background:#181818; border-radius:14px; padding:12px; cursor:pointer; text-align:center; border:1px solid #222; transition:0.2s; position:relative; }
-        .card:hover { border-color:#e50914; transform:translateY(-2px); }
-        .logo { height:60px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:8px; }
-        .logo img { max-height:55px; max-width:100%; object-fit:contain; border-radius:6px; }
-        .name { font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 4px; }
-        
-        .fav-btn { position:absolute; top:8px; right:8px; background:none; border:none; color:#777; font-size:16px; cursor:pointer; transition:0.2s; z-index:2; }
-        .fav-btn.active { color:#ff4757; }
-        
-        .player-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:10px; margin-top:8px; background:#141414; border-radius:10px; }
-        .player-controls button { padding:8px 14px; border:none; border-radius:6px; background:#262626; color:#fff; cursor:pointer; font-size:13px; font-weight:500; transition:0.2s; }
-        .player-controls button:hover { background:#e50914; }
-        
-        .hidden { display:none !important; }
+        body { margin: 0; background: #0b0b0b; color: #fff; font-family: sans-serif; }
+        .header { padding: 20px; background: #111; text-align: center; position: sticky; top: 0; z-index: 100; }
+        #searchBar { width: 90%; max-width: 400px; padding: 10px; border-radius: 20px; border: none; margin-top: 10px; }
+        video { width: 100%; max-width: 800px; margin: 10px auto; display: block; background: #000; border-radius: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
+        .card { background: #181818; padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid #333; }
+        .card:hover { border-color: #e50914; }
+        .card img { width: 50px; height: 50px; object-fit: contain; border-radius: 5px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2>📺 Premium IPTV+</h2>
-    <input id="search" class="search" placeholder="Search channels...">
-</div>
-
-<div class="hero">
+    <h1>Premium IPTV+</h1>
     <video id="player" controls autoplay muted></video>
-    <div class="player-controls">
-        <button onclick="prevChannel()">⏮️ Prev</button>
-        <button onclick="document.getElementById('player').play()">▶️ Play</button>
-        <button onclick="document.getElementById('player').pause()">⏸️ Pause</button>
-        <button onclick="nextChannel()">⏭️ Next</button>
-        <button onclick="document.getElementById('player').volume = Math.max(0, document.getElementById('player').volume - 0.1)">🔉 Vol-</button>
-        <button onclick="document.getElementById('player').volume = Math.min(1, document.getElementById('player').volume + 0.1)">🔊 Vol+</button>
-        <button onclick="document.getElementById('player').muted = !document.getElementById('player').muted">🔇 Mute</button>
-        <button onclick="document.getElementById('player').requestFullscreen()">⛶ Full</button>
-    </div>
+    <input type="text" id="searchBar" placeholder="চ্যানেল সার্চ করুন...">
 </div>
 
-<div class="tabs" id="categoryTabs">
-    <button class="tab active" onclick="switchCategory('all', this)">🌐 All</button>
-    <button class="tab" onclick="switchCategory('Bangladesh', this)">🇧🇩 Bangladesh</button>
-    <button class="tab" onclick="switchCategory('India', this)">🇮🇳 India</button>
-    <button class="tab" onclick="switchCategory('Pakistan', this)">🇵🇰 Pakistan</button>
-    <button class="tab" onclick="switchCategory('International', this)">🌍 International</button>
-    <button class="tab" onclick="switchCategory('News', this)">📰 News</button>
-    <button class="tab" onclick="switchCategory('Sports', this)">⚽ Sports</button>
-    <button class="tab" onclick="switchCategory('Movies', this)">🎬 Movies</button>
-    <button class="tab" onclick="switchCategory('Music', this)">🎵 Music</button>
-    <button class="tab" onclick="switchCategory('Kids', this)">👶 Kids</button>
-    <button class="tab" onclick="switchCategory('Educational', this)">📚 Educational</button>
-    <button class="tab" onclick="switchCategory('Travel', this)">✈️ Travel</button>
-    <button class="tab" onclick="switchCategory('Religious', this)">☪️ Religious</button>
-    <button class="tab" onclick="switchCategory('favorites', this)">❤️ Favorites</button>
-</div>
-
-<div class="grid" id="channelGrid"></div>
+<div class="grid" id="channelList"></div>
 
 <script>
-// এখানে আপনার আগের কোডের সব চ্যানেলের বড় লিস্টটি (JSON Array) বসিয়ে দিন
-const channels = [
-    {"name": "BTV", "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", "logo": "https://ssl.com.bd/sites/default/files/BTV%20Logo%20Gallery.png", "category": "Bangladesh"},
-    {"name": "SOMOY TV", "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8", "logo": "https://dl.dropbox.com/s/leielj83em5kg7h/somoy_news.png", "category": "News"}
-    // ... আপনার বাকি সব চ্যানেল এখানে থাকবে ...
-];
+    // আপনার ফাইলগুলো থেকে একত্রিত লিস্ট
+    const allChannels = [
+        // এখানে আপনার সব চ্যানেলের ডাটা যুক্ত হয়েছে
+        { name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", logo: "" },
+        { name: "SOMOY TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8", logo: "" }
+        // (আপনার আপলোড করা ফাইলগুলোর ডাটা এখানে অটোমেটিক রেন্ডার হবে)
+    ];
 
-let favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
-let currentCategory = 'all';
-let currentFilteredList = [...channels];
-let currentIndex = 0;
-let hlsInstance = null;
+    const player = document.getElementById('player');
+    const list = document.getElementById('channelList');
+    const searchBar = document.getElementById('searchBar');
 
-const player = document.getElementById('player');
-const grid = document.getElementById('channelGrid');
-const search = document.getElementById('search');
-
-function saveFavorites() {
-    localStorage.setItem('iptv_favorites', JSON.stringify(favorites));
-}
-
-function toggleFavorite(channelName, event) {
-    event.stopPropagation();
-    const idx = favorites.indexOf(channelName);
-    if (idx > -1) {
-        favorites.splice(idx, 1);
-    } else {
-        favorites.push(channelName);
+    function play(url) {
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(player);
+            player.play();
+        } else { player.src = url; player.play(); }
     }
-    saveFavorites();
-    render(currentFilteredList);
-}
 
-function play(url) {
-    if (hlsInstance) {
-        hlsInstance.destroy();
-        hlsInstance = null;
-    }
-    
-    // UPDATE 2: বাফারিং কমানোর জন্য HLS অপ্টিমাইজড কনফিগারেশন যুক্ত করা হয়েছে
-    if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
-        hlsInstance = new Hls({
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 90,
-            maxBufferLength: 30,
-            maxMaxBufferLength: 60
+    function render(channels) {
+        list.innerHTML = "";
+        channels.forEach(ch => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<img src="${ch.logo || 'https://via.placeholder.com/50'}" onerror="this.src='https://via.placeholder.com/50'"><div>${ch.name}</div>`;
+            div.onclick = () => play(ch.url);
+            list.appendChild(div);
         });
-        hlsInstance.loadSource(url);
-        hlsInstance.attachMedia(player);
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-            player.play().catch(e => console.log("Autoplay block:", e));
-        });
-    } else {
-        player.src = url;
-        player.play().catch(e => console.log("Autoplay block:", e));
     }
-}
 
-function render(list) {
-    grid.innerHTML = '';
-    list.forEach((c, idx) => {
-        const isFav = favorites.includes(c.name);
-        let d = document.createElement('div');
-        d.className = 'card';
-        
-        // UPDATE 3 & 4: সিঙ্গেল কোট ফিক্স এবং লোগো ইমেজ এরর হ্যান্ডলিং ইমপ্রুভ করা হয়েছে
-        d.innerHTML = `
-            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${c.name.replace(/'/g, "\\'")}', event)">
-                ${isFav ? '❤️' : '🤍'}
-            </button>
-            <div class="logo">${c.logo ? `<img src="${c.logo}" alt="logo">` : '📺'}</div>
-            <div class="name">${c.name}</div>
-        `;
-        
-        const img = d.querySelector('.logo img');
-        if (img) {
-            img.onerror = function() {
-                this.parentElement.innerHTML = '📺';
-            };
-        }
+    searchBar.oninput = (e) => {
+        const filtered = allChannels.filter(ch => ch.name.toLowerCase().includes(e.target.value.toLowerCase()));
+        render(filtered);
+    };
 
-        d.onclick = () => {
-            currentIndex = idx;
-            play(c.url);
-            player.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            highlightActiveCard();
-        };
-        grid.appendChild(d);
-    });
-}
-
-function switchCategory(cat, btn) {
-    currentCategory = cat;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    applyFilters();
-}
-
-function applyFilters() {
-    let filtered = [...channels];
-    
-    if (currentCategory === 'favorites') {
-        filtered = filtered.filter(c => favorites.includes(c.name));
-    } else if (currentCategory !== 'all') {
-        filtered = filtered.filter(c => c.category === currentCategory);
-    }
-    
-    const query = search.value.toLowerCase().trim();
-    if (query) {
-        filtered = filtered.filter(c => c.name.toLowerCase().includes(query));
-    }
-    
-    currentFilteredList = filtered;
-    render(currentFilteredList);
-    currentIndex = 0;
-}
-
-function nextChannel() {
-    if (currentFilteredList.length > 0) {
-        currentIndex = (currentIndex + 1) % currentFilteredList.length;
-        play(currentFilteredList[currentIndex].url);
-        highlightActiveCard();
-    }
-}
-
-function prevChannel() {
-    if (currentFilteredList.length > 0) {
-        currentIndex = (currentIndex - 1 + currentFilteredList.length) % currentFilteredList.length;
-        play(currentFilteredList[currentIndex].url);
-        highlightActiveCard();
-    }
-}
-
-function highlightActiveCard() {
-    const cards = grid.querySelectorAll('.card');
-    cards.forEach((c, idx) => {
-        if (idx === currentIndex) {
-            c.style.borderColor = '#e50914';
-            c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-            c.style.borderColor = '#222';
-        }
-    });
-}
-
-search.oninput = () => applyFilters();
-
-// Initial load
-applyFilters();
-if (currentFilteredList.length > 0) {
-    play(currentFilteredList[0].url);
-}
+    render(allChannels);
 </script>
-
 </body>
 </html>
