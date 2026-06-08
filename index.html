@@ -368,4 +368,83 @@ document.addEventListener('click',e=>{
 })();
 </script>
 
+
+<style>
+.player-controls{
+position:absolute!important;
+bottom:12px!important;
+left:50%!important;
+transform:translateX(-50%)!important;
+z-index:99999!important;
+background:rgba(0,0,0,.55)!important;
+backdrop-filter:blur(12px);
+border-radius:18px;
+padding:10px;
+}
+.video-host{position:relative}
+.mx-toast{
+position:fixed;top:50%;left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,.6);
+color:#fff;padding:16px 20px;
+border-radius:14px;display:none;
+z-index:100000;
+font-size:28px;
+}
+</style>
+<div id="mxToast" class="mx-toast"></div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const v=document.getElementById('player');
+ const ctr=document.querySelector('.player-controls');
+ if(v && ctr && v.parentElement!==ctr.parentElement){
+   const wrap=document.createElement('div');
+   wrap.className='video-host';
+   v.parentNode.insertBefore(wrap,v);
+   wrap.appendChild(v);
+   wrap.appendChild(ctr);
+ }
+
+ const toast=document.getElementById('mxToast');
+ const show=(t)=>{
+   toast.textContent=t;
+   toast.style.display='block';
+   clearTimeout(window.__mx);
+   window.__mx=setTimeout(()=>toast.style.display='none',700);
+ };
+
+ let t;
+ const reveal=()=>{
+   if(!ctr) return;
+   ctr.style.opacity='1';
+   clearTimeout(t);
+   t=setTimeout(()=>ctr.style.opacity='.15',3000);
+ };
+ document.addEventListener('touchstart',reveal);
+ document.addEventListener('mousemove',reveal);
+ reveal();
+
+ let sx=0, sy=0, vol=0;
+ v?.addEventListener('touchstart',e=>{
+   sx=e.touches[0].clientX;
+   sy=e.touches[0].clientY;
+   vol=v.volume;
+ });
+ v?.addEventListener('touchmove',e=>{
+   const x=e.touches[0].clientX;
+   const y=e.touches[0].clientY;
+   const dy=sy-y;
+   if(Math.abs(dy)>20){
+     if(sx>window.innerWidth/2){
+       v.volume=Math.max(0,Math.min(1,vol+dy/300));
+       show('🔊 '+Math.round(v.volume*100)+'%');
+     }else{
+       const b=Math.max(40,Math.min(200,100+dy/3));
+       v.style.filter='brightness('+b+'%)';
+       show('☀️ '+Math.round(b)+'%');
+     }
+   }
+ });
+});
+</script>
 </body></html>
