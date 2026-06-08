@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -16,29 +16,34 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
-        body { margin: 0; background: #0b0b0b; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-        .header { padding: 15px; background: linear-gradient(90deg,#111,#1f1f1f); position: sticky; top: 0; z-index: 10; display: flex; flex-direction: column; gap: 10px; }
-        .header h2 { margin: 0; font-size: 20px; text-align: center; color: #ff4757; }
-        .search { width: 100%; padding: 12px; border-radius: 25px; border: none; background: #222; color: #fff; box-sizing: border-box; outline: none; }
+        body{margin:0;background:#0b0b0b;color:#fff;font-family:system-ui}
+        .header{padding:15px;background:linear-gradient(90deg,#111,#1f1f1f);position:sticky;top:0;z-index:10}
+        .search{width:100%;padding:12px;border-radius:25px;border:none;background:#222;color:#fff;box-sizing: border-box;}
+        .hero{
+            padding:15px;
+            position:sticky;
+            top:80px;
+            z-index:5;
+            background:#0b0b0b;
+        }
+        video{width:100%;height:230px;background:#000;border-radius:14px}
         
-        .hero { padding: 15px; position: sticky; top: 120px; z-index: 5; background: #0b0b0b; }
-        video { width: 100%; height: 230px; background: #000; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        
+        /* প্লেয়ার কন্ট্রোলস ডিজাইন */
         .player-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; padding: 10px; background: #111; border-radius: 10px; margin-top: 8px; transition: opacity 0.3s; }
         .player-controls.hidden { display: none !important; }
         .player-controls button { padding: 8px 12px; border: none; border-radius: 6px; background: #222; color: #fff; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .player-controls button:hover { background: #ff4757; }
-        
-        .category-tabs { display: flex; overflow-x: auto; gap: 8px; padding: 10px 15px; background: #111; scrollbar-width: none; }
-        .category-tabs::-webkit-scrollbar { display: none; }
-        .category-tabs button { padding: 8px 16px; border-radius: 20px; border: none; background: #222; color: #fff; white-space: nowrap; cursor: pointer; transition: 0.2s; }
-        .category-tabs button.active { background: #ff4757; font-weight: bold; }
 
-        .channel-grid { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
-        .channel-card { background: #1a1a1a; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid #222; }
-        .channel-card:hover { transform: translateY(-3px); border-color: #ff4757; }
-        .channel-card img { width: 50px; height: 50px; object-fit: contain; border-radius: 8px; margin-bottom: 8px; }
-        .channel-card div { font-size: 12px; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .tabs{display:flex;gap:8px;padding:10px;overflow-x:auto;scrollbar-width:none}
+        .tabs::-webkit-scrollbar{display:none}
+        .tabs button{padding:10px 18px;border-radius:20px;border:none;background:#1a1a1a;color:#fff;white-space:nowrap;cursor:pointer}
+        .tabs button.active{background:#ff4757;font-weight:bold}
+        
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:15px}
+        .card{background:#161616;padding:10px;border-radius:12px;text-align:center;cursor:pointer;border:1px solid #222;transition:0.2s}
+        .card:hover{border-color:#ff4757;transform:scale(1.03)}
+        .card img{width:50px;height:50px;object-fit:contain;border-radius:8px;margin-bottom:6px}
+        .card div{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         
         .hidden { display: none !important; }
     </style>
@@ -46,12 +51,12 @@
 <body>
 
     <div class="header">
-        <h2>📺 Premium IPTV+</h2>
         <input id="search" class="search" placeholder="Search channels..." oninput="filterChannels()">
     </div>
 
     <div class="hero">
         <video id="player" controls autoplay></video>
+        
         <div class="player-controls" id="controlsContainer">
             <button onclick="prevChannel()">⏮️ Prev</button>
             <button onclick="document.getElementById('player').play()">▶️ Play</button>
@@ -65,24 +70,30 @@
         </div>
     </div>
 
-    <div class="category-tabs" id="categoryTabs">
+    <div class="tabs">
         <button class="active" onclick="filterCategory('all', this)">All</button>
         <button onclick="filterCategory('Live TV', this)">Live TV</button>
         <button onclick="filterCategory('Sports', this)">Sports</button>
         <button onclick="filterCategory('News', this)">News</button>
         <button onclick="filterCategory('Movies', this)">Movies</button>
+        <button onclick="filterCategory('Entertainment', this)">Entertainment</button>
+        <button onclick="filterCategory('Music', this)">Music</button>
+        <button onclick="filterCategory('Kids', 'Kids')">Kids</button>
+        <button onclick="filterCategory('Infotainment', this)">Infotainment</button>
+        <button onclick="filterCategory('Religious', this)">Religious</button>
+        <button onclick="filterCategory('Radio', this)">Radio</button>
     </div>
 
-    <div class="channel-grid" id="channelGrid">
-        <div class="channel-card" data-name="Somoy TV" data-category="News" onclick="playStream('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')">
+    <div class="grid" id="channelGrid">
+        <div class="card" data-name="Somoy TV" data-category="News" onclick="playStream('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')">
             <img src="https://via.placeholder.com/50" alt="Logo">
             <div>Somoy TV</div>
         </div>
-        <div class="channel-card" data-name="T Sports" data-category="Sports" onclick="playStream('https://content.jwplatform.com/manifests/vM7wCIzo.m3u8')">
+        <div class="card" data-name="T Sports" data-category="Sports" onclick="playStream('https://content.jwplatform.com/manifests/vM7wCIzo.m3u8')">
             <img src="https://via.placeholder.com/50" alt="Logo">
             <div>T Sports</div>
         </div>
-    </div>
+        </div>
 
     <script>
         let currentChannelIndex = 0;
@@ -91,10 +102,9 @@
         const player = document.getElementById('player');
         const controls = document.getElementById('controlsContainer');
 
-        // স্ট্রীম প্লে করার ফাংশন (HLS .m3u8 সাপোর্ট)
+        // HLS স্ট্রিম প্লেয়ার ফাংশন
         function playStream(url) {
-            if (isLocked) return alert("Player is locked! Unlock first.");
-            
+            if (isLocked) return alert("Player is locked!");
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(url);
@@ -115,12 +125,11 @@
             player.volume = Math.min(1, Math.max(0, player.volume + amount));
         }
 
-        // মিউট/আনমিউট
         function toggleMute() {
             player.muted = !player.muted;
         }
 
-        // স্ক্রিন লক ফাংশন
+        // লক স্ক্রিন
         function toggleLockScreen() {
             isLocked = !isLocked;
             const lockBtn = document.querySelector("button[onclick='toggleLockScreen()']");
@@ -135,7 +144,7 @@
             }
         }
 
-        // অটো হাইড কন্ট্রোলস (৩ সেকেন্ড পর বাটন লুকিয়ে যাবে)
+        // ৩ সেকেন্ড পর অটো কন্ট্রোল বাটন হাইড হওয়ার লজিক
         function showControls() {
             if (isLocked) return;
             controls.classList.remove('hidden');
@@ -147,30 +156,27 @@
         player.addEventListener('click', showControls);
         showControls();
 
-        // নেক্সট ও প্রিভিয়াস চ্যানেল কন্ট্রোল
+        // নেক্সট ও প্রিভিয়াস চ্যানেল চেঞ্জ লজিক
         function nextChannel() {
-            const visibleChannels = document.querySelectorAll('.channel-card:not(.hidden)');
+            const visibleChannels = document.querySelectorAll('.card:not(.hidden)');
             if(visibleChannels.length > 0) {
                 currentChannelIndex = (currentChannelIndex + 1) % visibleChannels.length;
                 visibleChannels[currentChannelIndex].click();
             }
         }
 
-        /* নোট: আপনার channels.7z ফাইল থেকে বাকি চ্যানেলগুলোর কোড জেনারেট করে 
-        উপরের <div class="channel-grid"> এর ভেতর বসিয়ে নিলেই পুরো প্রোজেক্ট তৈরি হয়ে যাবে।
-        */
         function prevChannel() {
-            const visibleChannels = document.querySelectorAll('.channel-card:not(.hidden)');
+            const visibleChannels = document.querySelectorAll('.card:not(.hidden)');
             if(visibleChannels.length > 0) {
                 currentChannelIndex = (currentChannelIndex - 1 + visibleChannels.length) % visibleChannels.length;
                 visibleChannels[currentChannelIndex].click();
             }
         }
 
-        // রিয়েল-টাইম সার্চ ফিল্টার
+        // সার্চ বার ফিল্টারিং
         function filterChannels() {
             const query = document.getElementById('search').value.toLowerCase();
-            const channels = document.querySelectorAll('.channel-card');
+            const channels = document.querySelectorAll('.card');
             
             channels.forEach(channel => {
                 const name = channel.getAttribute('data-name').toLowerCase();
@@ -182,12 +188,12 @@
             });
         }
 
-        // ক্যাটাগরি ফিল্টার লজিক
+        // ক্যাটাগরি ফিল্টারিং
         function filterCategory(category, button) {
-            document.querySelectorAll('.category-tabs button').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            if(typeof button === 'object') button.classList.add('active');
 
-            const channels = document.querySelectorAll('.channel-card');
+            const channels = document.querySelectorAll('.card');
             channels.forEach(channel => {
                 const chanCat = channel.getAttribute('data-category');
                 if (category === 'all' || chanCat === category) {
