@@ -156,16 +156,54 @@ fetch("channels.json")
 .then(r=>r.json())
 .then(data=>{
 
-channels=data;
+const categoryFiles = [
+"bangla.json",
+"bangla-news.json",
+"educational.json",
+"india.json",
+"international-news.json",
+"international.json",
+"kids.json",
+"movies.json",
+"music.json",
+"pakistan.json",
+"sports.json",
+"travel.json"
+];
 
-document.getElementById("count").innerHTML=
+async function loadChannels(){
+
+channels=[];
+
+for(const file of categoryFiles){
+
+try{
+
+const res = await fetch("channels/"+file);
+const data = await res.json();
+
+const category = file.replace(".json","");
+
+data.forEach(ch=>{
+ch.category = category;
+channels.push(ch);
+});
+
+}catch(err){
+console.log(err);
+}
+
+}
+
+document.getElementById("count").innerHTML =
 "Channels: "+channels.length;
 
 loadCategories();
-
 render(channels);
 
-});
+}
+
+loadChannels();
 
 function loadCategories(){
 
