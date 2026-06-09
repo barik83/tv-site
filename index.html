@@ -64,11 +64,6 @@
                 </div>
         </section>
 
-        <div id="status-message" class="text-center text-gray-400 text-sm hidden my-8">
-            <i class="fa-solid fa-circle-notch fa-spin text-cyan-400 text-2xl mb-2"></i>
-            <p>Loading channels...</p>
-        </div>
-
         <section class="w-full">
             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4" id="channel-grid">
                 </div>
@@ -76,9 +71,54 @@
 
     </main>
 
+    <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm" onclick="hideUpdateNotice()">
+        <div class="bg-gray-800 text-white rounded-xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-700 transform transition-all cursor-pointer">
+            <i class="fa-solid fa-rotate animate-spin text-cyan-400 text-4xl mb-4"></i>
+            <h3 class="text-lg font-bold mb-2">চ্যানেল আপডেট করা হচ্ছে...</h3>
+            <p class="text-xs text-gray-400">স্ক্রিনের যেকোনো জায়গায় চাপ দিন কেটে যাবে</p>
+        </div>
+    </div>
+
+    <div id="error-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 hidden">
+        <div class="bg-white rounded-sm w-[85%] max-w-sm p-6 shadow-2xl">
+            <p id="error-text" class="text-gray-800 text-[16px] mb-8 font-medium leading-relaxed">
+                আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!
+            </p>
+            <div class="flex justify-end mt-2">
+                <button onclick="hideErrorModal()" class="text-[#1976D2] font-bold uppercase tracking-wider px-2 py-1 text-sm hover:bg-blue-50 rounded transition-colors">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const updateModal = document.getElementById('update-modal');
+        const errorModal = document.getElementById('error-modal');
+        const errorText = document.getElementById('error-text');
+
+        // Modal Control Functions
+        function showUpdateNotice() {
+            updateModal.classList.remove('hidden');
+        }
+        function hideUpdateNotice() {
+            updateModal.classList.add('hidden');
+        }
+        function showErrorModal(message) {
+            errorText.innerText = message;
+            errorModal.classList.remove('hidden');
+            hideUpdateNotice(); // Hide update notice if error occurs
+        }
+        function hideErrorModal() {
+            errorModal.classList.add('hidden');
+        }
+
+        // Network Status Listeners
+        window.addEventListener('offline', () => {
+            showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
-            // Mapping categories to their respective JSON files
             const categoryFiles = [
                 { name: "Bangla", file: "bangla.json" },
                 { name: "Bangla News", file: "bangla-news.json" },
@@ -94,14 +134,12 @@
 
             const tabsContainer = document.getElementById('category-tabs');
             const gridContainer = document.getElementById('channel-grid');
-            const statusMessage = document.getElementById('status-message');
             const playerStatus = document.getElementById('player-status');
 
-            // 1. Initialize Navigation Tabs
+            // Initialize Tabs
             function initTabs() {
                 categoryFiles.forEach((cat, index) => {
                     const btn = document.createElement('button');
-                    // Set the first tab as active by default
                     if(index === 0) {
                         btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm";
                     } else {
@@ -111,84 +149,77 @@
                     btn.dataset.file = cat.file;
                     
                     btn.addEventListener('click', () => {
-                        // Reset tab styles
                         document.querySelectorAll('.tab-btn').forEach(b => {
                             b.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
                         });
-                        // Set active style
                         btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm";
                         
-                        // Load corresponding data
                         loadChannelData(cat.file);
                     });
 
                     tabsContainer.appendChild(btn);
                 });
                 
-                // Load the first category initially
                 loadChannelData(categoryFiles[0].file);
             }
 
-            // 2. Fetch and Load Channel Data from JSON
+            // Fetch Data
             async function loadChannelData(fileName) {
-                gridContainer.innerHTML = ''; // Clear grid
-                statusMessage.classList.remove('hidden'); // Show loading spinner
-                statusMessage.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-cyan-400 text-2xl mb-2"></i><p>Loading channels...</p>`;
+                // Check network before fetching
+                if (!navigator.onLine) {
+                    showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
+                    return;
+                }
+
+                gridContainer.innerHTML = '';
+                showUpdateNotice(); // Show the update notice board
 
                 try {
                     const response = await fetch(fileName);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) throw new Error("Fetch failed");
                     
                     const data = await response.json();
-                    statusMessage.classList.add('hidden'); // Hide loading
-                    
                     renderChannels(data);
+                    
+                    // Auto-hide update notice after 800ms to give a smooth experience, 
+                    // though user can click to hide it instantly.
+                    setTimeout(() => {
+                        hideUpdateNotice();
+                    }, 800);
 
                 } catch (error) {
                     console.error("Error fetching data:", error);
-                    statusMessage.innerHTML = `
-                        <div class="bg-red-900/30 border border-red-800 text-red-400 p-4 rounded-lg">
-                            <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
-                            <p class="font-bold">Failed to load <code>${fileName}</code></p>
-                            <p class="text-xs mt-1 text-gray-300">Are you running this via a Local Web Server (like VS Code Live Server)? File fetching won't work simply by double-clicking the HTML file due to browser CORS policies.</p>
-                        </div>
-                    `;
+                    // Show error modal with Bengali message if fetch fails or file missing
+                    showErrorModal("ফাইল অথবা কোডে কোনো সমস্যা হয়েছে! দয়া করে পরে আবার চেষ্টা করুন।");
                 }
             }
 
-            // 3. Render Channel Cards
+            // Render Grid
             function renderChannels(channels) {
                 channels.forEach(channel => {
                     const card = document.createElement('button');
                     card.className = "channel-card aspect-square bg-white rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400";
                     
-                    // Handle missing/broken logos gracefully
                     let logoHtml = '';
                     if (channel.logo && channel.logo.trim() !== "") {
                         logoHtml = `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold\\'>${channel.name.charAt(0)}</div>'">`;
                     } else {
-                        // Fallback text logo if no image URL is provided
                         logoHtml = `<div class="w-full h-full rounded-full bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 font-black text-2xl uppercase">${channel.name.charAt(0)}</div>`;
                     }
-
-                    // Extract a clean name (e.g., remove "BD | " or "EN | " prefixes for the UI display if you want, or just display raw)
-                    const displayName = channel.name;
 
                     card.innerHTML = `
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">
                             ${logoHtml}
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${displayName}">${displayName}</span>
+                        <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${channel.name}">${channel.name}</span>
                     `;
 
-                    // Add click event for the player
                     card.addEventListener('click', () => {
-                        console.log(`[STREAM CLICKED] Name: ${channel.name} | URL: ${channel.url}`);
+                        console.log(`[STREAM URL]: ${channel.url}`);
                         playerStatus.innerHTML = `Streaming: <span class="text-cyan-400">${channel.name}</span>`;
                         playerStatus.parentElement.classList.remove('text-gray-500');
                         playerStatus.parentElement.classList.add('text-white');
                         
-                        // Click animation
                         card.classList.add('scale-95', 'opacity-80');
                         setTimeout(() => card.classList.remove('scale-95', 'opacity-80'), 150);
                     });
@@ -197,7 +228,7 @@
                 });
             }
 
-            // Start the app
+            // Start App
             initTabs();
         });
     </script>
