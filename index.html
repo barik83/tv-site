@@ -66,6 +66,11 @@
         .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Error Box Style */
+        .error-box { grid-column: 1 / -1; background: #3b0909; border: 1px solid #ff4757; padding: 15px; border-radius: 8px; color: #fff; margin-bottom: 10px; font-size: 13px; display: none; }
+        .error-box h4 { margin: 0 0 10px 0; color: #ff4757; }
+        .error-box ul { margin: 0; padding-left: 20px; }
     </style>
 </head>
 <body>
@@ -108,9 +113,15 @@
 </div>
 
 <div class="grid" id="channelGrid">
-    <div class="no-results">
-        <div class="loader"></div>
-        Finding and loading channels...
+    <div id="errorContainer" class="error-box">
+        <h4>⚠️ কিছু ফাইলে সমস্যা পাওয়া গেছে:</h4>
+        <ul id="errorList"></ul>
+    </div>
+    <div id="gridContent">
+        <div class="no-results">
+            <div class="loader"></div>
+            Finding and loading channels...
+        </div>
     </div>
 </div>
 
@@ -124,8 +135,8 @@ const fileNamesToLoad = [
 
 let channels = [];
 let favorites = [];
+let failedFiles = []; // ভুল ফাইলগুলো এখানে জমা হবে
 
-// LocalStorage Error Handle
 try {
     favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
 } catch (e) {
@@ -139,26 +150,36 @@ let currentIndex = 0;
 let hlsInstance = null;
 
 const player = document.getElementById('player');
-const grid = document.getElementById('channelGrid');
+const gridContent = document.getElementById('gridContent');
 const search = document.getElementById('search');
 const nowPlayingText = document.getElementById('nowPlaying');
+const errorContainer = document.getElementById('errorContainer');
+const errorList = document.getElementById('errorList');
 
-// Smart Fetch Logic: এটি ৩টি সম্ভাব্য লোকেশনে ফাইল খুঁজবে
+// Smart Fetch Logic + Error Detection
 async function fetchSmartFile(fileName) {
-    const pathsToTry = [`Channels/${fileName}`, `channels/${fileName}`, fileName];
+    // এখানে আপনার ফোল্ডারের নাম 'channels' দেওয়া হলো
+    const pathsToTry = [`channels/${fileName}`, `Channels/${fileName}`, fileName];
     
     for (let path of pathsToTry) {
         try {
             let res = await fetch(path);
             if (res.ok) {
-                let data = await res.json();
-                return Array.isArray(data) ? data : [];
+                try {
+                    let data = await res.json();
+                    return Array.isArray(data) ? data : [];
+                } catch (parseError) {
+                    // JSON ফাইলে কমা বা ব্র্যাকেট ভুল থাকলে এই মেসেজ দেখাবে
+                    failedFiles.push(`<b>${fileName}</b> : এই ফাইলটিতে কোডিং/কমা (,) ভুল আছে। JSON ঠিক করুন।`);
+                    return [];
+                }
             }
         } catch (e) {
-            // Ignore error and try the next path
+            // নেটওয়ার্ক বা পাথ এরর
         }
     }
-    console.warn(`Skipping ${fileName}: Not found anywhere.`);
+    // ফাইল খুঁজে না পেলে এই মেসেজ দেখাবে
+    failedFiles.push(`<b>${fileName}</b> : ফাইলটি আপলোড করা হয়নি বা খুঁজে পাওয়া যাচ্ছে না।`);
     return [];
 }
 
@@ -173,18 +194,28 @@ async function loadAllChannels() {
             }
         });
 
+        // যদি কোনো ফাইলে সমস্যা থাকে, তবে সেটি স্ক্রিনে লাল বক্সে দেখাবে
+        if (failedFiles.length > 0) {
+            errorContainer.style.display = 'block';
+            failedFiles.forEach(err => {
+                let li = document.createElement('li');
+                li.innerHTML = err;
+                errorList.appendChild(li);
+            });
+        }
+
         if (channels.length > 0) {
             applyFilters();
             if (currentFilteredList.length > 0) {
                 play(currentFilteredList[0].url, currentFilteredList[0].name);
             }
         } else {
-            grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! দয়া করে নিশ্চিত হোন JSON ফাইলগুলো আপলোড করা হয়েছে।</div>';
+            gridContent.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি!</div>';
             nowPlayingText.innerHTML = `⚠️ <span>No channels loaded</span>`;
         }
     } catch (error) {
         console.error("Critical Error:", error);
-        grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর। কনসোল চেক করুন।</div>';
+        gridContent.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর। কনসোল চেক করুন।</div>';
     }
 }
 
@@ -225,8 +256,8 @@ function play(url, channelName) {
 }
 
 function render(list) {
-    grid.innerHTML = '';
-    if (list.length === 0) { grid.innerHTML = '<div class="no-results">No channels found for this category 📺</div>'; return; }
+    gridContent.innerHTML = '';
+    if (list.length === 0) { gridContent.innerHTML = '<div class="no-results">No channels found for this category 📺</div>'; return; }
 
     list.forEach((c, idx) => {
         const isFav = favorites.includes(c.name);
@@ -242,7 +273,7 @@ function render(list) {
             <div class="category-tag">${c.category || 'Other'}</div>
         `;
         d.onclick = () => { currentIndex = idx; play(c.url, c.name); };
-        grid.appendChild(d);
+        gridContent.appendChild(d);
     });
 }
 
@@ -293,7 +324,7 @@ function prevChannel() {
 }
 
 function highlightActiveCard() {
-    const cards = grid.querySelectorAll('.card');
+    const cards = gridContent.querySelectorAll('.card');
     cards.forEach((c, idx) => {
         if (idx === currentIndex) { c.classList.add('playing'); c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } 
         else { c.classList.remove('playing'); }
@@ -302,7 +333,6 @@ function highlightActiveCard() {
 
 search.addEventListener('input', applyFilters);
 
-// স্ক্রিপ্ট শুরু হওয়ার সাথে সাথেই JSON ফাইলগুলো লোড করা শুরু হবে
 loadAllChannels();
 
 </script>
