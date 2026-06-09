@@ -24,6 +24,15 @@
             height: 100%;
             border-radius: 50%;
         }
+        /* ভার্টিক্যাল ব্রাইটনেস স্লাইডারের জন্য স্পেশাল স্টাইল */
+        .vertical-slider {
+            -webkit-appearance: slider-vertical;
+            width: 6px;
+            height: 90px;
+            background: #4b5563;
+            outline: none;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
@@ -32,24 +41,48 @@
 
         <section class="w-full mb-4">
             <div class="relative w-full pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-2xl border border-gray-800 group cursor-pointer">
+                
+                <div id="brightness-overlay" class="absolute inset-0 bg-black pointer-events-none z-10 opacity-0 transition-opacity duration-70"></div>
+
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform group-hover:scale-105">
                     <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-cyan-400"></i>
                     <p id="player-status" class="text-sm font-semibold tracking-wide">প্লে করতে একটি চ্যানেল সিলেক্ট করুন</p>
                 </div>
                 
-                <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-90 group-hover:opacity-100 transition-opacity">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 px-2 py-3 rounded-full space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+                    <i class="fa-solid fa-sun text-sm text-yellow-400" title="সর্বোচ্চ আলো"></i>
+                    <input type="range" id="brightness-slider" min="10" max="100" value="100" class="vertical-slider accent-cyan-400 cursor-pointer">
+                    <i class="fa-regular fa-sun text-xs text-gray-400" title="সর্বনিম্ন আলো"></i>
+                </div>
+
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+                    <button id="next-channel-btn" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
+                        <i class="fa-solid fa-chevron-up text-sm"></i>
+                    </button>
+                    <button id="prev-channel-btn" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </button>
+                </div>
+
+                <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-90 group-hover:opacity-100 transition-opacity z-20">
                     <div class="flex items-center">
                         <div class="flex items-center text-red-600 font-bold text-xs sm:text-sm tracking-wider bg-black/40 px-2 py-1 rounded">
                             <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> লাইভ
                         </div>
                     </div>
                     
-                    <div class="flex items-center space-x-3 sm:space-x-5 text-gray-300 text-sm sm:text-base">
-                        <button class="hover:text-white transition-colors" title="সেটিংস"><i class="fa-solid fa-gear"></i></button>
-                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5" title="ভিডিও কোয়ালিটি">HD</button>
-                        <button class="hover:text-white transition-colors" title="সাউন্ড"><i class="fa-solid fa-volume-high"></i></button>
-                        <button class="hover:text-white transition-colors" title="সাবটাইটেল"><i class="fa-solid fa-closed-captioning"></i></button>
-                        <button class="hover:text-white transition-colors" title="ফুলস্ক্রিন"><i class="fa-solid fa-expand"></i></button>
+                    <div class="flex items-center space-x-3 sm:space-x-4 text-gray-300 text-sm sm:text-base">
+                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-gear"></i></button>
+                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5">HD</button>
+                        
+                        <div class="flex items-center space-x-1.5 bg-black/40 px-2 py-1 rounded-lg">
+                            <i class="fa-solid fa-volume-low text-xs text-gray-400"></i>
+                            <input type="range" id="volume-slider" min="0" max="100" value="80" class="w-16 sm:w-24 h-1 accent-cyan-400 rounded-lg appearance-none bg-gray-700 cursor-pointer">
+                            <i class="fa-solid fa-volume-high text-xs text-gray-300"></i>
+                        </div>
+
+                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-closed-captioning"></i></button>
+                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-expand"></i></button>
                     </div>
                 </div>
             </div>
@@ -72,23 +105,25 @@
     </main>
 
     <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm" onclick="hideUpdateNotice()">
-        <div class="bg-gray-800 text-white rounded-xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-700 transform transition-all cursor-pointer">
+        <div class="bg-[#1e1e1e] text-white rounded-2xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-800 transform transition-all cursor-pointer">
             <i class="fa-solid fa-rotate animate-spin text-cyan-400 text-4xl mb-4"></i>
-            <h3 class="text-lg font-bold mb-2">চ্যানেল আপডেট করা হচ্ছে...</h3>
-            <p class="text-xs text-gray-400">বন্ধ করতে যেকোনো জায়গায় চাপ দিন</p>
+            <h3 class="text-lg font-bold mb-2">চ্যানেল আপডেট হচ্ছে...</h3>
+            <p class="text-xs text-gray-400">বন্ধ করতে স্ক্রিনে চাপ দিন</p>
         </div>
     </div>
 
-    <div id="error-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 hidden">
-        <div class="bg-white rounded-sm w-[85%] max-w-sm p-6 shadow-2xl">
-            <p id="error-text" class="text-gray-800 text-[16px] mb-8 font-medium leading-relaxed">
-                আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!
-            </p>
-            <div class="flex justify-end mt-2">
-                <button onclick="hideErrorModal()" class="text-[#1976D2] font-bold uppercase tracking-wider px-2 py-1 text-sm hover:bg-blue-50 rounded transition-colors">
-                    ঠিক আছে
-                </button>
+    <div id="error-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 hidden backdrop-blur-sm transition-opacity">
+        <div class="bg-[#1e1e1e] rounded-2xl w-[85%] max-w-sm p-6 shadow-2xl border border-red-500/30 flex flex-col items-center text-center transform transition-all scale-100">
+            <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
             </div>
+            <h3 class="text-white text-xl font-bold mb-2">সমস্যা হয়েছে!</h3>
+            <p id="error-text" class="text-gray-300 text-sm mb-6 leading-relaxed">
+                আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে কানেকশন চালু করুন।
+            </p>
+            <button onclick="hideErrorModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-red-600/30 active:scale-95">
+                ঠিক আছে
+            </button>
         </div>
     </div>
 
@@ -96,6 +131,14 @@
         const updateModal = document.getElementById('update-modal');
         const errorModal = document.getElementById('error-modal');
         const errorText = document.getElementById('error-text');
+        const brightnessOverlay = document.getElementById('brightness-overlay');
+        const brightnessSlider = document.getElementById('brightness-slider');
+        const volumeSlider = document.getElementById('volume-slider');
+        const nextChannelBtn = document.getElementById('next-channel-btn');
+        const prevChannelBtn = document.getElementById('prev-channel-btn');
+
+        let currentChannelsData = [];
+        let currentPlayingIndex = -1;
 
         // মোডাল কন্ট্রোল ফাংশনসমূহ
         function showUpdateNotice() {
@@ -107,19 +150,31 @@
         function showErrorModal(message) {
             errorText.innerText = message;
             errorModal.classList.remove('hidden');
-            hideUpdateNotice(); // এরর আসলে আপডেট নোটিশ বন্ধ করে দেবে
+            hideUpdateNotice();
         }
         function hideErrorModal() {
             errorModal.classList.add('hidden');
         }
 
-        // ইন্টারনেট কানেকশন চলে গেলে স্বয়ংক্রিয় ডিটেকশন
+        // ইন্টারনেট কানেকশন চলে গেলে বাংলা এরর মেসেজ
         window.addEventListener('offline', () => {
-            showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
+            showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন বিচ্ছিন্ন হয়ে গেছে! দয়া করে ইন্টারনেট কানেকশন চালু করুন।");
+        });
+
+        // ব্রাইটনেস পরিবর্তন হ্যান্ডলার
+        brightnessSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            const opacity = (100 - value) / 100 * 0.85;
+            brightnessOverlay.style.opacity = opacity;
+        });
+
+        // ভলিউম পরিবর্তন হ্যান্ডলার
+        volumeSlider.addEventListener('input', (e) => {
+            const volumeValue = e.target.value;
+            console.log(`[ভলিউম লেভেল]: ${volumeValue}%`);
         });
 
         document.addEventListener("DOMContentLoaded", () => {
-            // আপনার দেওয়া সবগুলো ফাইল এবং নতুন pakistan.json যুক্ত করা হলো (গিটহাবের জন্য ./ পাথ ব্যবহার করা হয়েছে)
             const categoryFiles = [
                 { name: "বাংলা", file: "./bangla.json" },
                 { name: "বাংলা খবর", file: "./bangla-news.json" },
@@ -138,7 +193,7 @@
             const gridContainer = document.getElementById('channel-grid');
             const playerStatus = document.getElementById('player-status');
 
-            // ক্যাটাগরি ট্যাব তৈরি করা
+            // ক্যাটাগরি ট্যাব তৈরি
             function initTabs() {
                 categoryFiles.forEach((cat, index) => {
                     const btn = document.createElement('button');
@@ -162,47 +217,84 @@
                     tabsContainer.appendChild(btn);
                 });
                 
-                // প্রথম রান করার সময় প্রথম ক্যাটাগরি লোড হবে
                 loadChannelData(categoryFiles[0].file);
             }
 
-            // JSON ফাইল থেকে চ্যানেল ডেটা লোড করা
+            // JSON ফাইল থেকে চ্যানেল ডেটা লোড
             async function loadChannelData(fileName) {
-                // ফেচ করার আগে ইন্টারনেট চেক
+                // ইন্টারনেট চেক
                 if (!navigator.onLine) {
-                    showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
+                    showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন।");
                     return;
                 }
 
                 gridContainer.innerHTML = '';
-                showUpdateNotice(); // আপডেট নোটিশ বোর্ড প্রদর্শন
+                showUpdateNotice();
 
                 try {
-                    // গিটহাব পেজেসে কোনো সমস্যা ছাড়াই fetch কাজ করবে
                     const response = await fetch(fileName);
                     if (!response.ok) throw new Error("ফাইল পাওয়া যায়নি");
                     
                     const data = await response.json();
+                    currentChannelsData = data; 
+                    currentPlayingIndex = -1; 
+                    
                     renderChannels(data);
                     
-                    // ৮০০ মিলি-সেকেন্ড পর নোটিশ বোর্ড স্বয়ংক্রিয়ভাবে চলে যাবে
                     setTimeout(() => {
                         hideUpdateNotice();
                     }, 800);
 
                 } catch (error) {
                     console.error("Error fetching data:", error);
-                    showErrorModal(`সার্ভার থেকে ${fileName} ফাইলটি লোড করতে সমস্যা হচ্ছে! দয়া করে গিটহাবে ফাইলটি ঠিকমতো আপলোড হয়েছে কিনা চেক করুন।`);
+                    // সার্ভার বা ফাইল জনিত কোনো সমস্যা হলে বাংলা এরর মেসেজ
+                    showErrorModal("সার্ভার থেকে চ্যানেল লিস্ট লোড করতে সমস্যা হচ্ছে! দয়া করে পরে আবার চেষ্টা করুন অথবা আপনার ইন্টারনেট চেক করুন।");
                 }
             }
 
-            // চ্যানেল গ্রিড রেন্ডার করা
+            function playChannel(index) {
+                if (index < 0 || index >= currentChannelsData.length) return;
+                
+                currentPlayingIndex = index;
+                const channel = currentChannelsData[index];
+                
+                const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
+                
+                console.log(`[চলছে]: ${cleanName} | লিংক: ${channel.url}`);
+                playerStatus.innerHTML = `চলছে: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
+                playerStatus.parentElement.classList.remove('text-gray-500');
+                playerStatus.parentElement.classList.add('text-white');
+            }
+
+            // চ্যানেল পরিবর্তনের বোতাম ইভেন্ট
+            nextChannelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentChannelsData.length === 0) return;
+                
+                let nextIndex = currentPlayingIndex + 1;
+                if (nextIndex >= currentChannelsData.length) {
+                    nextIndex = 0; 
+                }
+                playChannel(nextIndex);
+            });
+
+            prevChannelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentChannelsData.length === 0) return;
+                
+                let prevIndex = currentPlayingIndex - 1;
+                if (prevIndex < 0) {
+                    prevIndex = currentChannelsData.length - 1; 
+                }
+                playChannel(prevIndex);
+            });
+
+            // চ্যানেল গ্রিড রেন্ডার
             function renderChannels(channels) {
-                channels.forEach(channel => {
+                channels.forEach((channel, index) => {
                     const card = document.createElement('button');
                     card.className = "channel-card aspect-square bg-white rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400";
                     
-                    // লোগো না থাকলে সুন্দর একটি টেক্সট লোগো জেনারেট হবে
                     let logoHtml = '';
                     const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                     const firstLetter = cleanName.charAt(0).toUpperCase();
@@ -220,14 +312,8 @@
                         <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${cleanName}">${cleanName}</span>
                     `;
 
-                    // চ্যানেল ক্লিকের ইভেন্ট
                     card.addEventListener('click', () => {
-                        console.log(`[চলছে]: ${cleanName} | লিংক: ${channel.url}`);
-                        playerStatus.innerHTML = `চলছে: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
-                        playerStatus.parentElement.classList.remove('text-gray-500');
-                        playerStatus.parentElement.classList.add('text-white');
-                        
-                        // ক্লিক অ্যানিমেশন ফিডব্যাক
+                        playChannel(index);
                         card.classList.add('scale-95', 'opacity-80');
                         setTimeout(() => card.classList.remove('scale-95', 'opacity-80'), 150);
                     });
@@ -236,7 +322,6 @@
                 });
             }
 
-            // অ্যাপ চালু করা
             initTabs();
         });
     </script>
