@@ -1,0 +1,77 @@
+[
+  {
+    "name": "BD | ATN News",
+    "logo": "https://static.wikia.nocookie.net/etv-gspn-bangla/images/4/4d/ATN_News_HD.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8"
+  },
+  {
+    "name": "BD | Channel 24",
+    "logo": "https://yt3.googleusercontent.com/8Q8MCd6ypr2Hzbp60VE_stJPl063kQYfeTxdIQkAXRfhdzxByLl0sJYHsk43uTM4W_cOzwcbPQ=s160-c-k-c0x00ffffff-no-rj",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8"
+  },
+  {
+    "name": "BD | Ekattor TV",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/5/5d/Ekattor_TV_logo.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/1705-audio_113352_eng=113200-video=1692000.m3u8"
+  },
+  {
+    "name": "BD | Independent Television",
+    "logo": "https://static.wikia.nocookie.net/etv-gspn-bangla/images/b/bb/Independent_logo_2011.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8"
+  },
+  {
+    "name": "BD | JAMUNA TV",
+    "logo": "https://www.freekaj.com/assets/images/stock/image/2024/01/14/65a43ac0d1ffc1705261760.jpg",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/1701-audio_113312_eng=113200-video=1692000.m3u8"
+  },
+  {
+    "name": "BD | SOMOY NEWS",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/8/8e/Somoy_Television.svg",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8"
+  },
+  {
+    "name": "IN | ABP Ananda",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/a/a2/Abp-ananda.png",
+    "url": "https://amg01448-samsungin-abpananda-samsungin-ad-pw.amagi.tv/playlist/amg01448-samsungin-abpananda-samsungin/playlist.m3u8"
+  },
+  {
+    "name": "IN | Calcutta News",
+    "logo": "https://assets.calcuttatelevisionnetwork.in/cn.png",
+    "url": "https://akdnetwork.co.in/live/cnnew/index.m3u8"
+  },
+  {
+    "name": "IN | Kolkata Tv",
+    "logo": "https://a.jsrdn.com/hls/23215/kolkata-tv/logo_20250819_185012_70.png",
+    "url": "https://cdn.ottlive.co.in/kolkatatv/index.m3u8"
+  },
+  {
+    "name": "IN | News18 Bangla",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/8/85/News18_Bangla1.svg/",
+    "url": "https://amg01448-samsungin-news18bangla-samsungin-ad-qy.amagi.tv/ts-eu-w1-n2/playlist/amg01448-samsungin-news18bangla-samsungin/playlist.m3u8"
+  },
+  {
+    "name": "IN | R Plus News",
+    "logo": "https://rplus.in/wp-content/uploads/2025/06/RPLUS_NEWS.png",
+    "url": "https://thelegitpro.in/pntv/rplusnews24x7/index.m3u8"
+  },
+  {
+    "name": "IN | Republic Bangla",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/9/93/R.Bangla_logo_with_tagline.jpg",
+    "url": "https://vg-republictvyupp.akamaized.net/ptnr-yuppt/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/vglive-sk-613605/93d674ab-f7a0-404e-88b2-b4f163373dbe/0.m3u8"
+  },
+  {
+    "name": "IN | Tribe TV",
+    "logo": "https://a.jsrdn.com/hls/23215/tribe-tv/logo_20250429_225821_70.png",
+    "url": "https://server.livelegitpro.in:9899/tribetv/tribetv/index.m3u8"
+  },
+  {
+    "name": "IN | TV9 Bangla",
+    "logo": "https://images.tv9bangla.com/wp-content/themes/tv9bangla/images/tv9-bangla-logo.svg",
+    "url": "https://dyjmyiv3bp2ez.cloudfront.net/pub-iotv9banaen8yq/liveabr/playlist.m3u8"
+  },
+  {
+    "name": "IN | Zee 24 Ghanta",
+    "logo": "https://static.wikia.nocookie.net/logopedia/images/b/bc/Zee_24_Ghanta_2025_Logo_2025.png",
+    "url": "https://d2dsoyvkr33m05.cloudfront.net/index_1.m3u8"
+  }
+]
