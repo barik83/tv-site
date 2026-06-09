@@ -6,33 +6,14 @@
     <title>লাইভ টিভি ওটিটি অ্যাপ</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
-        /* হরাইজন্টাল স্ক্রলবার হাইড করার জন্য */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .channel-logo-img {
-            object-fit: contain;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
-        /* ভার্টিক্যাল ব্রাইটনেস স্লাইডারের জন্য স্পেশাল স্টাইল */
-        .vertical-slider {
-            -webkit-appearance: slider-vertical;
-            width: 6px;
-            height: 90px;
-            background: #4b5563;
-            outline: none;
-            border-radius: 4px;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .channel-logo-img { object-fit: contain; width: 100%; height: 100%; border-radius: 50%; }
+        .vertical-slider { -webkit-appearance: slider-vertical; width: 6px; height: 90px; background: #4b5563; outline: none; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
@@ -40,19 +21,21 @@
     <main class="w-full max-w-4xl mx-auto pt-4 px-3 sm:px-6 pb-12">
 
         <section class="w-full mb-4">
-            <div class="relative w-full pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-2xl border border-gray-800 group cursor-pointer">
+            <div class="relative w-full pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-2xl border border-gray-800 group">
                 
+                <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black z-0" playsinline></video>
+
                 <div id="brightness-overlay" class="absolute inset-0 bg-black pointer-events-none z-10 opacity-0 transition-opacity duration-70"></div>
 
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform group-hover:scale-105">
+                <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform z-10 bg-black">
                     <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-cyan-400"></i>
                     <p id="player-status" class="text-sm font-semibold tracking-wide">প্লে করতে একটি চ্যানেল সিলেক্ট করুন</p>
                 </div>
                 
                 <div class="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 px-2 py-3 rounded-full space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-                    <i class="fa-solid fa-sun text-sm text-yellow-400" title="সর্বোচ্চ আলো"></i>
+                    <i class="fa-solid fa-sun text-sm text-yellow-400"></i>
                     <input type="range" id="brightness-slider" min="10" max="100" value="100" class="vertical-slider accent-cyan-400 cursor-pointer">
-                    <i class="fa-regular fa-sun text-xs text-gray-400" title="সর্বনিম্ন আলো"></i>
+                    <i class="fa-regular fa-sun text-xs text-gray-400"></i>
                 </div>
 
                 <div class="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
@@ -64,7 +47,7 @@
                     </button>
                 </div>
 
-                <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-90 group-hover:opacity-100 transition-opacity z-20">
+                <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
                     <div class="flex items-center">
                         <div class="flex items-center text-red-600 font-bold text-xs sm:text-sm tracking-wider bg-black/40 px-2 py-1 rounded">
                             <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> লাইভ
@@ -77,12 +60,11 @@
                         
                         <div class="flex items-center space-x-1.5 bg-black/40 px-2 py-1 rounded-lg">
                             <i class="fa-solid fa-volume-low text-xs text-gray-400"></i>
-                            <input type="range" id="volume-slider" min="0" max="100" value="80" class="w-16 sm:w-24 h-1 accent-cyan-400 rounded-lg appearance-none bg-gray-700 cursor-pointer">
+                            <input type="range" id="volume-slider" min="0" max="100" value="100" class="w-16 sm:w-24 h-1 accent-cyan-400 rounded-lg appearance-none bg-gray-700 cursor-pointer">
                             <i class="fa-solid fa-volume-high text-xs text-gray-300"></i>
                         </div>
 
-                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-closed-captioning"></i></button>
-                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-expand"></i></button>
+                        <button id="fullscreen-btn" class="hover:text-white transition-colors"><i class="fa-solid fa-expand"></i></button>
                     </div>
                 </div>
             </div>
@@ -93,13 +75,11 @@
         </section>
 
         <section class="w-full mb-6">
-            <div class="flex overflow-x-auto space-x-2.5 no-scrollbar py-2" id="category-tabs">
-                </div>
+            <div class="flex overflow-x-auto space-x-2.5 no-scrollbar py-2" id="category-tabs"></div>
         </section>
 
         <section class="w-full">
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4" id="channel-grid">
-                </div>
+            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4" id="channel-grid"></div>
         </section>
 
     </main>
@@ -118,9 +98,7 @@
                 <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
             </div>
             <h3 class="text-white text-xl font-bold mb-2">সমস্যা হয়েছে!</h3>
-            <p id="error-text" class="text-gray-300 text-sm mb-6 leading-relaxed">
-                আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে কানেকশন চালু করুন।
-            </p>
+            <p id="error-text" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
             <button onclick="hideErrorModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-red-600/30 active:scale-95">
                 ঠিক আছে
             </button>
@@ -128,6 +106,7 @@
     </div>
 
     <script>
+        // UI Elements
         const updateModal = document.getElementById('update-modal');
         const errorModal = document.getElementById('error-modal');
         const errorText = document.getElementById('error-text');
@@ -136,42 +115,45 @@
         const volumeSlider = document.getElementById('volume-slider');
         const nextChannelBtn = document.getElementById('next-channel-btn');
         const prevChannelBtn = document.getElementById('prev-channel-btn');
+        const videoElement = document.getElementById('main-video-player');
+        const playerPlaceholder = document.getElementById('player-placeholder');
+        const playerStatus = document.getElementById('player-status');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
 
         let currentChannelsData = [];
         let currentPlayingIndex = -1;
+        let hls;
 
-        // মোডাল কন্ট্রোল ফাংশনসমূহ
-        function showUpdateNotice() {
-            updateModal.classList.remove('hidden');
-        }
-        function hideUpdateNotice() {
-            updateModal.classList.add('hidden');
-        }
+        // Modal Functions
+        function showUpdateNotice() { updateModal.classList.remove('hidden'); }
+        function hideUpdateNotice() { updateModal.classList.add('hidden'); }
         function showErrorModal(message) {
             errorText.innerText = message;
             errorModal.classList.remove('hidden');
             hideUpdateNotice();
         }
-        function hideErrorModal() {
-            errorModal.classList.add('hidden');
-        }
+        function hideErrorModal() { errorModal.classList.add('hidden'); }
 
-        // ইন্টারনেট কানেকশন চলে গেলে বাংলা এরর মেসেজ
+        // [UX গাইডলাইন ১]: ইন্টারনেট কানেকশন এরর
         window.addEventListener('offline', () => {
-            showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন বিচ্ছিন্ন হয়ে গেছে! দয়া করে ইন্টারনেট কানেকশন চালু করুন।");
+            showErrorModal("ইন্টারনেট সংযোগ বিচ্ছিন্ন থাকায় অ্যাপে 'নতুন চ্যানেল লিস্ট' লোড করা সম্ভব হচ্ছে না। অনুগ্রহ করে আপনার মোবাইলের ওয়াইফাই বা ডেটা সংযোগ চালু করে আবার ক্যাটাগরিতে চাপ দিন।");
         });
 
-        // ব্রাইটনেস পরিবর্তন হ্যান্ডলার
+        // ব্রাইটনেস এবং ভলিউম কন্ট্রোল
         brightnessSlider.addEventListener('input', (e) => {
             const value = e.target.value;
-            const opacity = (100 - value) / 100 * 0.85;
-            brightnessOverlay.style.opacity = opacity;
+            brightnessOverlay.style.opacity = (100 - value) / 100 * 0.85;
         });
 
-        // ভলিউম পরিবর্তন হ্যান্ডলার
         volumeSlider.addEventListener('input', (e) => {
             const volumeValue = e.target.value;
-            console.log(`[ভলিউম লেভেল]: ${volumeValue}%`);
+            videoElement.volume = volumeValue / 100;
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (videoElement.requestFullscreen) { videoElement.requestFullscreen(); }
+            else if (videoElement.webkitRequestFullscreen) { videoElement.webkitRequestFullscreen(); }
+            else if (videoElement.msRequestFullscreen) { videoElement.msRequestFullscreen(); }
         });
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -191,40 +173,30 @@
 
             const tabsContainer = document.getElementById('category-tabs');
             const gridContainer = document.getElementById('channel-grid');
-            const playerStatus = document.getElementById('player-status');
 
-            // ক্যাটাগরি ট্যাব তৈরি
             function initTabs() {
                 categoryFiles.forEach((cat, index) => {
                     const btn = document.createElement('button');
-                    if(index === 0) {
-                        btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm";
-                    } else {
-                        btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
-                    }
+                    btn.className = index === 0 
+                        ? "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm"
+                        : "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
                     btn.textContent = cat.name;
-                    btn.dataset.file = cat.file;
                     
                     btn.addEventListener('click', () => {
                         document.querySelectorAll('.tab-btn').forEach(b => {
                             b.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
                         });
                         btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm";
-                        
                         loadChannelData(cat.file);
                     });
-
                     tabsContainer.appendChild(btn);
                 });
-                
                 loadChannelData(categoryFiles[0].file);
             }
 
-            // JSON ফাইল থেকে চ্যানেল ডেটা লোড
             async function loadChannelData(fileName) {
-                // ইন্টারনেট চেক
                 if (!navigator.onLine) {
-                    showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন।");
+                    showErrorModal("ইন্টারনেট সংযোগ বিচ্ছিন্ন থাকায় অ্যাপে 'নতুন চ্যানেল লিস্ট' লোড করা সম্ভব হচ্ছে না। অনুগ্রহ করে আপনার মোবাইলের ওয়াইফাই বা ডেটা সংযোগ চালু করে আবার ক্যাটাগরিতে চাপ দিন।");
                     return;
                 }
 
@@ -233,82 +205,110 @@
 
                 try {
                     const response = await fetch(fileName);
-                    if (!response.ok) throw new Error("ফাইল পাওয়া যায়নি");
                     
-                    const data = await response.json();
+                    // [UX গাইডলাইন ২]: 404 ফাইল নট ফাউন্ড এরর
+                    if (!response.ok) throw new Error("FILE_NOT_FOUND");
+                    
+                    const textData = await response.text();
+                    let data;
+                    
+                    try {
+                        data = JSON.parse(textData);
+                    } catch (e) {
+                        // [UX গাইডলাইন ৩]: JSON কোডিং ভুল বা Syntax Error
+                        throw new Error("SYNTAX_ERROR");
+                    }
+
+                    // [UX গাইডলাইন ৪]: চ্যানেল লিস্ট ফাঁকা থাকলে
+                    if (!Array.isArray(data) || data.length === 0) {
+                        throw new Error("EMPTY_LIST");
+                    }
+                    
                     currentChannelsData = data; 
                     currentPlayingIndex = -1; 
-                    
                     renderChannels(data);
                     
-                    setTimeout(() => {
-                        hideUpdateNotice();
-                    }, 800);
+                    setTimeout(() => { hideUpdateNotice(); }, 800);
 
                 } catch (error) {
-                    console.error("Error fetching data:", error);
-                    // সার্ভার বা ফাইল জনিত কোনো সমস্যা হলে বাংলা এরর মেসেজ
-                    showErrorModal("সার্ভার থেকে চ্যানেল লিস্ট লোড করতে সমস্যা হচ্ছে! দয়া করে পরে আবার চেষ্টা করুন অথবা আপনার ইন্টারনেট চেক করুন।");
+                    console.error(error);
+                    if (error.message === "SYNTAX_ERROR") {
+                        showErrorModal(`'${fileName}' ফাইলের ভেতরে কোডিং বা ফরম্যাটজনিত ভুল (Syntax Error) থাকায় এই ক্যাটাগরির চ্যানেলগুলো স্ক্রিনে দেখানো যাচ্ছে না। অনুগ্রহ করে গিটহাবে ফাইলটির কোড ঠিক আছে কিনা তা চেক করে আবার আপডেট করুন।`);
+                    } else if (error.message === "EMPTY_LIST") {
+                        showErrorModal(`বর্তমানে '${fileName}' ফাইলের অধীনে কোনো চ্যানেলের ডেটা যুক্ত করা নেই। অনুগ্রহ করে গিটহাবের ফাইলে নতুন চ্যানেলের নাম ও লিংক আপডেট করুন।`);
+                    } else {
+                        showErrorModal(`সার্ভারে '${fileName}' ফাইলটি খুঁজে না পাওয়ায় এই ক্যাটাগরির চ্যানেলগুলো লোড করা যায়নি। অনুগ্রহ করে আপনার গিটহাব রিপোজিটরিতে ফাইলটি সঠিকভাবে আপলোড করা আছে কিনা তা নিশ্চিত হয়ে পেজটি রিলোড দিন।`);
+                    }
                 }
             }
 
+            // [আসল ভিডিও প্লেয়ার লজিক]
             function playChannel(index) {
                 if (index < 0 || index >= currentChannelsData.length) return;
-                
                 currentPlayingIndex = index;
                 const channel = currentChannelsData[index];
-                
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                 
-                console.log(`[চলছে]: ${cleanName} | লিংক: ${channel.url}`);
+                playerPlaceholder.classList.add('hidden'); // প্লেসহোল্ডার হাইড
                 playerStatus.innerHTML = `চলছে: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
-                playerStatus.parentElement.classList.remove('text-gray-500');
-                playerStatus.parentElement.classList.add('text-white');
+
+                if (Hls.isSupported()) {
+                    if (hls) hls.destroy();
+                    hls = new Hls();
+                    hls.loadSource(channel.url);
+                    hls.attachMedia(videoElement);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        videoElement.play();
+                    });
+                    
+                    // [UX গাইডলাইন ৫]: ভিডিও লিংক বা m3u8 ব্রোকেন থাকলে
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            showErrorModal(`ভিডিও প্লেয়ারে '${cleanName}' চ্যানেলটি চালু করা যাচ্ছে না। সম্ভবত চ্যানেলটির লাইভ স্ট্রিমিং লিংক (m3u8) এক্সপায়ার হয়ে গেছে বা সার্ভার থেকে মুছে ফেলা হয়েছে। অনুগ্রহ করে লিস্ট থেকে অন্য একটি চ্যানেল সিলেক্ট করে দেখুন।`);
+                            playerPlaceholder.classList.remove('hidden');
+                            hls.destroy();
+                        }
+                    });
+                } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                    // সাফারি বা আইফোনের জন্য
+                    videoElement.src = channel.url;
+                    videoElement.play();
+                    videoElement.addEventListener('error', () => {
+                        showErrorModal(`ভিডিও প্লেয়ারে '${cleanName}' চ্যানেলটি চালু করা যাচ্ছে না। সম্ভবত চ্যানেলটির লাইভ স্ট্রিমিং লিংক (m3u8) এক্সপায়ার হয়ে গেছে বা সার্ভার থেকে মুছে ফেলা হয়েছে। অনুগ্রহ করে লিস্ট থেকে অন্য একটি চ্যানেল সিলেক্ট করে দেখুন।`);
+                        playerPlaceholder.classList.remove('hidden');
+                    });
+                }
             }
 
-            // চ্যানেল পরিবর্তনের বোতাম ইভেন্ট
             nextChannelBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (currentChannelsData.length === 0) return;
-                
                 let nextIndex = currentPlayingIndex + 1;
-                if (nextIndex >= currentChannelsData.length) {
-                    nextIndex = 0; 
-                }
+                if (nextIndex >= currentChannelsData.length) nextIndex = 0; 
                 playChannel(nextIndex);
             });
 
             prevChannelBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (currentChannelsData.length === 0) return;
-                
                 let prevIndex = currentPlayingIndex - 1;
-                if (prevIndex < 0) {
-                    prevIndex = currentChannelsData.length - 1; 
-                }
+                if (prevIndex < 0) prevIndex = currentChannelsData.length - 1; 
                 playChannel(prevIndex);
             });
 
-            // চ্যানেল গ্রিড রেন্ডার
             function renderChannels(channels) {
                 channels.forEach((channel, index) => {
                     const card = document.createElement('button');
                     card.className = "channel-card aspect-square bg-white rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400";
                     
-                    let logoHtml = '';
                     const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                     const firstLetter = cleanName.charAt(0).toUpperCase();
-
-                    if (channel.logo && channel.logo.trim() !== "") {
-                        logoHtml = `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold\\'>${firstLetter}</div>'">`;
-                    } else {
-                        logoHtml = `<div class="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center text-cyan-600 font-black text-2xl">${firstLetter}</div>`;
-                    }
+                    let logoHtml = channel.logo && channel.logo.trim() !== "" 
+                        ? `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold\\'>${firstLetter}</div>'">`
+                        : `<div class="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center text-cyan-600 font-black text-2xl">${firstLetter}</div>`;
 
                     card.innerHTML = `
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">
-                            ${logoHtml}
-                        </div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">${logoHtml}</div>
                         <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${cleanName}">${cleanName}</span>
                     `;
 
@@ -317,7 +317,6 @@
                         card.classList.add('scale-95', 'opacity-80');
                         setTimeout(() => card.classList.remove('scale-95', 'opacity-80'), 150);
                     });
-
                     gridContainer.appendChild(card);
                 });
             }
