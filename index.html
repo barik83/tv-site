@@ -5,7 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live TV OTT App</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loading-screen");
+    if(loader){
+        setTimeout(() => {
+            loader.style.opacity = "0";
+            setTimeout(() => loader.remove(), 500);
+        }, 1200);
+    }
+});
+
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
@@ -14,7 +25,12 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .channel-logo-img { object-fit: contain; width: 100%; height: 100%; border-radius: 50%; }
         .vertical-slider { -webkit-appearance: slider-vertical; width: 6px; height: 90px; background: #4b5563; outline: none; border-radius: 4px; }
-    </style>
+    
+#loading-screen{
+    transition: opacity .5s ease;
+}
+
+</style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
 
@@ -83,6 +99,12 @@
         </section>
 
     </main>
+
+<div id="loading-screen" class="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[9999]">
+    <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+    <p class="mt-4 text-cyan-400 font-semibold tracking-wider">Loading Channels...</p>
+</div>
+
 
     <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm" onclick="hideUpdateNotice()">
         <div class="bg-[#1e1e1e] text-white rounded-2xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-800 transform transition-all cursor-pointer">
@@ -160,7 +182,10 @@
                 { name: "Music", file: "./music.json" },
                 { name: "Educational", file: "./educational.json" },
                 { name: "International", file: "./international.json" },
-                { name: "Int. News", file: "./international-news.json" }
+                { name: "Int. News", file: "./international-news.json" },
+                { name: "Sports", file: "./sports.json" },
+                { name: "Religious", file: "./religious.json" },
+                { name: "Travel", file: "./travel.json" }
             ];
 
             const tabsContainer = document.getElementById('category-tabs');
