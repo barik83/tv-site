@@ -34,7 +34,7 @@
         .hero { padding:15px; position:sticky; top:110px; z-index:5; background:var(--bg-main); border-bottom: 1px solid #222; }
         video { width:100%; height:230px; background:#000; border-radius:14px; box-shadow:0 4px 15px rgba(0,0,0,0.6); outline: none; }
         
-        .now-playing { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--primary); }
+        .now-playing { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .now-playing span { color: var(--text-light); font-weight: 400; }
 
         .player-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:10px; margin-top:8px; background:#141414; border-radius:10px; }
@@ -77,9 +77,9 @@
 
 <div class="hero">
     <video id="player" controls autoplay playsinline></video>
-    <div id="nowPlaying" class="now-playing">▶️ <span>Select a channel to play</span></div>
+    <div id="nowPlaying" class="now-playing">▶️ <span>Loading...</span></div>
     <div class="player-controls">
-        <button onclick="prevChannel()">⏮️ Prev</button>
+        <button onclick="prevChannel()" title="Previous Channel">⏮️ Prev</button>
         <button onclick="document.getElementById('player').play()">▶️</button>
         <button onclick="document.getElementById('player').pause()">⏸️</button>
         <button onclick="nextChannel()">⏭️ Next</button>
@@ -110,27 +110,29 @@
 <div class="grid" id="channelGrid">
     <div class="no-results">
         <div class="loader"></div>
-        Loading channels...
+        Finding and loading channels...
     </div>
 </div>
 
 <script>
-// ফাইলের নামগুলোর আগে 'Channels/' ফোল্ডারের পাথ বসানো হয়েছে
-const jsonFilesToLoad = [
-    'Channels/bangla.json',
-    'Channels/bangla-news.json',
-    'Channels/movies.json',
-    'Channels/music.json',
-    'Channels/india.json',
-    'Channels/kids.json',
-    'Channels/educational.json',
-    'Channels/international.json',
-    'Channels/international-news.json',
-    'Channels/live-tv.json'
+// ফাইলগুলোর মূল নাম
+const fileNamesToLoad = [
+    'bangla.json', 'bangla-news.json', 'movies.json', 'music.json',
+    'india.json', 'kids.json', 'educational.json', 'international.json',
+    'international-news.json', 'live-tv.json'
 ];
 
 let channels = [];
-let favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
+let favorites = [];
+
+// LocalStorage Error Handle
+try {
+    favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
+} catch (e) {
+    favorites = [];
+    localStorage.removeItem('iptv_favorites');
+}
+
 let currentCategory = 'all';
 let currentFilteredList = [];
 let currentIndex = 0;
@@ -141,20 +143,28 @@ const grid = document.getElementById('channelGrid');
 const search = document.getElementById('search');
 const nowPlayingText = document.getElementById('nowPlaying');
 
+// Smart Fetch Logic: এটি ৩টি সম্ভাব্য লোকেশনে ফাইল খুঁজবে
+async function fetchSmartFile(fileName) {
+    const pathsToTry = [`Channels/${fileName}`, `channels/${fileName}`, fileName];
+    
+    for (let path of pathsToTry) {
+        try {
+            let res = await fetch(path);
+            if (res.ok) {
+                let data = await res.json();
+                return Array.isArray(data) ? data : [];
+            }
+        } catch (e) {
+            // Ignore error and try the next path
+        }
+    }
+    console.warn(`Skipping ${fileName}: Not found anywhere.`);
+    return [];
+}
+
 async function loadAllChannels() {
     try {
-        const fetchPromises = jsonFilesToLoad.map(fileName => 
-            fetch(fileName)
-            .then(res => {
-                if (!res.ok) throw new Error(`Could not load ${fileName}`);
-                return res.json();
-            })
-            .catch(err => {
-                console.warn(`Skipping ${fileName}:`, err);
-                return []; 
-            })
-        );
-
+        const fetchPromises = fileNamesToLoad.map(name => fetchSmartFile(name));
         const results = await Promise.all(fetchPromises);
         
         results.forEach(dataArray => {
@@ -169,11 +179,12 @@ async function loadAllChannels() {
                 play(currentFilteredList[0].url, currentFilteredList[0].name);
             }
         } else {
-            grid.innerHTML = '<div class="no-results">No channels loaded. Please ensure JSON files exist inside the Channels folder.</div>';
+            grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! দয়া করে নিশ্চিত হোন JSON ফাইলগুলো আপলোড করা হয়েছে।</div>';
+            nowPlayingText.innerHTML = `⚠️ <span>No channels loaded</span>`;
         }
     } catch (error) {
-        console.error("Error:", error);
-        grid.innerHTML = '<div class="no-results">Error loading channel data.</div>';
+        console.error("Critical Error:", error);
+        grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর। কনসোল চেক করুন।</div>';
     }
 }
 
@@ -215,7 +226,7 @@ function play(url, channelName) {
 
 function render(list) {
     grid.innerHTML = '';
-    if (list.length === 0) { grid.innerHTML = '<div class="no-results">No channels found 📺</div>'; return; }
+    if (list.length === 0) { grid.innerHTML = '<div class="no-results">No channels found for this category 📺</div>'; return; }
 
     list.forEach((c, idx) => {
         const isFav = favorites.includes(c.name);
@@ -291,6 +302,7 @@ function highlightActiveCard() {
 
 search.addEventListener('input', applyFilters);
 
+// স্ক্রিপ্ট শুরু হওয়ার সাথে সাথেই JSON ফাইলগুলো লোড করা শুরু হবে
 loadAllChannels();
 
 </script>
