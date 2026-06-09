@@ -26,13 +26,9 @@
 
         body { margin:0; background:var(--bg-main); color:var(--text-light); font-family:system-ui, sans-serif; user-select:none; }
         
-        .header { padding:15px; background:linear-gradient(90deg,#111,#1f1f1f); position:sticky; top:0; z-index:10; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .header h2 { margin:0 0 10px 0; font-size:22px; text-align:center; color:var(--primary); font-weight:800; letter-spacing: 1px; }
-        .search { width:100%; padding:12px 20px; border-radius:25px; border:1px solid #333; background:#222; color:#fff; box-sizing:border-box; outline:none; font-size:14px; transition: 0.3s; }
-        .search:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(229,9,20,0.3); }
-        
-        .hero { padding:15px; position:sticky; top:110px; z-index:5; background:var(--bg-main); border-bottom: 1px solid #222; }
-        video { width:100%; height:230px; background:#000; border-radius:14px; box-shadow:0 4px 15px rgba(0,0,0,0.6); outline: none; }
+        /* ১. ভিডিও প্লেয়ারকে একদম উপরে ফিক্সড করা হলো */
+        .hero { padding: 12px 15px; position: sticky; top: 0; z-index: 10; background: var(--bg-main); border-bottom: 1px solid #222; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        video { width:100%; max-height:240px; aspect-ratio: 16/9; background:#000; border-radius:14px; box-shadow:0 4px 15px rgba(0,0,0,0.6); outline: none; display: block; margin: 0 auto; }
         
         .now-playing { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .now-playing span { color: var(--text-light); font-weight: 400; }
@@ -41,56 +37,62 @@
         .player-controls button { padding:8px 14px; border:none; border-radius:6px; background:#262626; color:#fff; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s ease;}
         .player-controls button:hover { background:var(--primary); transform: scale(1.05); }
         
+        /* ২. সার্চ বার এবং টাইটেল প্লেয়ারের নিচে থাকবে */
+        .header { padding: 10px 15px 5px 15px; background: var(--bg-main); }
+        .header h2 { margin: 0 0 8px 0; font-size: 20px; text-align: center; color: var(--primary); font-weight: 800; letter-spacing: 1px; display: none; } /* টাইটেল বেশি জায়গা নিলে এটি হাইড রাখতে পারেন */
+        .search { width:100%; padding:12px 20px; border-radius:25px; border:1px solid #333; background:#222; color:#fff; box-sizing:border-box; outline:none; font-size:14px; transition: 0.3s; }
+        .search:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(229,9,20,0.3); }
+        
+        /* ৩. ক্যাটাগরি ট্যাব */
         .tabs { display:flex; gap:8px; padding:10px; overflow-x:auto; scrollbar-width:none; background:#111; border-radius:8px; margin:5px 10px; }
         .tabs::-webkit-scrollbar { display:none; }
         .tab { background:#222; padding:10px 18px; border-radius:20px; border:1px solid transparent; color:#fff; cursor:pointer; white-space:nowrap; font-size:13px; font-weight:500; transition:all 0.3s ease; }
         .tab:hover { background: #333; }
         .tab.active { background:var(--primary); color:#fff; font-weight:bold; box-shadow:0 2px 8px rgba(229,9,20,0.4); border-color: #ff4757; }
         
+        /* ৪. চ্যানেল গ্রিড */
         .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; padding:15px; padding-bottom: 30px;}
         .card { background:var(--bg-card); border-radius:14px; padding:12px; cursor:pointer; text-align:center; border:2px solid transparent; transition:all 0.3s ease; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .card:hover { border-color:var(--primary); transform:translateY(-4px); }
         .card.playing { border-color: var(--primary); background: #2a0808; }
         
         .logo { height:60px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:8px; background: #000; border-radius: 8px; padding: 5px;}
-        .logo img { max-height:50px; max-width:100%; object-fit:contain; border-radius:4px; transition: transform 0.3s;}
-        .card:hover .logo img { transform: scale(1.1); }
+        .logo img { max-height:50px; max-width:100%; object-fit:contain; border-radius:4px; }
         
         .name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 4px; }
         .category-tag { font-size: 10px; color: var(--text-muted); margin-top: 4px; display: block;}
         
         .fav-btn { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); border:none; color:#777; font-size:16px; cursor:pointer; transition:all 0.2s; z-index:2; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;}
-        .fav-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.2); }
         .fav-btn.active { color:#ff4757; }
         
         .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .error-box { grid-column: 1 / -1; background: #3b0909; border: 1px solid #ff4757; padding: 15px; border-radius: 8px; color: #fff; margin-bottom: 10px; font-size: 13px; display: none; }
+        .error-box { background: #3b0909; border: 1px solid #ff4757; padding: 15px; border-radius: 8px; color: #fff; margin: 10px; font-size: 13px; display: none; }
         .error-box h4 { margin: 0 0 10px 0; color: #ff4757; }
         .error-box ul { margin: 0; padding-left: 20px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2>📺 Premium IPTV+</h2>
-    <input id="search" class="search" placeholder="🔍 Search channels or categories...">
-</div>
-
 <div class="hero">
     <video id="player" controls autoplay playsinline></video>
-    <div id="nowPlaying" class="now-playing">▶️ <span>Loading...</span></div>
+    <div id="nowPlaying" class="now-playing">▶️ <span>Loading channels...</span></div>
     <div class="player-controls">
-        <button onclick="prevChannel()">⏮️ Prev</button>
+        <button onclick="prevChannel()" title="Previous Channel">⏮️ Prev</button>
         <button onclick="document.getElementById('player').play()">▶️</button>
         <button onclick="document.getElementById('player').pause()">⏸️</button>
-        <button onclick="nextChannel()">⏭️ Next</button>
+        <button onclick="nextChannel()" title="Next Channel">⏭️ Next</button>
         <button onclick="document.getElementById('player').volume = Math.max(0, document.getElementById('player').volume - 0.1)">🔉 Vol-</button>
         <button onclick="document.getElementById('player').volume = Math.min(1, document.getElementById('player').volume + 0.1)">🔊 Vol+</button>
         <button onclick="document.getElementById('player').requestFullscreen()">⛶ Full</button>
     </div>
+</div>
+
+<div class="header">
+    <h2>📺 Premium IPTV+</h2>
+    <input id="search" class="search" placeholder="🔍 Search channels or categories...">
 </div>
 
 <div class="tabs" id="categoryTabs">
@@ -111,12 +113,13 @@
     <button class="tab" onclick="switchCategory('favorites', this)">❤️ Favorites</button>
 </div>
 
+<div id="errorContainer" class="error-box">
+    <h4>⚠️ কিছু ফাইলে সমস্যা পাওয়া গেছে:</h4>
+    <ul id="errorList"></ul>
+</div>
+
 <div class="grid" id="channelGrid">
-    <div id="errorContainer" class="error-box">
-        <h4>⚠️ কিছু ফাইলে সমস্যা পাওয়া গেছে:</h4>
-        <ul id="errorList"></ul>
-    </div>
-    <div id="gridContent">
+    <div id="gridContent" style="grid-column: 1/-1;">
         <div class="no-results">
             <div class="loader"></div>
             Connecting to server and loading channels...
@@ -148,15 +151,15 @@ let currentIndex = 0;
 let hlsInstance = null;
 
 const player = document.getElementById('player');
+const grid = document.getElementById('channelGrid');
 const gridContent = document.getElementById('gridContent');
 const search = document.getElementById('search');
 const nowPlayingText = document.getElementById('nowPlaying');
 const errorContainer = document.getElementById('errorContainer');
 const errorList = document.getElementById('errorList');
 
-// Super Smart Fetch: Bypasses Cache & Tries strict relative paths
 async function fetchSmartFile(fileName) {
-    const cacheBuster = '?v=' + new Date().getTime(); // Cloudflare Cache Bypass
+    const cacheBuster = '?v=' + new Date().getTime(); // Bypasses Cloudflare Cache
     const pathsToTry = [`./${fileName}`, `/${fileName}`, fileName];
     
     for (let path of pathsToTry) {
@@ -167,15 +170,13 @@ async function fetchSmartFile(fileName) {
                     let data = await res.json();
                     return Array.isArray(data) ? data : [];
                 } catch (parseError) {
-                    failedFiles.push(`<b>${fileName}</b> : এই ফাইলে কমা (,) বা কোডিং ভুল আছে। JSON ফিক্স করুন।`);
+                    failedFiles.push(`<b>${fileName}</b> : এই ফাইলে কমা (,) বা কোডিং ভুল আছে।`);
                     return [];
                 }
             }
-        } catch (e) {
-            // keep trying next path
-        }
+        } catch (e) {}
     }
-    failedFiles.push(`<b>${fileName}</b> : ফাইলটি সার্ভারে পাওয়া যাচ্ছে না।`);
+    failedFiles.push(`<b>${fileName}</b> : ফাইলটি সার্ভারে পাওয়া যায়নি।`);
     return [];
 }
 
@@ -200,17 +201,18 @@ async function loadAllChannels() {
         }
 
         if (channels.length > 0) {
+            if(gridContent) gridContent.remove();
             applyFilters();
             if (currentFilteredList.length > 0) {
                 play(currentFilteredList[0].url, currentFilteredList[0].name);
             }
         } else {
-            gridContent.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! Cloudflare এ পুরো ফোল্ডার আপলোড করেছেন কিনা চেক করুন।</div>';
+            grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! সবগুলো JSON ফাইল ঠিকমতো আপলোড হয়েছে কিনা চেক করুন।</div>';
             nowPlayingText.innerHTML = `⚠️ <span>No channels loaded</span>`;
         }
     } catch (error) {
         console.error("Critical Error:", error);
-        gridContent.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর।</div>';
+        grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর।</div>';
     }
 }
 
@@ -251,8 +253,17 @@ function play(url, channelName) {
 }
 
 function render(list) {
-    gridContent.innerHTML = '';
-    if (list.length === 0) { gridContent.innerHTML = '<div class="no-results">No channels found for this category 📺</div>'; return; }
+    // Clear dynamic cards but keep error box if present
+    const cards = grid.querySelectorAll('.card, .no-results');
+    cards.forEach(c => c.remove());
+
+    if (list.length === 0) { 
+        let noRes = document.createElement('div');
+        noRes.className = 'no-results';
+        noRes.innerHTML = 'No channels found for this category 📺';
+        grid.appendChild(noRes); 
+        return; 
+    }
 
     list.forEach((c, idx) => {
         const isFav = favorites.includes(c.name);
@@ -268,7 +279,7 @@ function render(list) {
             <div class="category-tag">${c.category || 'Other'}</div>
         `;
         d.onclick = () => { currentIndex = idx; play(c.url, c.name); };
-        gridContent.appendChild(d);
+        grid.appendChild(d);
     });
 }
 
@@ -319,7 +330,7 @@ function prevChannel() {
 }
 
 function highlightActiveCard() {
-    const cards = gridContent.querySelectorAll('.card');
+    const cards = grid.querySelectorAll('.card');
     cards.forEach((c, idx) => {
         if (idx === currentIndex) { c.classList.add('playing'); c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } 
         else { c.classList.remove('playing'); }
@@ -329,7 +340,7 @@ function highlightActiveCard() {
 search.addEventListener('input', applyFilters);
 
 loadAllChannels();
-
 </script>
+
 </body>
 </html>
