@@ -1,143 +1,298 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium IPTV Pro - 3000+ Channels</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Premium IPTV+</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W97TS7J98P"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-W97TS7J98P');
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
     <style>
-        :root { --primary: #e50914; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#000; color:#fff; font-family:system-ui,sans-serif; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+        :root {
+            --primary: #e50914;
+            --bg-main: #0b0b0b;
+            --bg-card: #181818;
+            --text-light: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        body { margin:0; background:var(--bg-main); color:var(--text-light); font-family:system-ui, sans-serif; user-select:none; }
         
-        .player-container { position:relative; flex:1; background:#000; }
-        video { width:100%; height:100%; object-fit:contain; }
+        .header { padding:15px; background:linear-gradient(90deg,#111,#1f1f1f); position:sticky; top:0; z-index:10; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .header h2 { margin:0 0 10px 0; font-size:22px; text-align:center; color:var(--primary); font-weight:800; letter-spacing: 1px; }
+        .search { width:100%; padding:12px 20px; border-radius:25px; border:1px solid #333; background:#222; color:#fff; box-sizing:border-box; outline:none; font-size:14px; transition: 0.3s; }
+        .search:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(229,9,20,0.3); }
         
-        .top-bar { position:absolute; top:12px; left:12px; right:12px; z-index:30; display:flex; align-items:center; gap:10px; }
-        .search { flex:1; padding:11px 20px; border-radius:30px; background:rgba(0,0,0,0.7); border:1px solid #444; color:#fff; font-size:16px; }
+        .hero { padding:15px; position:sticky; top:110px; z-index:5; background:var(--bg-main); border-bottom: 1px solid #222; }
+        video { width:100%; height:230px; background:#000; border-radius:14px; box-shadow:0 4px 15px rgba(0,0,0,0.6); outline: none; }
         
-        .now-playing { position:absolute; bottom:16px; left:16px; background:rgba(0,0,0,0.85); padding:8px 18px; border-radius:25px; font-size:15px; z-index:25; }
+        .now-playing { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--primary); }
+        .now-playing span { color: var(--text-light); font-weight: 400; }
+
+        .player-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:10px; margin-top:8px; background:#141414; border-radius:10px; }
+        .player-controls button { padding:8px 14px; border:none; border-radius:6px; background:#262626; color:#fff; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s ease;}
+        .player-controls button:hover { background:var(--primary); transform: scale(1.05); }
         
-        .controls { position:absolute; bottom:0; left:0; right:0; padding:18px; display:flex; justify-content:center; gap:18px; background:linear-gradient(transparent, #000); z-index:20; }
-        button { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.18); border:none; color:#fff; font-size:24px; cursor:pointer; }
-        button:hover { background:var(--primary); transform:scale(1.1); }
+        .tabs { display:flex; gap:8px; padding:10px; overflow-x:auto; scrollbar-width:none; background:#111; border-radius:8px; margin:5px 10px; }
+        .tabs::-webkit-scrollbar { display:none; }
+        .tab { background:#222; padding:10px 18px; border-radius:20px; border:1px solid transparent; color:#fff; cursor:pointer; white-space:nowrap; font-size:13px; font-weight:500; transition:all 0.3s ease; }
+        .tab:hover { background: #333; }
+        .tab.active { background:var(--primary); color:#fff; font-weight:bold; box-shadow:0 2px 8px rgba(229,9,20,0.4); border-color: #ff4757; }
         
-        .content { flex:1; overflow:auto; padding:15px; background:#0a0a0a; }
-        .tabs { display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; }
-        .tab { padding:10px 22px; background:#1f1f1f; border-radius:30px; white-space:nowrap; cursor:pointer; font-size:14.5px; }
-        .tab.active { background:var(--primary); color:#000; font-weight:700; }
+        .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; padding:15px; padding-bottom: 30px;}
+        .card { background:var(--bg-card); border-radius:14px; padding:12px; cursor:pointer; text-align:center; border:2px solid transparent; transition:all 0.3s ease; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .card:hover { border-color:var(--primary); transform:translateY(-4px); }
+        .card.playing { border-color: var(--primary); background: #2a0808; }
         
-        .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:14px; }
-        .card { background:#181818; border-radius:14px; overflow:hidden; cursor:pointer; transition:0.3s; }
-        .card:hover { transform:scale(1.06); }
-        .card.playing { border:3px solid var(--primary); }
-        .logo { height:105px; background:#111; display:flex; align-items:center; justify-content:center; font-size:48px; }
-        .name { padding:12px 8px; text-align:center; font-size:14px; }
+        .logo { height:60px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:8px; background: #000; border-radius: 8px; padding: 5px;}
+        .logo img { max-height:50px; max-width:100%; object-fit:contain; border-radius:4px; transition: transform 0.3s;}
+        .card:hover .logo img { transform: scale(1.1); }
+        
+        .name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 4px; }
+        .category-tag { font-size: 10px; color: var(--text-muted); margin-top: 4px; display: block;}
+        
+        .fav-btn { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); border:none; color:#777; font-size:16px; cursor:pointer; transition:all 0.2s; z-index:2; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;}
+        .fav-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.2); }
+        .fav-btn.active { color:#ff4757; }
+        
+        .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px;}
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="player-container">
-    <video id="player" autoplay playsinline controls></video>
-    <div class="top-bar">
-        <input type="text" id="search" class="search" placeholder="🔍 ৩০০০+ চ্যানেল খুঁজুন...">
-    </div>
-    <div class="now-playing" id="nowPlaying">▶️ চ্যানেল সিলেক্ট করুন</div>
-    
-    <div class="controls">
-        <button onclick="prevChannel()">⏮️</button>
-        <button onclick="togglePlay()">⏯️</button>
-        <button onclick="nextChannel()">⏭️</button>
-        <button onclick="togglePiP()">📺</button>
-        <button onclick="toggleFullscreen()">⛶</button>
+<div class="header">
+    <h2>📺 Premium IPTV+</h2>
+    <input id="search" class="search" placeholder="🔍 Search channels or categories...">
+</div>
+
+<div class="hero">
+    <video id="player" controls autoplay playsinline></video>
+    <div id="nowPlaying" class="now-playing">▶️ <span>Select a channel to play</span></div>
+    <div class="player-controls">
+        <button onclick="prevChannel()">⏮️ Prev</button>
+        <button onclick="document.getElementById('player').play()">▶️</button>
+        <button onclick="document.getElementById('player').pause()">⏸️</button>
+        <button onclick="nextChannel()">⏭️ Next</button>
+        <button onclick="document.getElementById('player').volume = Math.max(0, document.getElementById('player').volume - 0.1)">🔉 Vol-</button>
+        <button onclick="document.getElementById('player').volume = Math.min(1, document.getElementById('player').volume + 0.1)">🔊 Vol+</button>
+        <button onclick="document.getElementById('player').requestFullscreen()">⛶ Full</button>
     </div>
 </div>
 
-<div class="content">
-    <div class="tabs" id="categoryTabs"></div>
-    <div class="grid" id="channelGrid"></div>
+<div class="tabs" id="categoryTabs">
+    <button class="tab active" onclick="switchCategory('all', this)">🌐 All</button>
+    <button class="tab" onclick="switchCategory('Bangladesh', this)">🇧🇩 Bangladesh</button>
+    <button class="tab" onclick="switchCategory('India', this)">🇮🇳 India</button>
+    <button class="tab" onclick="switchCategory('Pakistan', this)">🇵🇰 Pakistan</button>
+    <button class="tab" onclick="switchCategory('International', this)">🌍 International</button>
+    <button class="tab" onclick="switchCategory('News', this)">📰 News</button>
+    <button class="tab" onclick="switchCategory('Sports', this)">⚽ Sports</button>
+    <button class="tab" onclick="switchCategory('Movies', this)">🎬 Movies</button>
+    <button class="tab" onclick="switchCategory('Music', this)">🎵 Music</button>
+    <button class="tab" onclick="switchCategory('Kids', this)">👶 Kids</button>
+    <button class="tab" onclick="switchCategory('Educational', this)">📚 Educational</button>
+    <button class="tab" onclick="switchCategory('Travel', this)">✈️ Travel</button>
+    <button class="tab" onclick="switchCategory('Religious', this)">☪️ Religious</button>
+    <button class="tab" onclick="switchCategory('Live TV', this)">📺 Live TV</button>
+    <button class="tab" onclick="switchCategory('favorites', this)">❤️ Favorites</button>
+</div>
+
+<div class="grid" id="channelGrid">
+    <div class="no-results">
+        <div class="loader"></div>
+        Loading channels...
+    </div>
 </div>
 
 <script>
-// ==================== BUNO IP TV + অন্যান্য ফাইল থেকে সব চ্যানেল ====================
-const allChannels = [
-    {name: "Amar Bangla", url: "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI/amarbanglatv.stream/playlist.m3u8", category: "Bangla"},
-    {name: "ATN BANGLA", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8", category: "Bangla"},
-    {name: "BANGLA VISION", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8", category: "Bangla"},
-    {name: "BTV HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", category: "Bangla"},
-    {name: "CHANNEL I", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8", category: "Bangla"},
-    {name: "DEEPTO TV HD", url: "https://byphdgllyk.gpcdn.net/hls/deeptotv/0_1/index.m3u8", category: "Bangla"},
-    {name: "Enter10 Bangla HD", url: "https://live-bangla.akamaized.net/liveabr/pub-iobanglakp3sff/live_240p/chunks.m3u8", category: "Bangla"},
-    {name: "NTV HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/1716-audio_113462_eng=113200-video=1692000.m3u8", category: "Bangla"},
-    {name: "BD | ATN News", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8", category: "News"},
-    {name: "BD | Channel 24", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8", category: "News"},
-    {name: "BD | Ekattor TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/1705-audio_113352_eng=113200-video=1692000.m3u8", category: "News"},
-    {name: "BD | JAMUNA TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/1701-audio_113312_eng=113200-video=1692000.m3u8", category: "News"},
-    {name: "BD | SOMOY NEWS", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8", category: "News"},
-    {name: "Al Jazeera English HD", url: "https://live-hls-web-aje-fa.getaj.net/AJE/index.m3u8", category: "International"},
-    {name: "ABC News Channel", url: "https://abc-news-dmd-streams-1.akamaized.net/out/v1/701126012d044971b3fa89406a440133/index_6.m3u8", category: "International"},
-    {name: "CNN International", url: "https://turnerlive.warnermediacdn.com/hls/live/586495/cnngo/cnn_slate/VIDEO_3_1464000.m3u8", category: "International"},
-    {name: "FIFA Plus English", url: "https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8", category: "Sports"},
-    // আরও অনেক চ্যানেল যোগ করা হয়েছে (আপনার ফাইল থেকে)
+// ফাইলের নামগুলোর আগে 'Channels/' ফোল্ডারের পাথ বসানো হয়েছে
+const jsonFilesToLoad = [
+    'Channels/bangla.json',
+    'Channels/bangla-news.json',
+    'Channels/movies.json',
+    'Channels/music.json',
+    'Channels/india.json',
+    'Channels/kids.json',
+    'Channels/educational.json',
+    'Channels/international.json',
+    'Channels/international-news.json',
+    'Channels/live-tv.json'
 ];
 
+let channels = [];
+let favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
+let currentCategory = 'all';
+let currentFilteredList = [];
 let currentIndex = 0;
 let hlsInstance = null;
 
 const player = document.getElementById('player');
-const nowPlaying = document.getElementById('nowPlaying');
 const grid = document.getElementById('channelGrid');
-const searchInput = document.getElementById('search');
+const search = document.getElementById('search');
+const nowPlayingText = document.getElementById('nowPlaying');
 
-function playChannel(ch) {
-    nowPlaying.textContent = `▶️ ${ch.name}`;
-    if (hlsInstance) hlsInstance.destroy();
-    if (Hls.isSupported() && ch.url.includes('.m3u8')) {
-        hlsInstance = new Hls({lowLatencyMode: true, maxBufferLength: 30});
-        hlsInstance.loadSource(ch.url);
-        hlsInstance.attachMedia(player);
-    } else {
-        player.src = ch.url;
+async function loadAllChannels() {
+    try {
+        const fetchPromises = jsonFilesToLoad.map(fileName => 
+            fetch(fileName)
+            .then(res => {
+                if (!res.ok) throw new Error(`Could not load ${fileName}`);
+                return res.json();
+            })
+            .catch(err => {
+                console.warn(`Skipping ${fileName}:`, err);
+                return []; 
+            })
+        );
+
+        const results = await Promise.all(fetchPromises);
+        
+        results.forEach(dataArray => {
+            if (Array.isArray(dataArray)) {
+                channels = channels.concat(dataArray);
+            }
+        });
+
+        if (channels.length > 0) {
+            applyFilters();
+            if (currentFilteredList.length > 0) {
+                play(currentFilteredList[0].url, currentFilteredList[0].name);
+            }
+        } else {
+            grid.innerHTML = '<div class="no-results">No channels loaded. Please ensure JSON files exist inside the Channels folder.</div>';
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        grid.innerHTML = '<div class="no-results">Error loading channel data.</div>';
     }
-    player.play();
 }
 
-function togglePlay() { player.paused ? player.play() : player.pause(); }
-function toggleFullscreen() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
-async function togglePiP() {
-    try { document.pictureInPictureElement ? document.exitPictureInPicture() : await player.requestPictureInPicture(); } catch(e){}
+function saveFavorites() { localStorage.setItem('iptv_favorites', JSON.stringify(favorites)); }
+
+function toggleFavorite(channelName, event) {
+    event.stopPropagation();
+    const idx = favorites.indexOf(channelName);
+    if (idx > -1) favorites.splice(idx, 1);
+    else favorites.push(channelName);
+    
+    saveFavorites();
+    if (currentCategory === 'favorites') applyFilters();
+    else render(currentFilteredList);
 }
 
-function prevChannel() { currentIndex = (currentIndex - 1 + allChannels.length) % allChannels.length; playChannel(allChannels[currentIndex]); renderGrid(); }
-function nextChannel() { currentIndex = (currentIndex + 1) % allChannels.length; playChannel(allChannels[currentIndex]); renderGrid(); }
+function play(url, channelName) {
+    nowPlayingText.innerHTML = `▶️ Now Playing: <span>${channelName || 'Live Stream'}</span>`;
+    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 
-function renderGrid(filtered = allChannels) {
+    if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
+        hlsInstance = new Hls({ maxMaxBufferLength: 30 });
+        hlsInstance.loadSource(url);
+        hlsInstance.attachMedia(player);
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => player.play().catch(e=>console.log(e)));
+        hlsInstance.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+                if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hlsInstance.startLoad();
+                else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hlsInstance.recoverMediaError();
+                else { hlsInstance.destroy(); nowPlayingText.innerHTML = `⚠️ <span>Stream offline: ${channelName}</span>`; }
+            }
+        });
+    } else {
+        player.src = url;
+        player.play().catch(e=>console.log(e));
+    }
+    highlightActiveCard();
+}
+
+function render(list) {
     grid.innerHTML = '';
-    filtered.forEach((ch, i) => {
-        const card = document.createElement('div');
-        card.className = `card ${i === currentIndex ? 'playing' : ''}`;
-        card.innerHTML = `<div class="logo">📺</div><div class="name">${ch.name}</div>`;
-        card.onclick = () => { currentIndex = i; playChannel(ch); renderGrid(filtered); };
-        grid.appendChild(card);
+    if (list.length === 0) { grid.innerHTML = '<div class="no-results">No channels found 📺</div>'; return; }
+
+    list.forEach((c, idx) => {
+        const isFav = favorites.includes(c.name);
+        const isPlaying = (currentFilteredList[currentIndex] && currentFilteredList[currentIndex].url === c.url) ? 'playing' : '';
+        let d = document.createElement('div');
+        d.className = `card ${isPlaying}`;
+        d.innerHTML = `
+            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${c.name.replace(/'/g, "\\'")}', event)">
+                ${isFav ? '❤️' : '🤍'}
+            </button>
+            <div class="logo">${c.logo ? '<img src="' + c.logo + '" onerror="this.parentElement.innerHTML=\'📺\'">' : '📺'}</div>
+            <div class="name">${c.name}</div>
+            <div class="category-tag">${c.category || 'Other'}</div>
+        `;
+        d.onclick = () => { currentIndex = idx; play(c.url, c.name); };
+        grid.appendChild(d);
     });
 }
 
-searchInput.addEventListener('input', () => {
-    const term = searchInput.value.toLowerCase();
-    const filtered = allChannels.filter(c => c.name.toLowerCase().includes(term));
-    renderGrid(filtered);
-});
+function switchCategory(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyFilters();
+}
 
-document.addEventListener('keydown', e => {
-    if (e.key === ' ') { e.preventDefault(); togglePlay(); }
-    if (e.key === 'ArrowRight') nextChannel();
-    if (e.key === 'ArrowLeft') prevChannel();
-    if (e.key.toLowerCase() === 'f') toggleFullscreen();
-});
+function applyFilters() {
+    let filtered = [...channels];
+    if (currentCategory === 'favorites') {
+        filtered = filtered.filter(c => favorites.includes(c.name));
+    } else if (currentCategory !== 'all') {
+        filtered = filtered.filter(c => {
+            const cat = (c.category || '').toLowerCase();
+            const target = currentCategory.toLowerCase();
+            if (target === 'bangladesh' && (cat.includes('bangla') || cat.includes('bangladesh'))) return true;
+            if (target === 'news' && cat.includes('news')) return true;
+            if (target === 'international' && cat.includes('international')) return true;
+            if (cat === target) return true;
+            return false;
+        });
+    }
+    
+    const query = search.value.toLowerCase().trim();
+    if (query) {
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(query) || (c.category && c.category.toLowerCase().includes(query)));
+    }
+    
+    currentFilteredList = filtered;
+    render(currentFilteredList);
+}
 
-// শুরু
-renderGrid();
-if (allChannels.length > 0) playChannel(allChannels[0]);
+function nextChannel() {
+    if (currentFilteredList.length > 0) {
+        currentIndex = (currentIndex + 1) % currentFilteredList.length;
+        play(currentFilteredList[currentIndex].url, currentFilteredList[currentIndex].name);
+    }
+}
+
+function prevChannel() {
+    if (currentFilteredList.length > 0) {
+        currentIndex = (currentIndex - 1 + currentFilteredList.length) % currentFilteredList.length;
+        play(currentFilteredList[currentIndex].url, currentFilteredList[currentIndex].name);
+    }
+}
+
+function highlightActiveCard() {
+    const cards = grid.querySelectorAll('.card');
+    cards.forEach((c, idx) => {
+        if (idx === currentIndex) { c.classList.add('playing'); c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } 
+        else { c.classList.remove('playing'); }
+    });
+}
+
+search.addEventListener('input', applyFilters);
+
+loadAllChannels();
+
 </script>
 </body>
 </html>
