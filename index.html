@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লাইভ টিভি ওটিটি অ্যাপ</title>
+    <title>Live TV OTT App</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,20 +29,20 @@
 
                 <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform z-10 bg-black">
                     <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-cyan-400"></i>
-                    <p id="player-status" class="text-sm font-semibold tracking-wide">প্লে করতে একটি চ্যানেল সিলেক্ট করুন</p>
+                    <p id="player-status" class="text-sm font-semibold tracking-wide">Select a channel to play</p>
                 </div>
                 
                 <div class="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 px-2 py-3 rounded-full space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-                    <i class="fa-solid fa-sun text-sm text-yellow-400"></i>
+                    <i class="fa-solid fa-sun text-sm text-yellow-400" title="Max Brightness"></i>
                     <input type="range" id="brightness-slider" min="10" max="100" value="100" class="vertical-slider accent-cyan-400 cursor-pointer">
-                    <i class="fa-regular fa-sun text-xs text-gray-400"></i>
+                    <i class="fa-regular fa-sun text-xs text-gray-400" title="Min Brightness"></i>
                 </div>
 
                 <div class="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-                    <button id="next-channel-btn" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
+                    <button id="next-channel-btn" title="Next Channel" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
                         <i class="fa-solid fa-chevron-up text-sm"></i>
                     </button>
-                    <button id="prev-channel-btn" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
+                    <button id="prev-channel-btn" title="Previous Channel" class="w-9 h-9 rounded-full bg-[#0a192f] border border-cyan-500/30 flex items-center justify-center text-white shadow-xl hover:bg-cyan-600 hover:scale-110 active:scale-95 transition-all">
                         <i class="fa-solid fa-chevron-down text-sm"></i>
                     </button>
                 </div>
@@ -50,27 +50,27 @@
                 <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
                     <div class="flex items-center">
                         <div class="flex items-center text-red-600 font-bold text-xs sm:text-sm tracking-wider bg-black/40 px-2 py-1 rounded">
-                            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> লাইভ
+                            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> LIVE
                         </div>
                     </div>
                     
                     <div class="flex items-center space-x-3 sm:space-x-4 text-gray-300 text-sm sm:text-base">
-                        <button class="hover:text-white transition-colors"><i class="fa-solid fa-gear"></i></button>
-                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5">HD</button>
+                        <button class="hover:text-white transition-colors" title="Settings"><i class="fa-solid fa-gear"></i></button>
+                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5" title="Quality">HD</button>
                         
                         <div class="flex items-center space-x-1.5 bg-black/40 px-2 py-1 rounded-lg">
-                            <i class="fa-solid fa-volume-low text-xs text-gray-400"></i>
+                            <i class="fa-solid fa-volume-low text-xs text-gray-400" title="Low Volume"></i>
                             <input type="range" id="volume-slider" min="0" max="100" value="100" class="w-16 sm:w-24 h-1 accent-cyan-400 rounded-lg appearance-none bg-gray-700 cursor-pointer">
-                            <i class="fa-solid fa-volume-high text-xs text-gray-300"></i>
+                            <i class="fa-solid fa-volume-high text-xs text-gray-300" title="High Volume"></i>
                         </div>
 
-                        <button id="fullscreen-btn" class="hover:text-white transition-colors"><i class="fa-solid fa-expand"></i></button>
+                        <button id="fullscreen-btn" class="hover:text-white transition-colors" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
                     </div>
                 </div>
             </div>
             
             <div class="mt-3 text-center text-cyan-400 text-xs sm:text-sm font-semibold tracking-wide">
-                আন্তর্জাতিক চ্যানেল সাময়িক বাফার করতে পারে
+                International channels may buffer temporarily
             </div>
         </section>
 
@@ -87,8 +87,8 @@
     <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm" onclick="hideUpdateNotice()">
         <div class="bg-[#1e1e1e] text-white rounded-2xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-800 transform transition-all cursor-pointer">
             <i class="fa-solid fa-rotate animate-spin text-cyan-400 text-4xl mb-4"></i>
-            <h3 class="text-lg font-bold mb-2">চ্যানেল আপডেট হচ্ছে...</h3>
-            <p class="text-xs text-gray-400">বন্ধ করতে স্ক্রিনে চাপ দিন</p>
+            <h3 class="text-lg font-bold mb-2">Updating channels...</h3>
+            <p class="text-xs text-gray-400">Tap anywhere to close</p>
         </div>
     </div>
 
@@ -97,16 +97,15 @@
             <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
             </div>
-            <h3 class="text-white text-xl font-bold mb-2">সমস্যা হয়েছে!</h3>
+            <h3 class="text-white text-xl font-bold mb-2">Something went wrong!</h3>
             <p id="error-text" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
             <button onclick="hideErrorModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-red-600/30 active:scale-95">
-                ঠিক আছে
+                OK
             </button>
         </div>
     </div>
 
     <script>
-        // UI Elements
         const updateModal = document.getElementById('update-modal');
         const errorModal = document.getElementById('error-modal');
         const errorText = document.getElementById('error-text');
@@ -124,7 +123,6 @@
         let currentPlayingIndex = -1;
         let hls;
 
-        // Modal Functions
         function showUpdateNotice() { updateModal.classList.remove('hidden'); }
         function hideUpdateNotice() { updateModal.classList.add('hidden'); }
         function showErrorModal(message) {
@@ -134,12 +132,6 @@
         }
         function hideErrorModal() { errorModal.classList.add('hidden'); }
 
-        // [UX গাইডলাইন ১]: ইন্টারনেট কানেকশন এরর
-        window.addEventListener('offline', () => {
-            showErrorModal("ইন্টারনেট সংযোগ বিচ্ছিন্ন থাকায় অ্যাপে 'নতুন চ্যানেল লিস্ট' লোড করা সম্ভব হচ্ছে না। অনুগ্রহ করে আপনার মোবাইলের ওয়াইফাই বা ডেটা সংযোগ চালু করে আবার ক্যাটাগরিতে চাপ দিন।");
-        });
-
-        // ব্রাইটনেস এবং ভলিউম কন্ট্রোল
         brightnessSlider.addEventListener('input', (e) => {
             const value = e.target.value;
             brightnessOverlay.style.opacity = (100 - value) / 100 * 0.85;
@@ -158,17 +150,17 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const categoryFiles = [
-                { name: "বাংলা", file: "./bangla.json" },
-                { name: "বাংলা খবর", file: "./bangla-news.json" },
-                { name: "লাইভ টিভি", file: "./live-tv.json" },
-                { name: "ইন্ডিয়া", file: "./india.json" },
-                { name: "পাকিস্তান", file: "./pakistan.json" },
-                { name: "মুভিজ", file: "./movies.json" },
-                { name: "কিডস", file: "./kids.json" },
-                { name: "মিউজিক", file: "./music.json" },
-                { name: "শিক্ষামূলক", file: "./educational.json" },
-                { name: "আন্তর্জাতিক", file: "./international.json" },
-                { name: "বিশ্ব সংবাদ", file: "./international-news.json" }
+                { name: "Bangla", file: "./bangla.json" },
+                { name: "Bangla News", file: "./bangla-news.json" },
+                { name: "Live TV", file: "./live-tv.json" },
+                { name: "India", file: "./india.json" },
+                { name: "Pakistan", file: "./pakistan.json" },
+                { name: "Movies", file: "./movies.json" },
+                { name: "Kids", file: "./kids.json" },
+                { name: "Music", file: "./music.json" },
+                { name: "Educational", file: "./educational.json" },
+                { name: "International", file: "./international.json" },
+                { name: "Int. News", file: "./international-news.json" }
             ];
 
             const tabsContainer = document.getElementById('category-tabs');
@@ -195,18 +187,12 @@
             }
 
             async function loadChannelData(fileName) {
-                if (!navigator.onLine) {
-                    showErrorModal("ইন্টারনেট সংযোগ বিচ্ছিন্ন থাকায় অ্যাপে 'নতুন চ্যানেল লিস্ট' লোড করা সম্ভব হচ্ছে না। অনুগ্রহ করে আপনার মোবাইলের ওয়াইফাই বা ডেটা সংযোগ চালু করে আবার ক্যাটাগরিতে চাপ দিন।");
-                    return;
-                }
-
                 gridContainer.innerHTML = '';
                 showUpdateNotice();
 
                 try {
                     const response = await fetch(fileName);
                     
-                    // [UX গাইডলাইন ২]: 404 ফাইল নট ফাউন্ড এরর
                     if (!response.ok) throw new Error("FILE_NOT_FOUND");
                     
                     const textData = await response.text();
@@ -215,11 +201,9 @@
                     try {
                         data = JSON.parse(textData);
                     } catch (e) {
-                        // [UX গাইডলাইন ৩]: JSON কোডিং ভুল বা Syntax Error
                         throw new Error("SYNTAX_ERROR");
                     }
 
-                    // [UX গাইডলাইন ৪]: চ্যানেল লিস্ট ফাঁকা থাকলে
                     if (!Array.isArray(data) || data.length === 0) {
                         throw new Error("EMPTY_LIST");
                     }
@@ -232,25 +216,29 @@
 
                 } catch (error) {
                     console.error(error);
-                    if (error.message === "SYNTAX_ERROR") {
-                        showErrorModal(`'${fileName}' ফাইলের ভেতরে কোডিং বা ফরম্যাটজনিত ভুল (Syntax Error) থাকায় এই ক্যাটাগরির চ্যানেলগুলো স্ক্রিনে দেখানো যাচ্ছে না। অনুগ্রহ করে গিটহাবে ফাইলটির কোড ঠিক আছে কিনা তা চেক করে আবার আপডেট করুন।`);
+                    
+                    if (error.name === 'TypeError' || error.message === 'Failed to fetch') {
+                        showErrorModal("Network or CORS error! Unable to fetch the channel list. Remember, you cannot run this code directly from a local file manager (file://). You must upload it to GitHub Pages or use a local web server app.");
+                    } else if (error.message === "SYNTAX_ERROR") {
+                        showErrorModal(`Format error in '${fileName}'. Please check for missing commas or brackets in your JSON file.`);
                     } else if (error.message === "EMPTY_LIST") {
-                        showErrorModal(`বর্তমানে '${fileName}' ফাইলের অধীনে কোনো চ্যানেলের ডেটা যুক্ত করা নেই। অনুগ্রহ করে গিটহাবের ফাইলে নতুন চ্যানেলের নাম ও লিংক আপডেট করুন।`);
+                        showErrorModal(`The '${fileName}' category is currently empty.`);
                     } else {
-                        showErrorModal(`সার্ভারে '${fileName}' ফাইলটি খুঁজে না পাওয়ায় এই ক্যাটাগরির চ্যানেলগুলো লোড করা যায়নি। অনুগ্রহ করে আপনার গিটহাব রিপোজিটরিতে ফাইলটি সঠিকভাবে আপলোড করা আছে কিনা তা নিশ্চিত হয়ে পেজটি রিলোড দিন।`);
+                        showErrorModal(`Could not load the channels because '${fileName}' was not found. Please ensure it is correctly uploaded to your repository.`);
                     }
                 }
             }
 
-            // [আসল ভিডিও প্লেয়ার লজিক]
             function playChannel(index) {
                 if (index < 0 || index >= currentChannelsData.length) return;
                 currentPlayingIndex = index;
                 const channel = currentChannelsData[index];
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                 
-                playerPlaceholder.classList.add('hidden'); // প্লেসহোল্ডার হাইড
-                playerStatus.innerHTML = `চলছে: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
+                playerPlaceholder.classList.add('hidden'); 
+                
+                // এখানে ইংরেজিতে আপডেট করা হয়েছে
+                playerStatus.innerHTML = `Playing: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
 
                 if (Hls.isSupported()) {
                     if (hls) hls.destroy();
@@ -261,20 +249,18 @@
                         videoElement.play();
                     });
                     
-                    // [UX গাইডলাইন ৫]: ভিডিও লিংক বা m3u8 ব্রোকেন থাকলে
                     hls.on(Hls.Events.ERROR, function(event, data) {
                         if (data.fatal) {
-                            showErrorModal(`ভিডিও প্লেয়ারে '${cleanName}' চ্যানেলটি চালু করা যাচ্ছে না। সম্ভবত চ্যানেলটির লাইভ স্ট্রিমিং লিংক (m3u8) এক্সপায়ার হয়ে গেছে বা সার্ভার থেকে মুছে ফেলা হয়েছে। অনুগ্রহ করে লিস্ট থেকে অন্য একটি চ্যানেল সিলেক্ট করে দেখুন।`);
+                            showErrorModal(`Cannot play '${cleanName}'. The live streaming link (m3u8) might be expired or broken. Please try another channel.`);
                             playerPlaceholder.classList.remove('hidden');
                             hls.destroy();
                         }
                     });
                 } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                    // সাফারি বা আইফোনের জন্য
                     videoElement.src = channel.url;
                     videoElement.play();
                     videoElement.addEventListener('error', () => {
-                        showErrorModal(`ভিডিও প্লেয়ারে '${cleanName}' চ্যানেলটি চালু করা যাচ্ছে না। সম্ভবত চ্যানেলটির লাইভ স্ট্রিমিং লিংক (m3u8) এক্সপায়ার হয়ে গেছে বা সার্ভার থেকে মুছে ফেলা হয়েছে। অনুগ্রহ করে লিস্ট থেকে অন্য একটি চ্যানেল সিলেক্ট করে দেখুন।`);
+                        showErrorModal(`Cannot play '${cleanName}'. The live streaming link (m3u8) might be expired or broken. Please try another channel.`);
                         playerPlaceholder.classList.remove('hidden');
                     });
                 }
