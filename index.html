@@ -18,7 +18,7 @@
 
         body { margin:0; background:var(--bg-main); color:var(--text-light); font-family:system-ui, sans-serif; user-select:none; }
         
-        /* ভিডিও প্লেয়ার সেকশন (সবার উপরে ফিক্সড) */
+        /* Video Player Section */
         .hero { padding: 10px; position: sticky; top: 0; z-index: 20; background: var(--bg-main); border-bottom: 1px solid #222; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
         video { width:100%; max-height:250px; aspect-ratio: 16/9; background:#000; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.6); outline: none; display: block; margin: 0 auto; }
         
@@ -29,19 +29,19 @@
         .player-controls button { padding:8px 14px; border:none; border-radius:6px; background:#262626; color:#fff; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s ease;}
         .player-controls button:hover { background:var(--primary); transform: scale(1.05); }
         
-        /* সার্চ বার সেকশন */
+        /* Search Bar */
         .header { padding: 15px 15px 5px 15px; background: var(--bg-main); }
         .search { width:100%; padding:12px 20px; border-radius:25px; border:1px solid #333; background:#222; color:#fff; box-sizing:border-box; outline:none; font-size:14px; transition: 0.3s; }
         .search:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(229,9,20,0.3); }
         
-        /* ক্যাটাগরি ট্যাব */
+        /* Category Tabs */
         .tabs { display:flex; gap:8px; padding:10px; overflow-x:auto; scrollbar-width:none; background:#111; border-radius:8px; margin:5px 15px; }
         .tabs::-webkit-scrollbar { display:none; }
         .tab { background:#222; padding:10px 18px; border-radius:20px; border:1px solid transparent; color:#fff; cursor:pointer; white-space:nowrap; font-size:13px; font-weight:500; transition:all 0.3s ease; }
         .tab:hover { background: #333; }
         .tab.active { background:var(--primary); color:#fff; font-weight:bold; box-shadow:0 2px 8px rgba(229,9,20,0.4); border-color: #ff4757; }
         
-        /* চ্যানেল গ্রিড */
+        /* Channel Grid */
         .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; padding:15px; padding-bottom: 40px;}
         .card { background:var(--bg-card); border-radius:14px; padding:12px; cursor:pointer; text-align:center; border:2px solid transparent; transition:all 0.3s ease; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .card:hover { border-color:var(--primary); transform:translateY(-4px); }
@@ -68,7 +68,7 @@
 <body>
 
 <div class="hero">
-    <video id="player" controls autoplay playsinline preload="auto"></video>
+    <video id="player" controls autoplay playsinline></video>
     <div id="nowPlaying" class="now-playing">▶️ <span>Loading channels...</span></div>
     <div class="player-controls">
         <button onclick="prevChannel()" title="Previous Channel">⏮️ Prev</button>
@@ -89,6 +89,7 @@
     <button class="tab active" onclick="switchCategory('all', this)">🌐 All</button>
     <button class="tab" onclick="switchCategory('Bangladesh', this)">🇧🇩 Bangladesh</button>
     <button class="tab" onclick="switchCategory('India', this)">🇮🇳 India</button>
+    <button class="tab" onclick="switchCategory('Pakistan', this)">🇵🇰 Pakistan</button>
     <button class="tab" onclick="switchCategory('News', this)">📰 News</button>
     <button class="tab" onclick="switchCategory('Movies', this)">🎬 Movies</button>
     <button class="tab" onclick="switchCategory('Music', this)">🎵 Music</button>
@@ -115,7 +116,7 @@
 </div>
 
 <script>
-// আপনার দেওয়া ১০টি ফাইলের নাম
+// আপনার ১০টি JSON ফাইলের লিস্ট
 const fileNamesToLoad = [
     'bangla.json', 
     'bangla-news.json', 
@@ -137,7 +138,6 @@ try {
     favorites = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
 } catch (e) {
     favorites = [];
-    localStorage.removeItem('iptv_favorites');
 }
 
 let currentCategory = 'all';
@@ -152,8 +152,8 @@ const nowPlayingText = document.getElementById('nowPlaying');
 const errorContainer = document.getElementById('errorContainer');
 const errorList = document.getElementById('errorList');
 
-// ফাইল ফেচ করার শক্তিশালী ফাংশন
-async function fetchSmartFile(fileName) {
+// ফাইল ফেচ করার ফাংশন
+async function fetchFile(fileName) {
     const cacheBuster = '?v=' + new Date().getTime(); 
     const pathsToTry = [`./${fileName}`, `/${fileName}`, fileName];
     
@@ -177,12 +177,11 @@ async function fetchSmartFile(fileName) {
 
 async function loadAllChannels() {
     try {
-        const fetchPromises = fileNamesToLoad.map(name => fetchSmartFile(name));
+        const fetchPromises = fileNamesToLoad.map(name => fetchFile(name));
         const results = await Promise.all(fetchPromises);
         
         results.forEach(dataArray => {
             if (Array.isArray(dataArray)) {
-                // Duplicate channel remove করার লজিক
                 dataArray.forEach(channel => {
                     if (!channels.find(c => c.url === channel.url)) {
                         channels.push(channel);
@@ -208,12 +207,11 @@ async function loadAllChannels() {
                 play(currentFilteredList[0].url, currentFilteredList[0].name);
             }
         } else {
-            grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! সবগুলো JSON ফাইল ঠিকমতো আপলোড হয়েছে কিনা চেক করুন।</div>';
+            grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ কোনো চ্যানেল পাওয়া যায়নি! JSON ফাইলগুলো আপলোড করা আছে কিনা চেক করুন।</div>';
             nowPlayingText.innerHTML = `⚠️ <span>No channels loaded</span>`;
         }
     } catch (error) {
         console.error("Error:", error);
-        grid.innerHTML = '<div class="no-results" style="color: #ff4757;">⚠️ সিস্টেম এরর।</div>';
     }
 }
 
@@ -230,7 +228,7 @@ function toggleFavorite(channelName, event) {
     else render(currentFilteredList);
 }
 
-// সুপার ফাস্ট ভিডিও প্লেয়ার লজিক
+// ভিডিও প্লেয়ার লজিক
 function play(url, channelName) {
     nowPlayingText.innerHTML = `▶️ Now Playing: <span>${channelName || 'Live Stream'}</span>`;
     
@@ -248,7 +246,7 @@ function play(url, channelName) {
         hlsInstance.loadSource(url);
         hlsInstance.attachMedia(player);
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-            player.play().catch(e => console.log("Play interrupted by browser"));
+            player.play().catch(e => console.log("Play interrupted"));
         });
         hlsInstance.on(Hls.Events.ERROR, (event, data) => {
             if (data.fatal) {
@@ -264,7 +262,7 @@ function play(url, channelName) {
         });
     } else {
         player.src = url;
-        player.play().catch(e => console.log("Play interrupted by browser"));
+        player.play().catch(e => console.log("Play interrupted"));
     }
     highlightActiveCard();
 }
@@ -306,7 +304,7 @@ function switchCategory(cat, btn) {
     applyFilters();
 }
 
-// স্মার্ট ফিল্টারিং সিস্টেম
+// স্মার্ট ক্যাটাগরি ফিল্টার 
 function applyFilters() {
     let filtered = [...channels];
     if (currentCategory === 'favorites') {
@@ -317,10 +315,14 @@ function applyFilters() {
             const target = currentCategory.toLowerCase();
             
             if (target === 'bangladesh' && (cat.includes('bangla') || cat.includes('bangladesh') || cat.includes('bd'))) return true;
+            if (target === 'india' && cat.includes('india')) return true;
+            if (target === 'pakistan' && cat.includes('pakistan')) return true;
             if (target === 'news' && cat.includes('news')) return true;
             if (target === 'international' && cat.includes('international')) return true;
             if (target === 'music' && cat.includes('music')) return true;
             if (target === 'movies' && (cat.includes('movie') || cat.includes('cinema'))) return true;
+            if (target === 'sports' && cat.includes('sport')) return true;
+            if (target === 'kids' && cat.includes('kid')) return true;
             
             if (cat === target) return true;
             return false;
@@ -364,7 +366,6 @@ function highlightActiveCard() {
 
 search.addEventListener('input', applyFilters);
 
-// অ্যাপ লোড হওয়ার সাথে সাথে চ্যানেল কল করা হবে
 loadAllChannels();
 
 </script>
