@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live TV OTT App</title>
+    <title>লাইভ টিভি ওটিটি অ্যাপ</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Hide scrollbar for the horizontal navigation but keep it functional */
+        /* হরাইজন্টাল স্ক্রলবার হাইড করার জন্য */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -26,36 +26,36 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
+<body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
 
     <main class="w-full max-w-4xl mx-auto pt-4 px-3 sm:px-6 pb-12">
 
         <section class="w-full mb-4">
             <div class="relative w-full pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-2xl border border-gray-800 group cursor-pointer">
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform group-hover:scale-105">
-                    <i class="fa-solid fa-play fa-4x opacity-50 mb-4"></i>
-                    <p id="player-status" class="text-sm font-semibold tracking-wide">Select a channel to play</p>
+                    <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-cyan-400"></i>
+                    <p id="player-status" class="text-sm font-semibold tracking-wide">প্লে করতে একটি চ্যানেল সিলেক্ট করুন</p>
                 </div>
                 
                 <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 sm:p-4 flex justify-between items-center opacity-90 group-hover:opacity-100 transition-opacity">
                     <div class="flex items-center">
                         <div class="flex items-center text-red-600 font-bold text-xs sm:text-sm tracking-wider bg-black/40 px-2 py-1 rounded">
-                            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> LIVE
+                            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-600 animate-pulse mr-1.5 sm:mr-2"></span> লাইভ
                         </div>
                     </div>
                     
                     <div class="flex items-center space-x-3 sm:space-x-5 text-gray-300 text-sm sm:text-base">
-                        <button class="hover:text-white transition-colors" title="Settings"><i class="fa-solid fa-gear"></i></button>
-                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5" title="Quality">HD</button>
-                        <button class="hover:text-white transition-colors" title="Volume"><i class="fa-solid fa-volume-high"></i></button>
-                        <button class="hover:text-white transition-colors" title="Closed Captions"><i class="fa-solid fa-closed-captioning"></i></button>
-                        <button class="hover:text-white transition-colors" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                        <button class="hover:text-white transition-colors" title="সেটিংস"><i class="fa-solid fa-gear"></i></button>
+                        <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5" title="ভিডিও কোয়ালিটি">HD</button>
+                        <button class="hover:text-white transition-colors" title="সাউন্ড"><i class="fa-solid fa-volume-high"></i></button>
+                        <button class="hover:text-white transition-colors" title="সাবটাইটেল"><i class="fa-solid fa-closed-captioning"></i></button>
+                        <button class="hover:text-white transition-colors" title="ফুলস্ক্রিন"><i class="fa-solid fa-expand"></i></button>
                     </div>
                 </div>
             </div>
             
             <div class="mt-3 text-center text-cyan-400 text-xs sm:text-sm font-semibold tracking-wide">
-                INTERNATIONAL Channel May Buffer
+                আন্তর্জাতিক চ্যানেল সাময়িক বাফার করতে পারে
             </div>
         </section>
 
@@ -75,7 +75,7 @@
         <div class="bg-gray-800 text-white rounded-xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-700 transform transition-all cursor-pointer">
             <i class="fa-solid fa-rotate animate-spin text-cyan-400 text-4xl mb-4"></i>
             <h3 class="text-lg font-bold mb-2">চ্যানেল আপডেট করা হচ্ছে...</h3>
-            <p class="text-xs text-gray-400">স্ক্রিনের যেকোনো জায়গায় চাপ দিন কেটে যাবে</p>
+            <p class="text-xs text-gray-400">বন্ধ করতে যেকোনো জায়গায় চাপ দিন</p>
         </div>
     </div>
 
@@ -86,7 +86,7 @@
             </p>
             <div class="flex justify-end mt-2">
                 <button onclick="hideErrorModal()" class="text-[#1976D2] font-bold uppercase tracking-wider px-2 py-1 text-sm hover:bg-blue-50 rounded transition-colors">
-                    OK
+                    ঠিক আছে
                 </button>
             </div>
         </div>
@@ -97,7 +97,7 @@
         const errorModal = document.getElementById('error-modal');
         const errorText = document.getElementById('error-text');
 
-        // Modal Control Functions
+        // মোডাল কন্ট্রোল ফাংশনসমূহ
         function showUpdateNotice() {
             updateModal.classList.remove('hidden');
         }
@@ -107,36 +107,38 @@
         function showErrorModal(message) {
             errorText.innerText = message;
             errorModal.classList.remove('hidden');
-            hideUpdateNotice(); // Hide update notice if error occurs
+            hideUpdateNotice(); // এরর আসলে আপডেট নোটিশ বন্ধ করে দেবে
         }
         function hideErrorModal() {
             errorModal.classList.add('hidden');
         }
 
-        // Network Status Listeners
+        // ইন্টারনেট কানেকশন চলে গেলে স্বয়ংক্রিয় ডিটেকশন
         window.addEventListener('offline', () => {
             showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
         });
 
         document.addEventListener("DOMContentLoaded", () => {
+            // আপনার দেওয়া সবগুলো ফাইল এবং নতুন pakistan.json যুক্ত করা হলো (গিটহাবের জন্য ./ পাথ ব্যবহার করা হয়েছে)
             const categoryFiles = [
-                { name: "Bangla", file: "bangla.json" },
-                { name: "Bangla News", file: "bangla-news.json" },
-                { name: "Live TV", file: "live-tv.json" },
-                { name: "India", file: "india.json" },
-                { name: "Movies", file: "movies.json" },
-                { name: "Kids", file: "kids.json" },
-                { name: "Music", file: "music.json" },
-                { name: "Int. News", file: "international-news.json" },
-                { name: "International", file: "international.json" },
-                { name: "Educational", file: "educational.json" }
+                { name: "বাংলা", file: "./bangla.json" },
+                { name: "বাংলা খবর", file: "./bangla-news.json" },
+                { name: "লাইভ টিভি", file: "./live-tv.json" },
+                { name: "ইন্ডিয়া", file: "./india.json" },
+                { name: "পাকিস্তান", file: "./pakistan.json" },
+                { name: "মুভিজ", file: "./movies.json" },
+                { name: "কিডস", file: "./kids.json" },
+                { name: "মিউজিক", file: "./music.json" },
+                { name: "শিক্ষামূলক", file: "./educational.json" },
+                { name: "আন্তর্জাতিক", file: "./international.json" },
+                { name: "বিশ্ব সংবাদ", file: "./international-news.json" }
             ];
 
             const tabsContainer = document.getElementById('category-tabs');
             const gridContainer = document.getElementById('channel-grid');
             const playerStatus = document.getElementById('player-status');
 
-            // Initialize Tabs
+            // ক্যাটাগরি ট্যাব তৈরি করা
             function initTabs() {
                 categoryFiles.forEach((cat, index) => {
                     const btn = document.createElement('button');
@@ -160,66 +162,72 @@
                     tabsContainer.appendChild(btn);
                 });
                 
+                // প্রথম রান করার সময় প্রথম ক্যাটাগরি লোড হবে
                 loadChannelData(categoryFiles[0].file);
             }
 
-            // Fetch Data
+            // JSON ফাইল থেকে চ্যানেল ডেটা লোড করা
             async function loadChannelData(fileName) {
-                // Check network before fetching
+                // ফেচ করার আগে ইন্টারনেট চেক
                 if (!navigator.onLine) {
                     showErrorModal("আপনার মোবাইলের ইন্টারনেট কানেকশন নাই! দয়া করে ইন্টারনেট কানেকশন চালু করুন!");
                     return;
                 }
 
                 gridContainer.innerHTML = '';
-                showUpdateNotice(); // Show the update notice board
+                showUpdateNotice(); // আপডেট নোটিশ বোর্ড প্রদর্শন
 
                 try {
+                    // গিটহাব পেজেসে কোনো সমস্যা ছাড়াই fetch কাজ করবে
                     const response = await fetch(fileName);
-                    if (!response.ok) throw new Error("Fetch failed");
+                    if (!response.ok) throw new Error("ফাইল পাওয়া যায়নি");
                     
                     const data = await response.json();
                     renderChannels(data);
                     
-                    // Auto-hide update notice after 800ms to give a smooth experience, 
-                    // though user can click to hide it instantly.
+                    // ৮০০ মিলি-সেকেন্ড পর নোটিশ বোর্ড স্বয়ংক্রিয়ভাবে চলে যাবে
                     setTimeout(() => {
                         hideUpdateNotice();
                     }, 800);
 
                 } catch (error) {
                     console.error("Error fetching data:", error);
-                    // Show error modal with Bengali message if fetch fails or file missing
-                    showErrorModal("ফাইল অথবা কোডে কোনো সমস্যা হয়েছে! দয়া করে পরে আবার চেষ্টা করুন।");
+                    showErrorModal(`সার্ভার থেকে ${fileName} ফাইলটি লোড করতে সমস্যা হচ্ছে! দয়া করে গিটহাবে ফাইলটি ঠিকমতো আপলোড হয়েছে কিনা চেক করুন।`);
                 }
             }
 
-            // Render Grid
+            // চ্যানেল গ্রিড রেন্ডার করা
             function renderChannels(channels) {
                 channels.forEach(channel => {
                     const card = document.createElement('button');
                     card.className = "channel-card aspect-square bg-white rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400";
                     
+                    // লোগো না থাকলে সুন্দর একটি টেক্সট লোগো জেনারেট হবে
                     let logoHtml = '';
+                    const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
+                    const firstLetter = cleanName.charAt(0).toUpperCase();
+
                     if (channel.logo && channel.logo.trim() !== "") {
-                        logoHtml = `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold\\'>${channel.name.charAt(0)}</div>'">`;
+                        logoHtml = `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold\\'>${firstLetter}</div>'">`;
                     } else {
-                        logoHtml = `<div class="w-full h-full rounded-full bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 font-black text-2xl uppercase">${channel.name.charAt(0)}</div>`;
+                        logoHtml = `<div class="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center text-cyan-600 font-black text-2xl">${firstLetter}</div>`;
                     }
 
                     card.innerHTML = `
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">
                             ${logoHtml}
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${channel.name}">${channel.name}</span>
+                        <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${cleanName}">${cleanName}</span>
                     `;
 
+                    // চ্যানেল ক্লিকের ইভেন্ট
                     card.addEventListener('click', () => {
-                        console.log(`[STREAM URL]: ${channel.url}`);
-                        playerStatus.innerHTML = `Streaming: <span class="text-cyan-400">${channel.name}</span>`;
+                        console.log(`[চলছে]: ${cleanName} | লিংক: ${channel.url}`);
+                        playerStatus.innerHTML = `চলছে: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
                         playerStatus.parentElement.classList.remove('text-gray-500');
                         playerStatus.parentElement.classList.add('text-white');
                         
+                        // ক্লিক অ্যানিমেশন ফিডব্যাক
                         card.classList.add('scale-95', 'opacity-80');
                         setTimeout(() => card.classList.remove('scale-95', 'opacity-80'), 150);
                     });
@@ -228,7 +236,7 @@
                 });
             }
 
-            // Start App
+            // অ্যাপ চালু করা
             initTabs();
         });
     </script>
