@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ultima IPTV Max Pro - OLED & Playlist Parser</title>
+    <title>Ultima IPTV Max Pro - Extreme Performance Engine</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,16 +22,14 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* OLED True Black Custom Modifiers */
-        .oled-mode {
-            background-color: #000000 !important;
-        }
+        /* OLED True Black Layouts */
+        .oled-mode { background-color: #000000 !important; }
         .oled-mode .glass-panel {
             background: rgba(0, 0, 0, 0.95) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
         
-        /* MX Player Custom Range Track Styling */
+        /* MX Player Custom Range Seekbar Track */
         input[type=range].mx-seekbar {
             -webkit-appearance: none;
             background: transparent;
@@ -52,7 +50,7 @@
             box-shadow: 0 0 12px #00E676;
         }
 
-        /* Ambient Backdrop Glow Effect */
+        /* Ambient Dynamic Theater Glow */
         #ambient-glow {
             position: absolute;
             inset: -25px;
@@ -61,10 +59,10 @@
             z-index: -1;
             border-radius: 2rem;
             pointer-events: none;
-            transition: all 1s ease;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Floating Window Mini Sticky Player */
+        /* Floating Mini Sticky Player Window */
         .sticky-mini-player {
             position: fixed !important;
             bottom: 25px !important;
@@ -87,12 +85,22 @@
         #touch-area { touch-action: none; user-select: none; }
         .roller-item { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Hover Channel Peek Border Wave Effect */
         .channel-card-peek:hover {
             border-color: #00E676;
             box-shadow: 0 0 15px rgba(0,230,118,0.25);
             transform: translateY(-5px);
         }
+
+        /* Dual Ring Premium Fast Spinner Setup */
+        .stream-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 230, 118, 0.1);
+            border-radius: 50%;
+            border-top-color: #00E676;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body id="app-body" class="bg-gray-950 text-white min-h-screen font-sans selection:bg-[#00E676] selection:text-black transition-colors duration-500">
@@ -122,6 +130,11 @@
                     <span class="text-gray-600">|</span> <span id="live-date" class="text-gray-400">01 Jan 2026</span>
                 </div>
 
+                <div id="stream-loading-hud" class="absolute inset-0 bg-black/60 hidden flex-col items-center justify-center z-40 pointer-events-none backdrop-blur-xs transition-opacity duration-150">
+                    <div class="stream-spinner mb-3"></div>
+                    <p class="text-xs text-[#00E676] font-bold tracking-widest neon-glow uppercase">Connecting Stream...</p>
+                </div>
+
                 <div id="stats-hud" class="absolute top-16 left-4 hidden glass-panel p-3 rounded-xl text-[10px] font-mono text-gray-400 space-y-1 z-50 pointer-events-none w-48 border border-[#00E676]/20">
                     <p class="text-[#00E676] font-bold border-b border-gray-800 pb-1 mb-1">⚡ Stats For Nerds</p>
                     <p>Resolution: <span id="stat-res" class="text-white">0x0</span></p>
@@ -147,7 +160,7 @@
                 <div id="channel-roller" class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-4 z-40 bg-black/30 backdrop-blur-md p-2 rounded-2xl border border-white/5 opacity-0 transition-opacity duration-500"></div>
 
                 <div id="channel-popup" class="absolute top-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[#00E676] font-bold text-lg shadow-xl opacity-0 translate-y-[-20px] transition-all duration-300 z-50 pointer-events-none neon-glow"><span id="popup-text">Channel Sync</span></div>
-                <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-black z-10 pointer-events-none"><i class="fa-solid fa-satellite-dish fa-4x text-[#00E676] mb-3 animate-pulse"></i><p class="text-sm font-semibold text-gray-300">Select an IPTV Stream to Broadcast</p></div>
+                <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-black z-10"><i class="fa-solid fa-satellite-dish fa-4x text-[#00E676] mb-3 animate-pulse"></i><p class="text-sm font-semibold text-gray-300">Select an IPTV Stream to Broadcast</p></div>
 
                 <div id="master-controls" class="absolute inset-0 z-30 opacity-0 transition-opacity duration-500 bg-gradient-to-t from-black/90 via-transparent to-black/40">
                     
@@ -213,7 +226,6 @@
         </section>
 
         <section class="w-full mb-6"><div class="flex overflow-x-auto space-x-3 no-scrollbar py-2 px-1" id="category-tabs"></div></section>
-        
         <section class="w-full"><div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4" id="channel-grid"></div></section>
     </main>
 
@@ -244,10 +256,10 @@
             timerMenuBtn: document.getElementById('timer-menu-btn'), ambientGlow: document.getElementById('ambient-glow'),
             oledThemeBtn: document.getElementById('oled-theme-btn'),
             playlistUrlInput: document.getElementById('playlist-url-input'),
-            playlistLoadBtn: document.getElementById('playlist-load-btn')
+            playlistLoadBtn: document.getElementById('playlist-load-btn'),
+            streamLoadingHud: document.getElementById('stream-loading-hud') // Stream Spinner Hook
         };
 
-        // Complete Local Repositories and History State Stores
         let currentChannelsData = [];
         let favoriteChannels = JSON.parse(localStorage.getItem('iptv_favorites')) || [];
         let historyChannels = JSON.parse(localStorage.getItem('iptv_history')) || [];
@@ -261,7 +273,7 @@
         let playSpeeds = [1.0, 1.25, 1.5, 2.0];
         let currentSpeedIdx = 0;
 
-        // Functional Utility System Flags
+        // Functional Operational Controls Flags
         let isChildLocked = false;
         let isNerdHudActive = false;
         let isOledMode = JSON.parse(localStorage.getItem('iptv_oled_mode')) || false;
@@ -271,7 +283,6 @@
         let lastVideoTime = -1;
         let stuckCounter = 0;
 
-        // Default Boot Core Category Configs (Fallbacks)
         const categoryFiles = [
             { name: "Buno All", file: "./channels/bunoall.json" },
             { name: "Bangla News", file: "./channels/bangla-news.json" },
@@ -287,7 +298,7 @@
             }, 800);
         });
 
-        // --- 1. STICKY FLOATING WINDOW ENGINE MINI CONTROLLER ---
+        // Sticky Mini Floating Player Window Trigger
         const scrollObserver = new IntersectionObserver(([entry]) => {
             if (!entry.isIntersecting && currentPlayingIndex !== -1) {
                 DOM.videoWrapper.classList.add('sticky-mini-player');
@@ -334,7 +345,7 @@
             resetControlsTimer();
         };
 
-        // --- 2. LIVE REALTIME CLOCK MODULE ---
+        // --- Live Clock Engine ---
         function runLiveClock() {
             const dateObj = new Date();
             let hh = dateObj.getHours();
@@ -347,7 +358,7 @@
         }
         setInterval(runLiveClock, 1000); runLiveClock();
 
-        // --- 3. OLED TRUE BLACK MODULE ---
+        // --- OLED Theme Modifiers ---
         function initOledTheme() {
             if (isOledMode) {
                 DOM.body.classList.add('oled-mode');
@@ -371,7 +382,7 @@
             initOledTheme();
         });
 
-        // --- 4. CHILD LOCK SECURITY ENGINE ---
+        // --- Child Lock Trigger ---
         DOM.childLockBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             isChildLocked = !isChildLocked;
@@ -385,9 +396,9 @@
             }
         });
 
-        // --- 5. MX PLAYER SWIPE INTERACTIVITY ENGINE ---
+        // --- MX Swipe Touch Interface Controllers (Brightness 30%, Volume 1%) ---
         let isDragging = false, startY = 0, activeSide = null, startVal = 0;
-        let currentBrightness = 0.3, currentVolume = 0.01; // Restored matching 30% and 1% preferences
+        let currentBrightness = 0.3, currentVolume = 0.01; 
 
         function updateGestureUI(side, value) {
             const percentageInteger = Math.round(value * 100);
@@ -412,7 +423,6 @@
             }
         });
 
-        // Smart Double Tap Recognition
         let lastTappedTime = 0;
         DOM.touchArea.addEventListener('click', () => {
             if(isChildLocked) return;
@@ -433,7 +443,7 @@
         ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt => DOM.touchArea.addEventListener(evt, releaseDrag));
         updateGestureUI('left', currentBrightness); updateGestureUI('right', currentVolume);
 
-        // --- 6. NEAT STATS FOR NERDS HARMONIZER ---
+        // --- Diagnostics Hook Panel ---
         DOM.nerdBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             isNerdHudActive = !isNerdHudActive;
@@ -443,14 +453,14 @@
         setInterval(() => {
             if (!isNerdHudActive || currentPlayingIndex === -1) return;
             document.getElementById('stat-res').innerText = `${DOM.video.videoWidth}x${DOM.video.videoHeight}`;
-            document.getElementById('stat-fps').innerText = hlsPlayer?.id3Size || '24';
+            document.getElementById('stat-fps').innerText = hlsPlayer?.id3Size || '25';
             const bandwidthEst = hlsPlayer?.bandwidthEstimate ? (hlsPlayer.bandwidthEstimate / 1000000).toFixed(2) : '0.00';
             document.getElementById('stat-band').innerText = `${bandwidthEst} Mbps`;
             const bufferDuration = DOM.video.buffered.length ? (DOM.video.buffered.end(DOM.video.buffered.length - 1) - DOM.video.currentTime).toFixed(1) : '0.0';
             document.getElementById('stat-buf').innerText = `${bufferDuration}s`;
         }, 1000);
 
-        // --- 7. SMART AI VOICE ENGINE SYSTEM ---
+        // --- Speech AI Assistant Engine ---
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             const voiceRunner = new SpeechEngine();
@@ -472,7 +482,7 @@
             voiceRunner.onerror = () => { document.getElementById('mic-icon').className = 'fa-solid fa-microphone text-gray-400'; };
         } else { DOM.voiceBtn.classList.add('hidden'); }
 
-        // --- 8. SMART SLEEP TIMER CONTROL MODULE ---
+        // --- Sleep Timers Engine ---
         DOM.timerMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             clearInterval(sleepTimerInterval);
@@ -502,7 +512,7 @@
             }
         });
 
-        // --- 9. BOOKMARKS & HISTORY STATE HANDLERS ---
+        // --- Bookmarks and History Stores ---
         DOM.favToggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentPlayingIndex === -1) return;
@@ -521,11 +531,11 @@
         function appendWatchHistory(channelObj) {
             historyChannels = historyChannels.filter(url => url !== channelObj.url);
             historyChannels.unshift(channelObj.url);
-            if (historyChannels.length > 20) historyChannels.pop(); // Cap history pool size
+            if (historyChannels.length > 20) historyChannels.pop();
             localStorage.setItem('iptv_history', JSON.stringify(historyChannels));
         }
 
-        // --- 10. M3U CLOUD PLAYLIST PARSER ENGINE ---
+        // --- Cloud Playlist Parser ---
         DOM.playlistLoadBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const playlistUrl = DOM.playlistUrlInput.value.trim();
@@ -565,7 +575,6 @@
             if(parsedArray.length > 0) {
                 currentChannelsData = parsedArray;
                 renderChannels(currentChannelsData);
-                // Dynamically update the default tab indicator flag
                 DOM.tabsContainer.children[1].innerText = "Parsed Playlist";
                 DOM.tabsContainer.children[1].click();
             } else {
@@ -573,7 +582,7 @@
             }
         }
 
-        // --- 11. STREAM AUTO HEALER ROUTINE ---
+        // --- Stream Auto Healer Recovery Routine ---
         function initAutoHealer() {
             clearInterval(streamAutoHealerTicker);
             stuckCounter = 0;
@@ -581,7 +590,7 @@
                 if (DOM.video.paused) return;
                 if (DOM.video.currentTime === lastVideoTime) {
                     stuckCounter++;
-                    if (stuckCounter >= 4) {
+                    if (stuckCounter >= 3) { // Reduced checkpoint time window to 3 seconds for faster recovery
                         stuckCounter = 0;
                         if (hlsPlayer) hlsPlayer.recoverMediaError();
                         else playChannel(currentPlayingIndex);
@@ -591,7 +600,7 @@
             }, 1000);
         }
 
-        // --- 12. MX VERTICAL CHANNEL ROLLER ---
+        // --- Unique Channel Roller Strip Rendering ---
         function renderChannelRoller(currentIndex) {
             DOM.roller.innerHTML = '';
             if(currentChannelsData.length <= 1) return;
@@ -615,7 +624,6 @@
             });
         }
 
-        // Aspect and Scaling Rate Maps
         window.cycleAspectRatio = function() {
             currentAspectIdx = (currentAspectIdx + 1) % aspectRatios.length;
             aspectRatios.forEach(cls => DOM.video.classList.remove(cls));
@@ -652,11 +660,10 @@
             if (!document.fullscreenElement) DOM.videoWrapper.requestFullscreen(); else document.exitFullscreen();
         });
 
-        // --- Tabs Initialization Framework ---
+        // --- JSON Parsing Framework ---
         function initTabs() {
             DOM.tabsContainer.innerHTML = '';
             
-            // Favorite Category Tab Container
             const favBtn = document.createElement('button');
             favBtn.className = "px-5 py-2 rounded-full text-sm font-bold bg-[#1e293b] text-red-400 flex-shrink-0 hover:bg-red-950/40 border border-red-500/20";
             favBtn.innerHTML = "<i class='fa-solid fa-heart mr-1'></i> Favorites";
@@ -668,7 +675,6 @@
             };
             DOM.tabsContainer.appendChild(favBtn);
 
-            // History Category Tab Container
             const histBtn = document.createElement('button');
             histBtn.className = "px-5 py-2 rounded-full text-sm font-bold bg-[#1e293b] text-blue-400 flex-shrink-0 hover:bg-blue-950/40 border border-blue-500/20 mr-2";
             histBtn.innerHTML = "<i class='fa-solid fa-history mr-1'></i> Recents";
@@ -720,7 +726,7 @@
             renderChannels(filtered);
         });
 
-        // --- ULTRA FAST CHANNELS CONNECTION DISPATCHER ---
+        // --- EXTREME LOW LATENCY LIVE BROADCAST HANDSHAKE ENGINE ---
         function playChannel(index, dataArray = currentChannelsData) {
             if (index < 0 || index >= dataArray.length) return;
             const channel = dataArray[index];
@@ -732,7 +738,9 @@
             DOM.channelPopup.classList.remove('opacity-0');
             clearTimeout(popupTimer); popupTimer = setTimeout(() => DOM.channelPopup.classList.add('opacity-0'), 2000);
 
-            // Dynamic Backdrop Color Sync Engine
+            // Flash visual connectivity backdrop spinner loader immediately
+            DOM.streamLoadingHud.classList.replace('hidden', 'flex');
+
             const premiumNeonPalettes = ['rgba(0,230,118,0.22)', 'rgba(0,184,212,0.22)', 'rgba(213,0,249,0.22)', 'rgba(255,214,0,0.22)'];
             DOM.ambientGlow.style.background = premiumNeonPalettes[Math.floor(Math.random() * premiumNeonPalettes.length)];
 
@@ -743,40 +751,94 @@
             resetControlsTimer();
             initAutoHealer();
 
-            DOM.video.style.opacity = '0.4';
+            // Prime the video element structure early for immediate frame mapping
+            DOM.video.style.opacity = '0.3';
 
             if (Hls.isSupported()) {
-                if (hlsPlayer) hlsPlayer.destroy();
+                if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+                
+                // --- ULTRA-FAST ZAPPING PERFORMANCE OPTIMIZATION TUNING ---
                 hlsPlayer = new Hls({ 
-                    enableWorker: true, lowLatencyMode: true, capLevelToPlayerSize: true, 
-                    startLevel: -1, autoStartLoad: true, maxBufferLength: 4
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 0,            // Free memory instantly
+                    maxBufferLength: 2,             // Request only 2 seconds of fragments to play instantly
+                    maxMaxBufferLength: 4,
+                    liveSyncDuration: 1.0,          // Force synchronization right at the live edge
+                    liveMaxLatencyDuration: 2.5,
+                    maxBufferHole: 0.4,
+                    startLevel: 0,                  // Instantly query lowest bitrate profile for rapid sub-second connections
+                    testBandwidth: false,           // Bypass initial latency delay check requests entirely
+                    progressive: true,              // Stream segment parsing progressively
+                    manifestLoadingTimeOut: 3000,
+                    manifestLoadingMaxRetry: 3,
+                    manifestLoadingRetryDelay: 400,
+                    fragLoadingTimeOut: 4000,
+                    fragLoadingMaxRetry: 3,
+                    fragLoadingRetryDelay: 400
                 }); 
-                hlsPlayer.loadSource(channel.url); hlsPlayer.attachMedia(DOM.video);
-                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => { DOM.video.play(); DOM.video.style.opacity = '1'; DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'; });
+                
+                hlsPlayer.loadSource(channel.url); 
+                hlsPlayer.attachMedia(DOM.video);
+                
+                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => { 
+                    const startPlayPromise = DOM.video.play();
+                    if (startPlayPromise !== undefined) {
+                        startPlayPromise.then(() => {
+                            DOM.streamLoadingHud.classList.replace('flex', 'hidden');
+                            DOM.video.style.opacity = '1';
+                        }).catch(() => {
+                            // Autoplay fallback execution check
+                            DOM.video.muted = true;
+                            DOM.video.play();
+                            DOM.streamLoadingHud.classList.replace('flex', 'hidden');
+                            DOM.video.style.opacity = '1';
+                        });
+                    }
+                    DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'; 
+                });
+
+                // Dismiss loader spinner immediately on first payload chunk delivery
+                DOM.video.addEventListener('loadeddata', () => { 
+                    DOM.streamLoadingHud.classList.replace('flex', 'hidden');
+                    DOM.video.style.opacity = '1'; 
+                });
+
+                hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR: hlsPlayer.startLoad(); break;
+                            case Hls.ErrorTypes.MEDIA_ERROR: hlsPlayer.recoverMediaError(); break;
+                            default: hlsPlayer.destroy(); DOM.streamLoadingHud.classList.replace('flex', 'hidden'); break;
+                        }
+                    }
+                });
+
             } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
-                DOM.video.src = channel.url; DOM.video.play(); DOM.video.style.opacity = '1';
+                DOM.video.src = channel.url; 
+                DOM.video.play(); 
+                DOM.streamLoadingHud.classList.replace('flex', 'hidden');
+                DOM.video.style.opacity = '1';
             }
         }
 
-        // Renders Grid Catalog with Expandable Peek Enhancements
         function renderChannels(channels) {
             DOM.gridContainer.innerHTML = '';
-            if (!channels.length) { DOM.gridContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No channels inside selected catalog context.</p>'; return; }
+            if (!channels.length) { DOM.gridContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No matching records</p>'; return; }
 
             channels.forEach((channel) => {
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                 const card = document.createElement('button');
                 card.className = "channel-card-peek aspect-square bg-gray-900/40 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 transition-all duration-300 border border-white/5 relative overflow-hidden group";
                 
-                // Add an elegant animated soundwave preview peek bar inside card element
                 const soundwaveHtml = `<div class="absolute bottom-1 right-2 flex items-end space-x-0.5 h-3 opacity-0 group-hover:opacity-100 transition-opacity"><span class="w-0.5 bg-[#00E676] animate-pulse h-2"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-3"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-1"></span></div>`;
-
                 const logoHtml = channel.logo ? `<img src="${channel.logo}" alt="" class="w-12 h-12 object-contain rounded-full bg-white p-1 mb-2 transform group-hover:scale-110 transition-transform">` : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-[#00E676] font-bold mb-2 group-hover:shadow-[0_0_8px_#00E676] transition-all">${cleanName.charAt(0)}</div>`;
+                
                 card.innerHTML = `${logoHtml}<span class="text-[11px] font-medium text-gray-300 text-center truncate w-full group-hover:text-[#00E676] transition-colors">${cleanName}</span>${soundwaveHtml}`;
 
                 card.onclick = () => { 
                     const targetOriginIdx = currentChannelsData.findIndex(c => c.url === channel.url);
-                    playChannel(targetOriginIdx !== -1 ? targetOriginIdx : 0, targetOriginIdx !== -1 ? currentChannelsData : channels); 
+                    playChannel(targetOriginIdx !== -1 ? targetOriginIdx : 0); 
                     window.scrollTo({ top: 0, behavior: 'smooth' }); 
                 };
                 DOM.gridContainer.appendChild(card);
