@@ -153,17 +153,20 @@
             else if (DOM.video.webkitRequestFullscreen) DOM.video.webkitRequestFullscreen();
         });
 
+        // FIXED: Added "channels/" path and included missing JSON files
         const categoryFiles = [
-            { name: "Bangla News", file: "./bangla-news.json" },
-            { name: "Bangla", file: "./bangla.json" },
-            { name: "Live TV", file: "./live-tv.json" },
-            { name: "India", file: "./india.json" },
-            { name: "Movies", file: "./movies.json" },
-            { name: "Kids", file: "./kids.json" },
-            { name: "Music", file: "./music.json" },
-            { name: "Educational", file: "./educational.json" },
-            { name: "International", file: "./international.json" },
-            { name: "Int. News", file: "./international-news.json" }
+            { name: "Bangla News", file: "./channels/bangla-news.json" },
+            { name: "Bangla", file: "./channels/bangla.json" },
+            { name: "Live TV", file: "./channels/live-tv.json" },
+            { name: "India", file: "./channels/india.json" },
+            { name: "Movies", file: "./channels/movies.json" },
+            { name: "Kids", file: "./channels/kids.json" },
+            { name: "Music", file: "./channels/music.json" },
+            { name: "Educational", file: "./channels/educational.json" },
+            { name: "International", file: "./channels/international.json" },
+            { name: "Int. News", file: "./channels/international-news.json" },
+            { name: "Pakistan", file: "./channels/pakistan.json" },
+            { name: "Religious", file: "./channels/religious.json" }
         ];
 
         function initTabs() {
@@ -203,7 +206,7 @@
             } catch (error) {
                 console.error(error);
                 if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-                    showErrorModal("Network error! Make sure you are running this via a server (like GitHub Pages or VS Code Live Server). Opening the HTML file directly will not work due to CORS policy.");
+                    showErrorModal("Network error! Make sure you are running this via a server (like GitHub Pages).");
                 } else if (error.message === "EMPTY_LIST") {
                     showErrorModal(`No channels found in ${fileName}.`);
                 } else {
@@ -230,7 +233,7 @@
                 
                 hlsPlayer.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        showErrorModal(`Cannot play '${cleanName}'. The streaming link might be expired or broken.`);
+                        showErrorModal(`Cannot play '${cleanName}'. The streaming link might be expired or blocked by CORS.`);
                         hlsPlayer.destroy();
                     }
                 });
