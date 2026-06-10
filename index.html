@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium IPTV Web Player</title>
+    <title>Premium IPTV Web Player - Fixed</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -85,18 +85,13 @@
             <div id="video-wrapper" class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-900 flex items-center justify-center group">
                 
                 <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline></video>
-                
-                <div id="center-hud" class="absolute pointer-events-none glass-panel px-4 py-2 rounded-full flex items-center space-x-2 shadow-2xl z-40 opacity-0 transition-opacity duration-300">
-                    <i class="fa-solid fa-expand text-sm text-gray-300"></i>
-                    <span id="hud-text" class="text-sm font-semibold tracking-wide">100% Display / Scale</span>
-                </div>
 
                 <div id="channel-popup" class="absolute top-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[#00E676] font-bold text-lg shadow-xl opacity-0 translate-y-[-20px] transition-all duration-300 z-50 pointer-events-none neon-glow">
                     <span id="popup-text">Channel Name</span>
                 </div>
 
                 <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 bg-black z-10 pointer-events-none">
-                    <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-[#00E676] drop-shadow-[0_0_15px_rgba(0,230,118,0.5)] animate-pulse"></i>
+                    <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-[#00E676] drop-shadow-[0_0_15px_rgba(0, 230, 118, 0.5)] animate-pulse"></i>
                     <p class="text-sm font-semibold tracking-wide text-gray-400">Select a channel to play</p>
                 </div>
 
@@ -134,11 +129,12 @@
                             <button onclick="mockFeature('Chromecast')" class="flex flex-col items-center hover:text-[#00E676] transition-colors"><i class="fa-brands fa-chromecast text-lg mb-1"></i><span class="text-[9px] font-bold tracking-tight">Cast</span></button>
                             <button onclick="cycleAspectRatio()" class="flex flex-col items-center hover:text-[#00E676] transition-colors"><i class="fa-solid fa-crop-simple text-lg mb-1"></i><span id="aspect-btn-txt" class="text-[9px] font-bold tracking-tight">16:9</span></button>
                         </div>
-                        <div class="flex justify-around items-center mb-4 border-b border-gray-800 pb-3">
+                        <div class="flex justify-around items-center mb-4 border-b border-gray-800 pb-3 relative">
                             <button onclick="toggleActiveState(this)" class="text-gray-400 hover:text-[#00E676] transition-colors"><i class="fa-regular fa-star text-base"></i></button>
                             <button onclick="toggleActiveState(this)" class="text-gray-400 hover:text-[#00E676] transition-colors"><i class="fa-regular fa-bookmark text-base"></i></button>
                             <button onclick="mockFeature('VR 360° Mode')" class="text-gray-400 hover:text-[#00E676] transition-colors"><i class="fa-solid fa-vr-cardboard text-base"></i></button>
                             <button id="quality-btn" onclick="togglePanel('quality-panel')" class="text-xs border border-gray-600 rounded px-2 py-0.5 hover:border-[#00E676] text-gray-300 hover:text-[#00E676] font-bold hidden">Auto</button>
+                            <div class="absolute left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-300 top-[-10px]">Scale: <span id="hud-text">100%</span></div>
                         </div>
                         <div>
                             <h4 class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">Play Settings</h4>
@@ -155,7 +151,7 @@
 
                     <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-4 pt-10 flex flex-col space-y-3">
                         
-                        <div class="flex items-center space-x-3 w-full">
+                        <div class="flex items-center space-x-3 w-full relative">
                             <span class="text-[10px] font-bold text-gray-300">00:00:00</span>
                             <input type="range" id="seek-bar" min="0" max="100" value="100" class="w-full cursor-not-allowed" disabled>
                             <span class="text-[10px] font-bold text-[#00E676] tracking-wider neon-glow">LIVE</span>
@@ -236,7 +232,6 @@
             playPauseBtn: document.getElementById('play-pause-btn'),
             speedBtn: document.getElementById('speed-btn'),
             aspectBtnTxt: document.getElementById('aspect-btn-txt'),
-            centerHud: document.getElementById('center-hud'),
             hudText: document.getElementById('hud-text'),
             tabsContainer: document.getElementById('category-tabs'),
             gridContainer: document.getElementById('channel-grid'),
@@ -248,7 +243,6 @@
         let hlsPlayer = null;
         let controlsTimer;
         let popupTimer;
-        let hudTimer;
         
         let aspectRatios = ['object-contain', 'object-cover', 'object-fill'];
         let aspectLabels = ['16:9', 'Zoom', 'Stretch'];
@@ -321,43 +315,33 @@
         });
 
         // --- 4. Advanced HUD Controls (Toggles & Action Handlers) ---
-        function triggerHUD(text) {
-            DOM.hudText.innerText = text;
-            DOM.centerHud.classList.remove('opacity-0');
-            DOM.centerHud.classList.add('opacity-100');
-            clearTimeout(hudTimer);
-            hudTimer = setTimeout(() => DOM.centerHud.classList.remove('opacity-100'), 1500);
-        }
+        // Popup removed as scale text is moved to settings panel
 
         window.cycleAspectRatio = function() {
             currentAspectIdx = (currentAspectIdx + 1) % aspectRatios.length;
             aspectRatios.forEach(cls => DOM.video.classList.remove(cls));
             DOM.video.classList.add(aspectRatios[currentAspectIdx]);
             DOM.aspectBtnTxt.innerText = aspectLabels[currentAspectIdx];
-            triggerHUD(`Scale: ${aspectLabels[currentAspectIdx]}`);
+            DOM.hudText.innerText = aspectLabels[currentAspectIdx]; // Update text in settings
         };
 
         window.cyclePlaybackSpeed = function() {
             currentSpeedIdx = (currentSpeedIdx + 1) % playSpeeds.length;
             DOM.video.playbackRate = playSpeeds[currentSpeedIdx];
             DOM.speedBtn.innerText = `${playSpeeds[currentSpeedIdx]}x`;
-            triggerHUD(`Speed: ${playSpeeds[currentSpeedIdx]}x`);
         };
 
         window.toggleMirrorMode = function(btn) {
             DOM.video.classList.toggle('scale-x-[-1]');
             btn.classList.toggle('text-[#00E676]');
-            triggerHUD(DOM.video.classList.contains('scale-x-[-1]') ? "Mirror Mode: On" : "Mirror Mode: Off");
         };
 
         window.toggleNightMode = function(btn) {
             btn.classList.toggle('text-[#00E676]');
             if(btn.classList.contains('text-[#00E676]')) {
                 DOM.video.style.setProperty('filter', 'sepia(45%) saturate(110%) brightness(90%)');
-                triggerHUD("Night Mode Blue-Filter: On");
             } else {
                 DOM.video.style.filter = `brightness(${DOM.sliders.brightness.value}%)`;
-                triggerHUD("Night Mode Blue-Filter: Off");
             }
         };
 
@@ -366,7 +350,7 @@
         };
 
         window.mockFeature = function(featureName) {
-            triggerHUD(`${featureName} Activated`);
+            console.log(`${featureName} Activated`);
         };
 
         // Play Pause Core Sync Toggle
@@ -562,7 +546,7 @@
                 });
 
                 hlsPlayer.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) triggerHUD("Link expired or unable to load stream.");
+                    if (data.fatal) console.log("Link expired or unable to load stream.");
                 });
             } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
                 DOM.video.src = channel.url;
