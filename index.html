@@ -6,17 +6,6 @@
     <title>Live TV OTT App</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const loader = document.getElementById("loading-screen");
-    if(loader){
-        setTimeout(() => {
-            loader.style.opacity = "0";
-            setTimeout(() => loader.remove(), 500);
-        }, 1500);
-    }
-});
-</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
@@ -25,23 +14,22 @@ document.addEventListener("DOMContentLoaded", () => {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .channel-logo-img { object-fit: contain; width: 100%; height: 100%; border-radius: 50%; }
         .vertical-slider { -webkit-appearance: slider-vertical; width: 6px; height: 90px; background: #4b5563; outline: none; border-radius: 4px; }
-    
-#loading-screen{
-    transition: opacity .5s ease;
-}
-
-</style>
+        #loading-screen { transition: opacity 0.5s ease; }
+    </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
 
-    <main class="w-full max-w-4xl mx-auto pt-4 px-3 sm:px-6 pb-12">
+    <div id="loading-screen" class="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[9999]">
+        <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-4 text-cyan-400 font-semibold tracking-wider">Loading Application...</p>
+    </div>
 
+    <main class="w-full max-w-4xl mx-auto pt-4 px-3 sm:px-6 pb-12">
         <section class="w-full mb-4">
             <div class="relative w-full pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-2xl border border-gray-800 group">
                 
                 <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black z-0" playsinline></video>
-
-                <div id="brightness-overlay" class="absolute inset-0 bg-black pointer-events-none z-10 opacity-0 transition-opacity duration-70"></div>
+                <div id="brightness-overlay" class="absolute inset-0 bg-black pointer-events-none z-10 opacity-0 transition-opacity duration-75"></div>
 
                 <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 transition-transform transform z-10 bg-black">
                     <i class="fa-solid fa-play fa-4x opacity-50 mb-4 text-cyan-400"></i>
@@ -71,13 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     
                     <div class="flex items-center space-x-3 sm:space-x-4 text-gray-300 text-sm sm:text-base">
-                        <button class="hover:text-white transition-colors" title="Settings"><i class="fa-solid fa-gear"></i></button>
                         <button class="hover:text-white transition-colors font-bold text-[10px] sm:text-xs border border-gray-400 hover:border-white rounded px-1.5 py-0.5" title="Quality">HD</button>
                         
                         <div class="flex items-center space-x-1.5 bg-black/40 px-2 py-1 rounded-lg">
-                            <i class="fa-solid fa-volume-low text-xs text-gray-400" title="Low Volume"></i>
+                            <i class="fa-solid fa-volume-low text-xs text-gray-400"></i>
                             <input type="range" id="volume-slider" min="0" max="100" value="100" class="w-16 sm:w-24 h-1 accent-cyan-400 rounded-lg appearance-none bg-gray-700 cursor-pointer">
-                            <i class="fa-solid fa-volume-high text-xs text-gray-300" title="High Volume"></i>
+                            <i class="fa-solid fa-volume-high text-xs text-gray-300"></i>
                         </div>
 
                         <button id="fullscreen-btn" class="hover:text-white transition-colors" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
@@ -86,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             
             <div class="mt-3 text-center text-cyan-400 text-xs sm:text-sm font-semibold tracking-wide">
-                International channels may buffer temporarily
+                International channels may buffer temporarily depending on network.
             </div>
         </section>
 
@@ -97,243 +84,198 @@ document.addEventListener("DOMContentLoaded", () => {
         <section class="w-full">
             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4" id="channel-grid"></div>
         </section>
-
     </main>
 
-<div id="loading-screen" class="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[9999]">
-    <div class="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-    <p class="mt-4 text-cyan-400 font-semibold tracking-wider">Loading Channels...</p>
-</div>
-
-
-    <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm" onclick="hideUpdateNotice()">
-        <div class="bg-[#1e1e1e] text-white rounded-2xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-800 transform transition-all cursor-pointer">
-            <i class="fa-solid fa-rotate animate-spin text-cyan-400 text-4xl mb-4"></i>
-            <h3 class="text-lg font-bold mb-2">Updating channels...</h3>
-            <p class="text-xs text-gray-400">Tap anywhere to close</p>
+    <div id="update-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 hidden backdrop-blur-sm">
+        <div class="bg-[#1e1e1e] text-white rounded-2xl p-6 max-w-xs w-[85%] text-center shadow-2xl border border-gray-800">
+            <div class="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 class="text-lg font-bold">Updating channels...</h3>
         </div>
     </div>
 
     <div id="error-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 hidden backdrop-blur-sm transition-opacity">
-        <div class="bg-[#1e1e1e] rounded-2xl w-[85%] max-w-sm p-6 shadow-2xl border border-red-500/30 flex flex-col items-center text-center transform transition-all scale-100">
+        <div class="bg-[#1e1e1e] rounded-2xl w-[85%] max-w-sm p-6 shadow-2xl border border-red-500/30 flex flex-col items-center text-center">
             <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
             </div>
-            <h3 class="text-white text-xl font-bold mb-2">Something went wrong!</h3>
+            <h3 class="text-white text-xl font-bold mb-2">Notice</h3>
             <p id="error-text" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
-            <button onclick="hideErrorModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-red-600/30 active:scale-95">
+            <button onclick="hideErrorModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg active:scale-95">
                 OK
             </button>
         </div>
     </div>
 
     <script>
-        const updateModal = document.getElementById('update-modal');
-        const errorModal = document.getElementById('error-modal');
-        const errorText = document.getElementById('error-text');
-        const brightnessOverlay = document.getElementById('brightness-overlay');
-        const brightnessSlider = document.getElementById('brightness-slider');
-        const volumeSlider = document.getElementById('volume-slider');
-        const nextChannelBtn = document.getElementById('next-channel-btn');
-        const prevChannelBtn = document.getElementById('prev-channel-btn');
-        const videoElement = document.getElementById('main-video-player');
-        const playerPlaceholder = document.getElementById('player-placeholder');
-        const playerStatus = document.getElementById('player-status');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const DOM = {
+            loader: document.getElementById('loading-screen'),
+            updateModal: document.getElementById('update-modal'),
+            errorModal: document.getElementById('error-modal'),
+            errorText: document.getElementById('error-text'),
+            brightnessOverlay: document.getElementById('brightness-overlay'),
+            brightnessSlider: document.getElementById('brightness-slider'),
+            volumeSlider: document.getElementById('volume-slider'),
+            video: document.getElementById('main-video-player'),
+            placeholder: document.getElementById('player-placeholder'),
+            status: document.getElementById('player-status'),
+            tabsContainer: document.getElementById('category-tabs'),
+            gridContainer: document.getElementById('channel-grid')
+        };
 
         let currentChannelsData = [];
         let currentPlayingIndex = -1;
-        let hls;
+        let hlsPlayer = null;
 
-        function showUpdateNotice() { updateModal.classList.remove('hidden'); }
-        function hideUpdateNotice() { updateModal.classList.add('hidden'); }
-        function showErrorModal(message) {
-            errorText.innerText = message;
-            errorModal.classList.remove('hidden');
-            hideUpdateNotice();
+        // Modal Controls
+        const showUpdateNotice = () => DOM.updateModal.classList.remove('hidden');
+        const hideUpdateNotice = () => DOM.updateModal.classList.add('hidden');
+        const showErrorModal = (msg) => { DOM.errorText.innerText = msg; DOM.errorModal.classList.remove('hidden'); hideUpdateNotice(); };
+        const hideErrorModal = () => DOM.errorModal.classList.add('hidden');
+
+        // UI Listeners
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                DOM.loader.style.opacity = "0";
+                setTimeout(() => DOM.loader.remove(), 500);
+            }, 800);
+        });
+
+        DOM.brightnessSlider.addEventListener('input', (e) => {
+            DOM.brightnessOverlay.style.opacity = (100 - e.target.value) / 100 * 0.85;
+        });
+
+        DOM.volumeSlider.addEventListener('input', (e) => {
+            DOM.video.volume = e.target.value / 100;
+        });
+
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            if (DOM.video.requestFullscreen) DOM.video.requestFullscreen();
+            else if (DOM.video.webkitRequestFullscreen) DOM.video.webkitRequestFullscreen();
+        });
+
+        const categoryFiles = [
+            { name: "Bangla News", file: "./bangla-news.json" },
+            { name: "Bangla", file: "./bangla.json" },
+            { name: "Live TV", file: "./live-tv.json" },
+            { name: "India", file: "./india.json" },
+            { name: "Movies", file: "./movies.json" },
+            { name: "Kids", file: "./kids.json" },
+            { name: "Music", file: "./music.json" },
+            { name: "Educational", file: "./educational.json" },
+            { name: "International", file: "./international.json" },
+            { name: "Int. News", file: "./international-news.json" }
+        ];
+
+        function initTabs() {
+            categoryFiles.forEach((cat, index) => {
+                const btn = document.createElement('button');
+                btn.className = index === 0 
+                    ? "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-cyan-500 text-white flex-shrink-0 transition-colors shadow-sm"
+                    : "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
+                btn.textContent = cat.name;
+                
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
+                    });
+                    btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-cyan-500 text-white flex-shrink-0 transition-colors shadow-sm";
+                    loadChannelData(cat.file);
+                });
+                DOM.tabsContainer.appendChild(btn);
+            });
+            loadChannelData(categoryFiles[0].file);
         }
-        function hideErrorModal() { errorModal.classList.add('hidden'); }
 
-        brightnessSlider.addEventListener('input', (e) => {
-            const value = e.target.value;
-            brightnessOverlay.style.opacity = (100 - value) / 100 * 0.85;
-        });
+        async function loadChannelData(fileName) {
+            DOM.gridContainer.innerHTML = '';
+            showUpdateNotice();
 
-        volumeSlider.addEventListener('input', (e) => {
-            const volumeValue = e.target.value;
-            videoElement.volume = volumeValue / 100;
-        });
-
-        fullscreenBtn.addEventListener('click', () => {
-            if (videoElement.requestFullscreen) { videoElement.requestFullscreen(); }
-            else if (videoElement.webkitRequestFullscreen) { videoElement.webkitRequestFullscreen(); }
-            else if (videoElement.msRequestFullscreen) { videoElement.msRequestFullscreen(); }
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const categoryFiles = [
-                { name: "Bangla", file: "./bangla.json" },
-                { name: "Bangla News", file: "./bangla-news.json" },
-                { name: "Live TV", file: "./live-tv.json" },
-                { name: "India", file: "./india.json" },
-                { name: "Pakistan", file: "./pakistan.json" },
-                { name: "Movies", file: "./movies.json" },
-                { name: "Kids", file: "./kids.json" },
-                { name: "Music", file: "./music.json" },
-                { name: "Educational", file: "./educational.json" },
-                { name: "International", file: "./international.json" },
-                { name: "Int. News", file: "./international-news.json" },
-                { name: "Sports", file: "./sports.json" },
-                { name: "Religious", file: "./religious.json" },
-                { name: "Travel", file: "./travel.json" }
-            ];
-
-            const tabsContainer = document.getElementById('category-tabs');
-            const gridContainer = document.getElementById('channel-grid');
-
-            function initTabs() {
-                categoryFiles.forEach((cat, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = index === 0 
-                        ? "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm"
-                        : "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
-                    btn.textContent = cat.name;
-                    
-                    btn.addEventListener('click', () => {
-                        document.querySelectorAll('.tab-btn').forEach(b => {
-                            b.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-gray-800 text-white flex-shrink-0 transition-colors hover:bg-gray-700";
-                        });
-                        btn.className = "tab-btn px-5 py-2 rounded-full text-sm font-bold bg-white text-gray-900 flex-shrink-0 transition-colors shadow-sm";
-                        loadChannelData(cat.file);
-                    });
-                    tabsContainer.appendChild(btn);
-                });
-                loadChannelData(categoryFiles[0].file);
-            }
-
-            async function loadChannelData(fileName) {
-                gridContainer.innerHTML = '';
-                showUpdateNotice();
-
-                try {
-                    const response = await fetch(fileName);
-                    
-                    if (!response.ok) throw new Error("FILE_NOT_FOUND");
-                    
-                    const textData = await response.text();
-                    let data;
-                    
-                    try {
-                        data = JSON.parse(textData);
-                    } catch (e) {
-                        throw new Error("SYNTAX_ERROR");
-                    }
-
-                    if (!Array.isArray(data) || data.length === 0) {
-                        throw new Error("EMPTY_LIST");
-                    }
-                    
-                    currentChannelsData = data; 
-                    currentPlayingIndex = -1; 
-                    renderChannels(data);
-                    
-                    setTimeout(() => { hideUpdateNotice(); }, 800);
-
-                } catch (error) {
-                    console.error(error);
-                    
-                    if (error.name === 'TypeError' || error.message === 'Failed to fetch') {
-                        showErrorModal("Network or CORS error! Unable to fetch the channel list. Remember, you cannot run this code directly from a local file manager (file://). You must upload it to GitHub Pages or use a local web server app.");
-                    } else if (error.message === "SYNTAX_ERROR") {
-                        showErrorModal(`Format error in '${fileName}'. Please check for missing commas or brackets in your JSON file.`);
-                    } else if (error.message === "EMPTY_LIST") {
-                        showErrorModal(`The '${fileName}' category is currently empty.`);
-                    } else {
-                        showErrorModal(`Could not load the channels because '${fileName}' was not found. Please ensure it is correctly uploaded to your repository.`);
-                    }
+            try {
+                const response = await fetch(fileName);
+                if (!response.ok) throw new Error("FILE_NOT_FOUND");
+                
+                const data = await response.json();
+                if (!Array.isArray(data) || data.length === 0) throw new Error("EMPTY_LIST");
+                
+                currentChannelsData = data;
+                renderChannels(data);
+                hideUpdateNotice();
+            } catch (error) {
+                console.error(error);
+                if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+                    showErrorModal("Network error! Make sure you are running this via a server (like GitHub Pages or VS Code Live Server). Opening the HTML file directly will not work due to CORS policy.");
+                } else if (error.message === "EMPTY_LIST") {
+                    showErrorModal(`No channels found in ${fileName}.`);
+                } else {
+                    showErrorModal(`Could not load ${fileName}. Make sure the file is uploaded correctly.`);
                 }
             }
+        }
 
-            function playChannel(index) {
-                if (index < 0 || index >= currentChannelsData.length) return;
-                currentPlayingIndex = index;
-                const channel = currentChannelsData[index];
+        function playChannel(index) {
+            if (index < 0 || index >= currentChannelsData.length) return;
+            currentPlayingIndex = index;
+            const channel = currentChannelsData[index];
+            const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
+            
+            DOM.placeholder.classList.add('hidden');
+            DOM.status.innerHTML = `Playing: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
+
+            if (Hls.isSupported()) {
+                if (hlsPlayer) hlsPlayer.destroy();
+                hlsPlayer = new Hls();
+                hlsPlayer.loadSource(channel.url);
+                hlsPlayer.attachMedia(DOM.video);
+                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => DOM.video.play());
+                
+                hlsPlayer.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        showErrorModal(`Cannot play '${cleanName}'. The streaming link might be expired or broken.`);
+                        hlsPlayer.destroy();
+                    }
+                });
+            } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
+                DOM.video.src = channel.url;
+                DOM.video.play();
+            }
+        }
+
+        document.getElementById('next-channel-btn').addEventListener('click', () => {
+            if (currentChannelsData.length > 0) playChannel((currentPlayingIndex + 1) % currentChannelsData.length);
+        });
+
+        document.getElementById('prev-channel-btn').addEventListener('click', () => {
+            if (currentChannelsData.length > 0) playChannel((currentPlayingIndex - 1 + currentChannelsData.length) % currentChannelsData.length);
+        });
+
+        function renderChannels(channels) {
+            channels.forEach((channel, index) => {
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
+                const firstLetter = cleanName.charAt(0).toUpperCase();
                 
-                playerPlaceholder.classList.add('hidden'); 
+                const logoHtml = channel.logo ? 
+                    `<img src="${channel.logo}" alt="${cleanName}" class="channel-logo-img bg-gray-50" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                     <div style="display:none;" class="w-full h-full rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold">${firstLetter}</div>` : 
+                    `<div class="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center text-cyan-600 font-black text-2xl">${firstLetter}</div>`;
+
+                const card = document.createElement('button');
+                card.className = "channel-card aspect-square bg-[#1a1a24] rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-gray-800";
                 
-                // এখানে ইংরেজিতে আপডেট করা হয়েছে
-                playerStatus.innerHTML = `Playing: <span class="text-cyan-400 font-bold">${cleanName}</span>`;
+                card.innerHTML = `
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">${logoHtml}</div>
+                    <span class="text-xs sm:text-sm font-bold text-gray-300 text-center leading-tight truncate w-full" title="${cleanName}">${cleanName}</span>
+                `;
 
-                if (Hls.isSupported()) {
-                    if (hls) hls.destroy();
-                    hls = new Hls();
-                    hls.loadSource(channel.url);
-                    hls.attachMedia(videoElement);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                        videoElement.play();
-                    });
-                    
-                    hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal) {
-                            showErrorModal(`Cannot play '${cleanName}'. The live streaming link (m3u8) might be expired or broken. Please try another channel.`);
-                            playerPlaceholder.classList.remove('hidden');
-                            hls.destroy();
-                        }
-                    });
-                } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                    videoElement.src = channel.url;
-                    videoElement.play();
-                    videoElement.addEventListener('error', () => {
-                        showErrorModal(`Cannot play '${cleanName}'. The live streaming link (m3u8) might be expired or broken. Please try another channel.`);
-                        playerPlaceholder.classList.remove('hidden');
-                    });
-                }
-            }
-
-            nextChannelBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (currentChannelsData.length === 0) return;
-                let nextIndex = currentPlayingIndex + 1;
-                if (nextIndex >= currentChannelsData.length) nextIndex = 0; 
-                playChannel(nextIndex);
-            });
-
-            prevChannelBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (currentChannelsData.length === 0) return;
-                let prevIndex = currentPlayingIndex - 1;
-                if (prevIndex < 0) prevIndex = currentChannelsData.length - 1; 
-                playChannel(prevIndex);
-            });
-
-            function renderChannels(channels) {
-                channels.forEach((channel, index) => {
-                    const card = document.createElement('button');
-                    card.className = "channel-card aspect-square bg-white rounded-xl flex flex-col items-center justify-center p-2 hover:-translate-y-1 hover:shadow-[0_4px_15px_rgba(6,182,212,0.3)] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-cyan-400";
-                    
-                    const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
-                    const firstLetter = cleanName.charAt(0).toUpperCase();
-                    let logoHtml = channel.logo && channel.logo.trim() !== "" 
-                        ? `<img src="${channel.logo}" alt="${channel.name}" class="channel-logo-img bg-gray-50" onerror="this.onerror=null; this.outerHTML='<div class=\\'w-full h-full rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold\\'>${firstLetter}</div>'">`
-                        : `<div class="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 flex items-center justify-center text-cyan-600 font-black text-2xl">${firstLetter}</div>`;
-
-                    card.innerHTML = `
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full mb-2 flex items-center justify-center text-gray-700 text-xl group-hover:scale-110 transition-transform relative overflow-hidden">${logoHtml}</div>
-                        <span class="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight truncate w-full" title="${cleanName}">${cleanName}</span>
-                    `;
-
-                    card.addEventListener('click', () => {
-                        playChannel(index);
-                        card.classList.add('scale-95', 'opacity-80');
-                        setTimeout(() => card.classList.remove('scale-95', 'opacity-80'), 150);
-                    });
-                    gridContainer.appendChild(card);
+                card.addEventListener('click', () => {
+                    playChannel(index);
+                    card.classList.add('scale-95');
+                    setTimeout(() => card.classList.remove('scale-95'), 150);
                 });
-            }
+                DOM.gridContainer.appendChild(card);
+            });
+        }
 
-            initTabs();
-        });
+        initTabs();
     </script>
 </body>
 </html>
