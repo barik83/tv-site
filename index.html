@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ultima IPTV Max Pro - Extreme Performance Engine</title>
+    <title>Ultima IPTV Max Pro - Clean UI & Instant Play</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -91,14 +91,13 @@
             transform: translateY(-5px);
         }
 
-        /* Dual Ring Premium Fast Spinner Setup */
         .stream-spinner {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             border: 3px solid rgba(0, 230, 118, 0.1);
             border-radius: 50%;
             border-top-color: #00E676;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.6s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
@@ -112,6 +111,18 @@
 
     <main class="w-full mx-auto pt-4 px-2 sm:px-4 pb-12 md:max-w-4xl lg:max-w-[1200px] xl:max-w-[1400px]">
         
+        <div class="w-full mb-3 flex flex-col sm:flex-row items-center justify-between px-4 py-2 rounded-xl glass-panel text-xs gap-2">
+            <div class="flex items-center space-x-2 font-bold tracking-wide">
+                <span class="text-white">Player Station:</span>
+                <span class="text-[#00E676] neon-glow">Cepanto Pro</span>
+            </div>
+            <div id="live-clock-panel" class="flex items-center space-x-3 font-medium text-gray-300">
+                <span id="live-time" class="font-bold text-white tracking-wider bg-black/40 px-3 py-1 rounded-md border border-white/5">00:00:00 AM</span>
+                <span class="text-gray-600">|</span>
+                <span id="live-date" class="text-gray-400 bg-black/40 px-3 py-1 rounded-md border border-white/5">01 Jan 2026</span>
+            </div>
+        </div>
+
         <section class="w-full mb-6 flex justify-center relative">
             <div id="ambient-glow"></div>
 
@@ -121,21 +132,12 @@
 
                 <div id="touch-area" class="absolute inset-0 z-10 w-full h-[85%]"></div>
 
-                <div class="absolute top-4 left-4 glass-panel px-4 py-1.5 rounded-xl flex items-center space-x-2 z-40 text-xs font-bold tracking-wide pointer-events-none opacity-80">
-                    <span class="text-white">Cepanto</span> <span class="text-gray-600">|</span> <span class="text-[#00E676] neon-glow">my 121</span>
+                <div id="stream-loading-hud" class="absolute inset-0 bg-black/80 hidden flex-col items-center justify-center z-40 pointer-events-none transition-opacity duration-150">
+                    <div class="stream-spinner mb-2"></div>
+                    <p class="text-[10px] text-[#00E676] font-bold tracking-widest neon-glow uppercase">Zapping Stream...</p>
                 </div>
 
-                <div id="live-clock-panel" class="absolute top-4 left-1/2 -translate-x-1/2 glass-panel px-4 py-1.5 rounded-xl flex items-center space-x-3 z-40 text-xs font-medium tracking-wide pointer-events-none opacity-0 transition-opacity duration-500 text-gray-300">
-                    <span id="live-time" class="font-bold text-white tracking-wider">00:00:00 AM</span>
-                    <span class="text-gray-600">|</span> <span id="live-date" class="text-gray-400">01 Jan 2026</span>
-                </div>
-
-                <div id="stream-loading-hud" class="absolute inset-0 bg-black/60 hidden flex-col items-center justify-center z-40 pointer-events-none backdrop-blur-xs transition-opacity duration-150">
-                    <div class="stream-spinner mb-3"></div>
-                    <p class="text-xs text-[#00E676] font-bold tracking-widest neon-glow uppercase">Connecting Stream...</p>
-                </div>
-
-                <div id="stats-hud" class="absolute top-16 left-4 hidden glass-panel p-3 rounded-xl text-[10px] font-mono text-gray-400 space-y-1 z-50 pointer-events-none w-48 border border-[#00E676]/20">
+                <div id="stats-hud" class="absolute top-4 left-4 hidden glass-panel p-3 rounded-xl text-[10px] font-mono text-gray-400 space-y-1 z-50 pointer-events-none w-48 border border-[#00E676]/20">
                     <p class="text-[#00E676] font-bold border-b border-gray-800 pb-1 mb-1">⚡ Stats For Nerds</p>
                     <p>Resolution: <span id="stat-res" class="text-white">0x0</span></p>
                     <p>Frames Per Sec: <span id="stat-fps" class="text-white">0</span></p>
@@ -209,7 +211,7 @@
                                 <button onclick="cycleAspectRatio()"><i class="fa-solid fa-compress text-lg"></i></button>
                                 <button id="pip-btn"><i class="fa-regular fa-window-restore text-lg"></i></button>
                                 <button id="rotate-btn"><i class="fa-solid fa-rotate text-lg"></i></button>
-                                <button id="fullscreen-btn"><i class="fa-solid fa-expand text-lg"></i></button>
+                                <button id="fullscreen-btn" class="hover:text-[#00E676] transition-all"><i class="fa-solid fa-expand text-lg"></i></button>
                             </div>
                         </div>
                     </div>
@@ -244,7 +246,7 @@
             bDot: document.getElementById('brightness-dot'), vDot: document.getElementById('volume-dot'),
             bTxt: document.getElementById('brightness-val'), vTxt: document.getElementById('volume-val'),
             volIcon: document.getElementById('vol-overlay-icon'), roller: document.getElementById('channel-roller'),
-            clockPanel: document.getElementById('live-clock-panel'), channelPopup: document.getElementById('channel-popup'),
+            channelPopup: document.getElementById('channel-popup'),
             popupText: document.getElementById('popup-text'), qualityPanel: document.getElementById('quality-panel'),
             qualityBtn: document.getElementById('quality-btn'), playPauseBtn: document.getElementById('play-pause-btn'),
             speedBtn: document.getElementById('speed-btn'), aspectBtnTxt: document.getElementById('aspect-btn-txt'),
@@ -257,7 +259,7 @@
             oledThemeBtn: document.getElementById('oled-theme-btn'),
             playlistUrlInput: document.getElementById('playlist-url-input'),
             playlistLoadBtn: document.getElementById('playlist-load-btn'),
-            streamLoadingHud: document.getElementById('stream-loading-hud') // Stream Spinner Hook
+            streamLoadingHud: document.getElementById('stream-loading-hud')
         };
 
         let currentChannelsData = [];
@@ -273,7 +275,6 @@
         let playSpeeds = [1.0, 1.25, 1.5, 2.0];
         let currentSpeedIdx = 0;
 
-        // Functional Operational Controls Flags
         let isChildLocked = false;
         let isNerdHudActive = false;
         let isOledMode = JSON.parse(localStorage.getItem('iptv_oled_mode')) || false;
@@ -298,7 +299,6 @@
             }, 800);
         });
 
-        // Sticky Mini Floating Player Window Trigger
         const scrollObserver = new IntersectionObserver(([entry]) => {
             if (!entry.isIntersecting && currentPlayingIndex !== -1) {
                 DOM.videoWrapper.classList.add('sticky-mini-player');
@@ -314,7 +314,6 @@
             if (isChildLocked) return;
             DOM.masterControls.style.opacity = '1';
             DOM.roller.style.opacity = '1';
-            DOM.clockPanel.style.opacity = '1';
             DOM.videoWrapper.style.cursor = 'default';
             clearTimeout(controlsTimer);
             
@@ -322,7 +321,6 @@
                 if(!DOM.video.paused) {
                     DOM.masterControls.style.opacity = '0';
                     DOM.roller.style.opacity = '0';
-                    DOM.clockPanel.style.opacity = '0';
                     DOM.videoWrapper.style.cursor = 'none';
                     closeAllPanels();
                 }
@@ -353,8 +351,8 @@
             const ss = String(dateObj.getSeconds()).padStart(2, '0');
             const cycle = hh >= 12 ? 'PM' : 'AM';
             hh = hh % 12 || 12;
-            DOM.clockPanel.children[0].innerText = `${String(hh).padStart(2, '0')}:${mm}:${ss} ${cycle}`;
-            DOM.clockPanel.children[2].innerText = dateObj.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('live-time').innerText = `${String(hh).padStart(2, '0')}:${mm}:${ss} ${cycle}`;
+            document.getElementById('live-date').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
         }
         setInterval(runLiveClock, 1000); runLiveClock();
 
@@ -388,7 +386,7 @@
             isChildLocked = !isChildLocked;
             if (isChildLocked) {
                 document.getElementById('lock-icon').className = 'fa-solid fa-lock text-red-500 animate-bounce';
-                DOM.masterControls.style.opacity = '0'; DOM.roller.style.opacity = '0'; DOM.clockPanel.style.opacity = '0';
+                DOM.masterControls.style.opacity = '0'; DOM.roller.style.opacity = '0';
                 closeAllPanels();
             } else {
                 document.getElementById('lock-icon').className = 'fa-solid fa-lock-open text-[#00E676]';
@@ -590,7 +588,7 @@
                 if (DOM.video.paused) return;
                 if (DOM.video.currentTime === lastVideoTime) {
                     stuckCounter++;
-                    if (stuckCounter >= 3) { // Reduced checkpoint time window to 3 seconds for faster recovery
+                    if (stuckCounter >= 3) { 
                         stuckCounter = 0;
                         if (hlsPlayer) hlsPlayer.recoverMediaError();
                         else playChannel(currentPlayingIndex);
@@ -726,7 +724,7 @@
             renderChannels(filtered);
         });
 
-        // --- EXTREME LOW LATENCY LIVE BROADCAST HANDSHAKE ENGINE ---
+        // --- EXTREME ULTRA-FAST INSTANT HANDSHAKE ENGINE ---
         function playChannel(index, dataArray = currentChannelsData) {
             if (index < 0 || index >= dataArray.length) return;
             const channel = dataArray[index];
@@ -738,7 +736,7 @@
             DOM.channelPopup.classList.remove('opacity-0');
             clearTimeout(popupTimer); popupTimer = setTimeout(() => DOM.channelPopup.classList.add('opacity-0'), 2000);
 
-            // Flash visual connectivity backdrop spinner loader immediately
+            // Turn on low-latency zapping overlay instantly
             DOM.streamLoadingHud.classList.replace('hidden', 'flex');
 
             const premiumNeonPalettes = ['rgba(0,230,118,0.22)', 'rgba(0,184,212,0.22)', 'rgba(213,0,249,0.22)', 'rgba(255,214,0,0.22)'];
@@ -751,31 +749,23 @@
             resetControlsTimer();
             initAutoHealer();
 
-            // Prime the video element structure early for immediate frame mapping
-            DOM.video.style.opacity = '0.3';
+            DOM.video.style.opacity = '0.4';
 
             if (Hls.isSupported()) {
                 if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
                 
-                // --- ULTRA-FAST ZAPPING PERFORMANCE OPTIMIZATION TUNING ---
+                // Absolute Fast-Zapping Hls Parameters Configuration
                 hlsPlayer = new Hls({ 
                     enableWorker: true,
                     lowLatencyMode: true,
-                    backBufferLength: 0,            // Free memory instantly
-                    maxBufferLength: 2,             // Request only 2 seconds of fragments to play instantly
-                    maxMaxBufferLength: 4,
-                    liveSyncDuration: 1.0,          // Force synchronization right at the live edge
-                    liveMaxLatencyDuration: 2.5,
-                    maxBufferHole: 0.4,
-                    startLevel: 0,                  // Instantly query lowest bitrate profile for rapid sub-second connections
-                    testBandwidth: false,           // Bypass initial latency delay check requests entirely
-                    progressive: true,              // Stream segment parsing progressively
-                    manifestLoadingTimeOut: 3000,
-                    manifestLoadingMaxRetry: 3,
-                    manifestLoadingRetryDelay: 400,
-                    fragLoadingTimeOut: 4000,
-                    fragLoadingMaxRetry: 3,
-                    fragLoadingRetryDelay: 400
+                    backBufferLength: 0,
+                    maxBufferLength: 1.5,           // Buffers only 1.5s max to allow instantaneous video payload trigger
+                    maxMaxBufferLength: 3.5,
+                    liveSyncDuration: 0.8,          // Sync strictly up to the edge frame chunk
+                    liveMaxLatencyDuration: 2.0,
+                    startLevel: 0,                  // Forces player to process lightweight data instantly without blocking handshakes
+                    testBandwidth: false,           // Strips bandwidth benchmarking routines for instant streaming
+                    progressive: true
                 }); 
                 
                 hlsPlayer.loadSource(channel.url); 
@@ -788,7 +778,6 @@
                             DOM.streamLoadingHud.classList.replace('flex', 'hidden');
                             DOM.video.style.opacity = '1';
                         }).catch(() => {
-                            // Autoplay fallback execution check
                             DOM.video.muted = true;
                             DOM.video.play();
                             DOM.streamLoadingHud.classList.replace('flex', 'hidden');
@@ -798,7 +787,6 @@
                     DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'; 
                 });
 
-                // Dismiss loader spinner immediately on first payload chunk delivery
                 DOM.video.addEventListener('loadeddata', () => { 
                     DOM.streamLoadingHud.classList.replace('flex', 'hidden');
                     DOM.video.style.opacity = '1'; 
