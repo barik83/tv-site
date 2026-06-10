@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium IPTV Web Player - Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium IPTV Web Player - MX Style & Fast Play</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,37 +22,29 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
         
-        /* Premium Neon Green Custom Sliders */
-        input[type=range] {
+        /* MX Style Horizontal Range Slider */
+        input[type=range].mx-seekbar {
             -webkit-appearance: none;
             background: transparent;
+            cursor: pointer;
         }
-        input[type=range]::-webkit-slider-runnable-track {
-            height: 5px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
+        input[type=range].mx-seekbar::-webkit-slider-runnable-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
         }
-        input[type=range]::-webkit-slider-thumb {
+        input[type=range].mx-seekbar::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 14px;
-            width: 14px;
+            height: 16px;
+            width: 16px;
             border-radius: 50%;
             background: #00E676; /* Neon Green */
-            cursor: pointer;
-            margin-top: -4px;
+            margin-top: -6px;
             box-shadow: 0 0 10px rgba(0, 230, 118, 0.6);
             transition: transform 0.1s;
         }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-        }
-        
-        /* Vertical Slider for Gesture Controls */
-        .vertical-slider {
-            -webkit-appearance: slider-vertical;
-            width: 6px;
-            height: 110px;
-            accent-color: #00E676;
+        input[type=range].mx-seekbar::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
         }
 
         /* Fullscreen Wrapper Integration */
@@ -67,22 +59,13 @@
         .neon-glow {
             text-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
         }
-        .neon-bg-glow {
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        
+        /* Gesture Touch Area */
+        #touch-area {
+            touch-action: none; /* Prevents page scrolling while swiping on video */
+            user-select: none;
         }
     </style>
-
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "26b93271-f3ed-4743-8979-f035093fc193",
-    notifyButton: { enable: true }
-  });
-});
-</script>
-
 </head>
 <body class="bg-gray-950 text-white min-h-screen font-sans selection:bg-[#00E676] selection:text-black">
 
@@ -96,7 +79,27 @@ OneSignalDeferred.push(async function(OneSignal) {
         <section class="w-full mb-6 flex justify-center">
             <div id="video-wrapper" class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-900 flex items-center justify-center group">
                 
-                <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline></video>
+                <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline preload="auto"></video>
+
+                <div id="touch-area" class="absolute inset-0 z-10 w-full h-[85%]"></div>
+
+                <div id="brightness-overlay" class="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 backdrop-blur-sm p-4 rounded-full opacity-0 transition-opacity duration-200 z-20 pointer-events-none">
+                    <span id="brightness-val" class="text-xs font-bold text-white mb-3">50%</span>
+                    <div class="w-1.5 h-24 bg-white/30 rounded-full relative mb-3">
+                        <div id="brightness-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full transition-all duration-75" style="height: 50%;"></div>
+                        <div id="brightness-dot" class="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-[#00E676] rounded-full shadow-[0_0_8px_#00E676] transition-all duration-75" style="bottom: 50%; transform: translate(-50%, 50%);"></div>
+                    </div>
+                    <i class="fa-solid fa-sun text-sm text-white"></i>
+                </div>
+
+                <div id="volume-overlay" class="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 backdrop-blur-sm p-4 rounded-full opacity-0 transition-opacity duration-200 z-20 pointer-events-none">
+                    <span id="volume-val" class="text-xs font-bold text-white mb-3">100%</span>
+                    <div class="w-1.5 h-24 bg-white/30 rounded-full relative mb-3">
+                        <div id="volume-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full transition-all duration-75" style="height: 100%;"></div>
+                        <div id="volume-dot" class="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-[#00E676] rounded-full shadow-[0_0_8px_#00E676] transition-all duration-75" style="bottom: 100%; transform: translate(-50%, 50%);"></div>
+                    </div>
+                    <i id="vol-overlay-icon" class="fa-solid fa-volume-high text-sm text-white"></i>
+                </div>
 
                 <div id="channel-popup" class="absolute top-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[#00E676] font-bold text-lg shadow-xl opacity-0 translate-y-[-20px] transition-all duration-300 z-50 pointer-events-none neon-glow">
                     <span id="popup-text">Channel Name</span>
@@ -107,34 +110,22 @@ OneSignalDeferred.push(async function(OneSignal) {
                     <p class="text-sm font-semibold tracking-wide text-gray-400">Select a channel to play</p>
                 </div>
 
-                <div id="master-controls" class="absolute inset-0 z-20 opacity-0 transition-opacity duration-500 bg-gradient-to-t from-black/40 via-transparent to-black/20">
+                <div id="master-controls" class="absolute inset-0 z-30 opacity-0 transition-opacity duration-500 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none">
                     
-                    <div class="absolute left-6 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2">
-                        <span id="brightness-txt" class="text-[10px] font-bold text-gray-300">100%</span>
-                        <input type="range" id="brightness-slider" min="30" max="150" value="100" class="vertical-slider cursor-pointer">
-                        <i class="fa-solid fa-sun text-sm text-[#00E676] neon-glow"></i>
-                    </div>
-
-                    <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2">
-                        <span id="volume-txt" class="text-[10px] font-bold text-gray-300">100%</span>
-                        <input type="range" id="volume-slider" min="0" max="100" value="100" class="vertical-slider cursor-pointer">
-                        <i id="vol-icon" class="fa-solid fa-volume-high text-sm text-[#00E676] neon-glow"></i>
-                    </div>
-
-                    <div class="absolute right-16 top-1/2 -translate-y-1/2 flex flex-col space-y-3">
-                        <button id="next-channel-btn" title="Next Channel" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-white hover:text-[#00E676] hover:scale-110 active:scale-95 transition-all shadow-lg">
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col space-y-3 pointer-events-auto">
+                        <button id="next-channel-btn" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:text-[#00E676] hover:scale-110 active:scale-95 transition-all">
                             <i class="fa-solid fa-chevron-up text-sm"></i>
                         </button>
-                        <button id="prev-channel-btn" title="Previous Channel" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-white hover:text-[#00E676] hover:scale-110 active:scale-95 transition-all shadow-lg">
+                        <button id="prev-channel-btn" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:text-[#00E676] hover:scale-110 active:scale-95 transition-all">
                             <i class="fa-solid fa-chevron-down text-sm"></i>
                         </button>
                     </div>
 
-                    <button onclick="togglePanel('advanced-settings-panel')" class="absolute top-4 right-4 w-10 h-10 rounded-full glass-panel flex items-center justify-center text-white hover:text-[#00E676] transition-all">
+                    <button onclick="togglePanel('advanced-settings-panel')" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:text-[#00E676] transition-all pointer-events-auto">
                         <i class="fa-solid fa-gear"></i>
                     </button>
 
-                    <div id="advanced-settings-panel" class="absolute top-16 right-4 hidden glass-panel rounded-2xl w-72 p-4 shadow-2xl z-50 animate-fade-in">
+                    <div id="advanced-settings-panel" class="absolute top-16 right-4 hidden glass-panel rounded-2xl w-72 p-4 shadow-2xl z-50 animate-fade-in pointer-events-auto">
                         <div class="grid grid-cols-4 gap-2 mb-4 border-b border-gray-800 pb-4 text-center">
                             <button onclick="mockFeature('Audio Track')" class="flex flex-col items-center hover:text-[#00E676] transition-colors"><i class="fa-solid fa-language text-lg mb-1"></i><span class="text-[9px] font-bold tracking-tight">Audio</span></button>
                             <button onclick="mockFeature('Equalizer')" class="flex flex-col items-center hover:text-[#00E676] transition-colors"><i class="fa-solid fa-sliders text-lg mb-1"></i><span class="text-[9px] font-bold tracking-tight">EQ</span></button>
@@ -159,42 +150,37 @@ OneSignalDeferred.push(async function(OneSignal) {
                         </div>
                     </div>
 
-                    <div id="quality-panel" class="absolute top-36 right-36 hidden glass-panel rounded-xl overflow-hidden w-32 flex flex-col z-50"></div>
+                    <div id="quality-panel" class="absolute top-36 right-36 hidden glass-panel rounded-xl overflow-hidden w-32 flex flex-col z-50 pointer-events-auto"></div>
 
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-4 pt-10 flex flex-col space-y-3">
+                    <div class="absolute bottom-0 left-0 w-full p-4 pt-8 flex flex-col space-y-4 pointer-events-auto">
                         
-                        <div class="flex items-center space-x-3 w-full relative">
-                            <span class="text-[10px] font-bold text-gray-300">00:00:00</span>
-                            <input type="range" id="seek-bar" min="0" max="100" value="100" class="w-full cursor-not-allowed" disabled>
-                            <span class="text-[10px] font-bold text-[#00E676] tracking-wider neon-glow">LIVE</span>
+                        <div class="flex items-center space-x-4 w-full">
+                            <span class="text-xs font-semibold text-white tracking-wider">00:00:00</span>
+                            <input type="range" id="seek-bar" min="0" max="100" value="100" class="mx-seekbar w-full cursor-not-allowed" disabled>
+                            <div class="flex items-center text-[#00E676] font-bold text-xs tracking-wider">
+                                <span class="w-2 h-2 rounded-full bg-[#00E676] shadow-[0_0_8px_#00E676] mr-1.5"></span> LIVE
+                            </div>
                         </div>
 
-                        <div class="flex items-center justify-between w-full px-2">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex items-center text-red-500 font-bold text-xs tracking-wider glass-panel px-2.5 py-1 rounded-lg border border-red-500/20">
-                                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse mr-2 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span> LIVE
+                        <div class="flex items-center justify-between w-full">
+                            
+                            <div class="flex items-center space-x-4 flex-1">
+                                <div class="flex items-center text-red-500 font-bold text-[10px] tracking-wider bg-red-500/10 px-2 py-1 rounded border border-red-500/30">
+                                    🔴 LIVE
                                 </div>
-                                <button id="speed-btn" onclick="cyclePlaybackSpeed()" class="text-xs font-bold bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/5 hover:text-[#00E676] transition-colors">1.0x</button>
+                                <button id="speed-btn" onclick="cyclePlaybackSpeed()" class="text-xs font-bold text-white bg-white/10 px-2.5 py-1 rounded hover:text-[#00E676] transition-colors">1.0x</button>
                             </div>
 
-                            <div class="flex items-center">
-                                <button id="play-pause-btn" class="w-11 h-11 bg-[#00E676] text-black rounded-full flex items-center justify-center text-base hover:scale-105 active:scale-95 transition shadow-[0_0_15px_rgba(0,230,118,0.4)]">
+                            <div class="flex items-center justify-center flex-1">
+                                <button id="play-pause-btn" class="w-[52px] h-[52px] bg-[#00E676] text-black rounded-full flex items-center justify-center text-xl hover:scale-105 active:scale-95 transition shadow-[0_0_15px_rgba(0,230,118,0.4)]">
                                     <i class="fa-solid fa-pause"></i>
                                 </button>
                             </div>
 
-                            <div class="flex items-center space-x-4">
-                                <button onclick="cycleAspectRatio()" title="Screen Fit" class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-compress text-base"></i></button>
-                                
-                                <div class="relative group/pip">
-                                    <button id="pip-btn" class="text-gray-400 hover:text-[#00E676] transition-all"><i class="fa-regular fa-window-restore text-base"></i></button>
-                                    <div class="absolute bottom-full right-0 mb-3 w-44 bg-[#00E676] text-black text-[9px] font-black p-2 rounded-lg shadow-2xl opacity-0 group-hover/pip:opacity-100 transition-opacity pointer-events-none z-50">
-                                        Watching videos in floating Pop-up window
-                                        <div class="absolute -bottom-1 right-3 w-2 h-2 bg-[#00E676] rotate-44"></div>
-                                    </div>
-                                </div>
-
-                                <button id="fullscreen-btn" class="text-gray-400 hover:text-[#00E676] transition-all text-base"><i class="fa-solid fa-expand"></i></button>
+                            <div class="flex items-center justify-end space-x-5 flex-1 text-gray-300">
+                                <button onclick="cycleAspectRatio()" class="hover:text-[#00E676] transition-all"><i class="fa-solid fa-compress text-lg"></i></button>
+                                <button id="pip-btn" class="hover:text-[#00E676] transition-all"><i class="fa-regular fa-window-restore text-lg"></i></button>
+                                <button id="fullscreen-btn" class="hover:text-[#00E676] transition-all"><i class="fa-solid fa-expand text-lg"></i></button>
                             </div>
                         </div>
 
@@ -228,19 +214,23 @@ OneSignalDeferred.push(async function(OneSignal) {
             placeholder: document.getElementById('player-placeholder'),
             masterControls: document.getElementById('master-controls'),
             panels: ['advanced-settings-panel', 'quality-panel'],
-            sliders: {
-                brightness: document.getElementById('brightness-slider'),
-                volume: document.getElementById('volume-slider')
-            },
-            txt: {
-                brightness: document.getElementById('brightness-txt'),
-                volume: document.getElementById('volume-txt')
-            },
+            
+            // Gesture DOM elements
+            touchArea: document.getElementById('touch-area'),
+            bOverlay: document.getElementById('brightness-overlay'),
+            vOverlay: document.getElementById('volume-overlay'),
+            bFill: document.getElementById('brightness-fill'),
+            vFill: document.getElementById('volume-fill'),
+            bDot: document.getElementById('brightness-dot'),
+            vDot: document.getElementById('volume-dot'),
+            bTxt: document.getElementById('brightness-val'),
+            vTxt: document.getElementById('volume-val'),
+            volIcon: document.getElementById('vol-overlay-icon'),
+
             channelPopup: document.getElementById('channel-popup'),
             popupText: document.getElementById('popup-text'),
             qualityPanel: document.getElementById('quality-panel'),
             qualityBtn: document.getElementById('quality-btn'),
-            volIcon: document.getElementById('vol-icon'),
             playPauseBtn: document.getElementById('play-pause-btn'),
             speedBtn: document.getElementById('speed-btn'),
             aspectBtnTxt: document.getElementById('aspect-btn-txt'),
@@ -285,9 +275,8 @@ OneSignalDeferred.push(async function(OneSignal) {
             }, 3500);
         }
 
-        ['mousemove', 'touchstart', 'click'].forEach(evt => {
-            DOM.videoWrapper.addEventListener(evt, resetControlsTimer);
-        });
+        DOM.videoWrapper.addEventListener('click', resetControlsTimer);
+        DOM.videoWrapper.addEventListener('mousemove', resetControlsTimer);
 
         function closeAllPanels() {
             DOM.panels.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -297,44 +286,105 @@ OneSignalDeferred.push(async function(OneSignal) {
             const panel = document.getElementById(panelId);
             const isHidden = panel.classList.contains('hidden');
             if(panelId === 'advanced-settings-panel') DOM.qualityPanel.classList.add('hidden');
-            else if(panelId === 'quality-panel') DOM.advancedSettingsPanel.classList.add('hidden');
+            else if(panelId === 'quality-panel') document.getElementById('advanced-settings-panel').classList.add('hidden');
             
             if (isHidden) panel.classList.remove('hidden');
             else panel.classList.add('hidden');
             resetControlsTimer();
         };
 
-        // Block event bubblings inside floating control menus
         DOM.panels.forEach(id => {
             document.getElementById(id).addEventListener('click', e => e.stopPropagation());
         });
 
-        // --- 3. Synchronized Interactive Sliders ---
-        DOM.sliders.brightness.addEventListener('input', (e) => {
-            DOM.video.style.filter = `brightness(${e.target.value}%)`;
-            DOM.txt.brightness.innerText = `${e.target.value}%`;
-            resetControlsTimer();
+        // --- 3. GESTURE LOGIC (Volume & Brightness Swipe) ---
+        let isDragging = false;
+        let startY = 0;
+        let activeSide = null;
+        let startVal = 0;
+        let currentBrightness = 0.5; 
+        let currentVolume = 1.0;
+        let hideOverlayTimer;
+
+        function updateGestureUI(side, value) {
+            const pct = Math.round(value * 100);
+            const pos = `${pct}%`;
+
+            if(side === 'left') {
+                DOM.bTxt.innerText = pos;
+                DOM.bFill.style.height = pos;
+                DOM.bDot.style.bottom = pos;
+                const filterVal = 30 + (value * 120); // 30% to 150% brightness
+                DOM.video.style.filter = `brightness(${filterVal}%)`;
+            } else {
+                DOM.vTxt.innerText = pos;
+                DOM.vFill.style.height = pos;
+                DOM.vDot.style.bottom = pos;
+                DOM.video.volume = value;
+                
+                if(value === 0) DOM.volIcon.className = 'fa-solid fa-volume-xmark text-white';
+                else if(value < 0.5) DOM.volIcon.className = 'fa-solid fa-volume-low text-white';
+                else DOM.volIcon.className = 'fa-solid fa-volume-high text-white';
+            }
+        }
+
+        DOM.touchArea.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            clearTimeout(hideOverlayTimer);
+            
+            const rect = DOM.touchArea.getBoundingClientRect();
+            const relX = e.clientX - rect.left;
+            
+            if(relX < rect.width / 2) {
+                activeSide = 'left';
+                startVal = currentBrightness;
+                DOM.bOverlay.style.opacity = '1';
+            } else {
+                activeSide = 'right';
+                startVal = currentVolume;
+                DOM.vOverlay.style.opacity = '1';
+            }
         });
 
-        DOM.sliders.volume.addEventListener('input', (e) => {
-            const vol = e.target.value / 100;
-            DOM.video.volume = vol;
-            DOM.txt.volume.innerText = `${e.target.value}%`;
-            if(vol === 0) DOM.volIcon.className = 'fa-solid fa-volume-xmark text-red-500';
-            else if(vol < 0.5) DOM.volIcon.className = 'fa-solid fa-volume-low text-[#00E676] neon-glow';
-            else DOM.volIcon.className = 'fa-solid fa-volume-high text-[#00E676] neon-glow';
-            resetControlsTimer();
+        DOM.touchArea.addEventListener('pointermove', (e) => {
+            if(!isDragging) return;
+            const deltaY = startY - e.clientY;
+            let newValue = startVal + (deltaY / 200); // 200px vertical drag = 100% change
+            newValue = Math.max(0, Math.min(1, newValue)); 
+            
+            if(activeSide === 'left') {
+                currentBrightness = newValue;
+                updateGestureUI('left', currentBrightness);
+            } else {
+                currentVolume = newValue;
+                updateGestureUI('right', currentVolume);
+            }
         });
 
-        // --- 4. Advanced HUD Controls (Toggles & Action Handlers) ---
-        // Popup removed as scale text is moved to settings panel
+        const endDrag = () => {
+            if(!isDragging) return;
+            isDragging = false;
+            hideOverlayTimer = setTimeout(() => {
+                DOM.bOverlay.style.opacity = '0';
+                DOM.vOverlay.style.opacity = '0';
+            }, 1000);
+        };
 
+        DOM.touchArea.addEventListener('pointerup', endDrag);
+        DOM.touchArea.addEventListener('pointerleave', endDrag);
+        DOM.touchArea.addEventListener('pointercancel', endDrag);
+
+        updateGestureUI('left', currentBrightness);
+        updateGestureUI('right', currentVolume);
+
+        // --- 4. Advanced HUD Controls Toggles ---
         window.cycleAspectRatio = function() {
             currentAspectIdx = (currentAspectIdx + 1) % aspectRatios.length;
             aspectRatios.forEach(cls => DOM.video.classList.remove(cls));
             DOM.video.classList.add(aspectRatios[currentAspectIdx]);
             DOM.aspectBtnTxt.innerText = aspectLabels[currentAspectIdx];
-            DOM.hudText.innerText = aspectLabels[currentAspectIdx]; // Update text in settings
+            DOM.hudText.innerText = aspectLabels[currentAspectIdx];
         };
 
         window.cyclePlaybackSpeed = function() {
@@ -353,19 +403,13 @@ OneSignalDeferred.push(async function(OneSignal) {
             if(btn.classList.contains('text-[#00E676]')) {
                 DOM.video.style.setProperty('filter', 'sepia(45%) saturate(110%) brightness(90%)');
             } else {
-                DOM.video.style.filter = `brightness(${DOM.sliders.brightness.value}%)`;
+                updateGestureUI('left', currentBrightness);
             }
         };
 
-        window.toggleActiveState = function(btn) {
-            btn.classList.toggle('text-[#00E676]');
-        };
+        window.toggleActiveState = function(btn) { btn.classList.toggle('text-[#00E676]'); };
+        window.mockFeature = function(name) { console.log(`${name} Activated`); };
 
-        window.mockFeature = function(featureName) {
-            console.log(`${featureName} Activated`);
-        };
-
-        // Play Pause Core Sync Toggle
         DOM.playPauseBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if(DOM.video.paused) {
@@ -373,11 +417,11 @@ OneSignalDeferred.push(async function(OneSignal) {
                 DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
             } else {
                 DOM.video.pause();
-                DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-play ml-0.5"></i>';
+                DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-play ml-1"></i>';
             }
+            resetControlsTimer();
         });
 
-        // Picture In Picture Interface Trigger
         document.getElementById('pip-btn').addEventListener('click', async (e) => {
             e.stopPropagation();
             try {
@@ -386,12 +430,10 @@ OneSignalDeferred.push(async function(OneSignal) {
                 } else {
                     await document.exitPictureInPicture();
                 }
-            } catch (err) {
-                console.error("PiP Engine Fail", err);
-            }
+            } catch (err) { console.error("PiP Fail", err); }
         });
 
-        // --- 5. Channel Up/Down Stepper Mechanics ---
+        // --- 5. Channel Step Overrides ---
         function showChannelPopup(name) {
             DOM.popupText.innerText = name;
             DOM.channelPopup.classList.remove('opacity-0', 'translate-y-[-20px]');
@@ -413,7 +455,7 @@ OneSignalDeferred.push(async function(OneSignal) {
             if (currentChannelsData.length > 0) playChannel((currentPlayingIndex - 1 + currentChannelsData.length) % currentChannelsData.length);
         });
 
-        // --- 6. Hardware Adaptable Video Quality Engines ---
+        // --- 6. Quality Render and Fullscreen Engines ---
         function updateQualityMenu(levels) {
             DOM.qualityPanel.innerHTML = '';
             if (!levels || levels.length <= 1) {
@@ -450,7 +492,6 @@ OneSignalDeferred.push(async function(OneSignal) {
             DOM.qualityPanel.appendChild(btn);
         }
 
-        // Display Fullscreen Layout Engine Toggle
         document.getElementById('fullscreen-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             if (!document.fullscreenElement) {
@@ -509,22 +550,18 @@ OneSignalDeferred.push(async function(OneSignal) {
             }
         }
 
-        // Live Real-time Input Searching Engine
         DOM.searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const filtered = currentChannelsData.filter(channel => 
-                channel.name.toLowerCase().includes(searchTerm)
-            );
+            const filtered = currentChannelsData.filter(channel => channel.name.toLowerCase().includes(searchTerm));
             renderChannels(filtered, true);
         });
 
-        // Fast Core HLS Engine Processing Launcher
+        // --- 8. ULTRA-FAST DRIVEN LOW LATENCY PLAY ENGINE ---
         function playChannel(index, dataArray = currentChannelsData) {
             if (index < 0 || index >= dataArray.length) return;
             
             const channel = dataArray[index];
             currentPlayingIndex = currentChannelsData.findIndex(c => c.url === channel.url);
-            
             const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
             
             DOM.placeholder.classList.add('hidden');
@@ -532,37 +569,70 @@ OneSignalDeferred.push(async function(OneSignal) {
             resetControlsTimer();
             closeAllPanels();
 
+            // Opacity trick to hide initial black blockiness during stream connect
+            DOM.video.style.opacity = '0.5';
+
             if (Hls.isSupported()) {
-                if (hlsPlayer) hlsPlayer.destroy();
+                if (hlsPlayer) {
+                    hlsPlayer.destroy();
+                    hlsPlayer = null;
+                }
                 
-                // --- ULTRA-FAST PERFORMANCE DRIVEN LOW LATENCY OPTIMIZATIONS ---
+                // Low Latency & High Speed Engine Optimization
                 hlsPlayer = new Hls({ 
-                    capLevelToPlayerSize: true,
-                    enableWorker: true,
+                    enableWorker: true, 
                     lowLatencyMode: true,
-                    maxBufferLength: 4,      // Extremely low buffer lengths for faster zapping
+                    capLevelToPlayerSize: true, 
+                    startLevel: -1, // Instantly loads lowest bit-rate grid to avoid buffering wheel
+                    autoStartLoad: true,
+                    maxBufferLength: 4, 
                     maxMaxBufferLength: 8,
-                    liveSyncDurationCount: 1.5,
+                    liveSyncDurationCount: 1.5, 
                     liveMaxLatencyDurationCount: 3,
-                    manifestLoadingTimeOut: 5000,
-                    manifestLoadingMaxRetry: 2
+                    manifestLoadingMaxRetry: 2,
+                    fragLoadingMaxRetry: 2
                 }); 
                 
                 hlsPlayer.loadSource(channel.url);
                 hlsPlayer.attachMedia(DOM.video);
                 
                 hlsPlayer.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                    DOM.video.play();
+                    const playPromise = DOM.video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            DOM.video.style.opacity = '1';
+                        }).catch(error => console.log("Playback engine push bypass:", error));
+                    }
                     DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
                     updateQualityMenu(data.levels);
                 });
 
-                hlsPlayer.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) console.log("Link expired or unable to load stream.");
+                // Play as soon as first frame data arrives
+                DOM.video.addEventListener('loadeddata', () => {
+                    DOM.video.play();
+                    DOM.video.style.opacity = '1';
                 });
+
+                hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hlsPlayer.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hlsPlayer.recoverMediaError();
+                                break;
+                            default:
+                                hlsPlayer.destroy();
+                                break;
+                        }
+                    }
+                });
+
             } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
                 DOM.video.src = channel.url;
                 DOM.video.play();
+                DOM.video.style.opacity = '1';
                 DOM.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
                 DOM.qualityBtn.classList.add('hidden'); 
             }
@@ -571,14 +641,14 @@ OneSignalDeferred.push(async function(OneSignal) {
         function renderChannels(channels, isFiltered = false) {
             DOM.gridContainer.innerHTML = '';
             if (channels.length === 0) {
-                DOM.gridContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No channels matching criteria found</p>';
+                DOM.gridContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No channels found</p>';
                 return;
             }
 
             channels.forEach((channel, index) => {
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                 const card = document.createElement('button');
-                card.className = "aspect-square bg-gray-900/40 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 hover:-translate-y-1.5 hover:shadow-[0_8px_20px_rgba(0,230,118,0.15)] transition-all duration-300 group border border-white/5 focus:outline-none focus:ring-1 focus:ring-[#00E676]";
+                card.className = "aspect-square bg-gray-900/40 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 hover:-translate-y-1.5 hover:shadow-[0_8px_20px_rgba(0,230,118,0.15)] transition-all duration-300 group border border-white/5";
                 
                 const logoHtml = channel.logo 
                     ? `<img src="${channel.logo}" alt="${cleanName}" class="w-14 h-14 object-contain rounded-full bg-white p-1 mb-3 group-hover:scale-110 transition-transform">`
@@ -586,10 +656,7 @@ OneSignalDeferred.push(async function(OneSignal) {
 
                 card.innerHTML = `${logoHtml}<span class="text-xs font-semibold text-gray-300 text-center truncate w-full group-hover:text-[#00E676] transition-colors">${cleanName}</span>`;
 
-                card.onclick = () => {
-                    playChannel(index, channels);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                };
+                card.onclick = () => { playChannel(index, channels); window.scrollTo({ top: 0, behavior: 'smooth' }); };
                 DOM.gridContainer.appendChild(card);
             });
         }
