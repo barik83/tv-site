@@ -139,6 +139,13 @@
             </div>
         </section>
 
+        <section class="w-full mb-4">
+            <div class="relative w-full sm:w-1/2 lg:w-1/3 mx-auto">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="channel-search" placeholder="Search channels..." class="w-full bg-[#1e293b] border border-gray-700 text-white text-sm rounded-full focus:ring-cyan-500 focus:border-cyan-500 block pl-10 p-2.5 transition-colors shadow-inner outline-none">
+            </div>
+        </section>
+
         <section class="w-full mb-6">
             <div class="flex overflow-x-auto space-x-3 no-scrollbar py-2 px-1" id="category-tabs"></div>
         </section>
@@ -166,7 +173,8 @@
             qualityBtn: document.getElementById('quality-btn'),
             volIcon: document.getElementById('vol-icon'),
             tabsContainer: document.getElementById('category-tabs'),
-            gridContainer: document.getElementById('channel-grid')
+            gridContainer: document.getElementById('channel-grid'),
+            searchInput: document.getElementById('channel-search') // New Search DOM
         };
 
         let currentChannelsData = [];
@@ -198,7 +206,6 @@
             }, 3000);
         }
 
-        // Trigger controls on hover, tap, or mouse move
         ['mousemove', 'touchstart', 'click'].forEach(evt => {
             DOM.videoWrapper.addEventListener(evt, resetControlsTimer);
         });
@@ -210,19 +217,17 @@
         window.togglePanel = function(panelId) {
             const panel = document.getElementById(panelId);
             const isHidden = panel.classList.contains('hidden');
-            closeAllPanels(); // Exclusive show
+            closeAllPanels(); 
             if (isHidden) panel.classList.remove('hidden');
             resetControlsTimer();
         };
 
-        // Prevents clicks inside panels from triggering video pause or hiding controls
         DOM.panels.forEach(id => {
             document.getElementById(id).addEventListener('click', e => e.stopPropagation());
         });
 
         // --- 3. Hardware Accelerated Sliders ---
         DOM.sliders.brightness.addEventListener('input', (e) => {
-            // Using CSS filter for hardware-accelerated brightness instead of an overlay div
             DOM.video.style.filter = `brightness(${e.target.value}%)`;
             resetControlsTimer();
         });
@@ -270,10 +275,8 @@
             DOM.qualityBtn.classList.remove('hidden');
             DOM.qualityBtn.innerText = 'Auto';
 
-            // Auto Option
             createQualityOption('Auto', -1, true);
 
-            // High to Low Resolution Mapping
             const sortedLevels = levels.slice().reverse();
             sortedLevels.forEach((level, index) => {
                 const originalIndex = levels.length - 1 - index;
@@ -293,9 +296,8 @@
             btn.onclick = (e) => {
                 e.stopPropagation();
                 hlsPlayer.currentLevel = levelIndex;
-                DOM.qualityBtn.innerText = label.split(' ')[0]; // Show just 1080p/720p on button
+                DOM.qualityBtn.innerText = label.split(' ')[0]; 
                 
-                // Highlight active
                 Array.from(DOM.qualityPanel.children).forEach(child => child.classList.remove('text-cyan-400', 'font-bold'));
                 btn.classList.add('text-cyan-400', 'font-bold');
                 
@@ -317,8 +319,11 @@
             closeAllPanels();
         });
 
-        // --- 7. Data Loading & Player Logic ---
+        // --- 7. Data Loading, Search & Player Logic ---
+        
+        // Buno All added to the top
         const categoryFiles = [
+            { name: "Buno All", file: "./channels/bunoall.json" },
             { name: "Bangla News", file: "./channels/bangla-news.json" },
             { name: "Bangla", file: "./channels/bangla.json" },
             { name: "Live TV", file: "./channels/live-tv.json" },
@@ -329,10 +334,7 @@
             { name: "Educational", file: "./channels/educational.json" },
             { name: "International", file: "./channels/international.json" },
             { name: "Pakistan", file: "./channels/pakistan.json" },
-            { name: "Religious", file: "./channels/religious.json" },
-            
-            // FIXED: bunoall.json ফাইলটি এখানে সঠিকভাবে যোগ করে দেওয়া হয়েছে
-            { name: "Buno All", file: "./channels/bunoall.json" }
+            { name: "Religious", file: "./channels/religious.json" }
         ];
 
         function initTabs() {
@@ -345,6 +347,8 @@
                 btn.onclick = () => {
                     Array.from(DOM.tabsContainer.children).forEach(b => b.className = "px-5 py-2 rounded-full text-sm font-bold bg-[#1e293b] text-gray-300 flex-shrink-0 hover:bg-[#334155] transition-colors");
                     btn.className = "px-5 py-2 rounded-full text-sm font-bold bg-cyan-500 text-white flex-shrink-0 shadow-lg shadow-cyan-500/30";
+                    
+                    DOM.searchInput.value = ''; // Reset search on tab change
                     loadChannelData(cat.file);
                 };
                 DOM.tabsContainer.appendChild(btn);
@@ -358,16 +362,28 @@
                 const response = await fetch(fileName);
                 const data = await response.json();
                 currentChannelsData = data;
-                renderChannels(data);
+                renderChannels(currentChannelsData);
             } catch (error) {
                 console.error("Error loading file:", error);
             }
         }
 
-        function playChannel(index) {
-            if (index < 0 || index >= currentChannelsData.length) return;
-            currentPlayingIndex = index;
-            const channel = currentChannelsData[index];
+        // Search Functionality
+        DOM.searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredChannels = currentChannelsData.filter(channel => 
+                channel.name.toLowerCase().includes(searchTerm)
+            );
+            renderChannels(filteredChannels, true); // true indicates it's a filtered list
+        });
+
+        function playChannel(index, dataArray = currentChannelsData) {
+            if (index < 0 || index >= dataArray.length) return;
+            
+            // Sync the playing index with the main array if we clicked from a search result
+            const channel = dataArray[index];
+            currentPlayingIndex = currentChannelsData.findIndex(c => c.url === channel.url);
+            
             const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
             
             DOM.placeholder.classList.add('hidden');
@@ -377,7 +393,20 @@
 
             if (Hls.isSupported()) {
                 if (hlsPlayer) hlsPlayer.destroy();
-                hlsPlayer = new Hls({ capLevelToPlayerSize: true }); // Performance optimization
+                
+                // --- OPTIMIZED HLS SETTINGS FOR FAST LOADING & REDUCED BUFFERING ---
+                hlsPlayer = new Hls({ 
+                    capLevelToPlayerSize: true,
+                    enableWorker: true,
+                    lowLatencyMode: true, // Enables low latency HLS parsing
+                    maxBufferLength: 8,   // Maximum buffer kept in memory (seconds)
+                    maxMaxBufferLength: 15, // Absolute max buffer limit
+                    liveSyncDurationCount: 2, // Sync closer to the live edge
+                    liveMaxLatencyDurationCount: 5,
+                    manifestLoadingTimeOut: 10000,
+                    manifestLoadingMaxRetry: 3
+                }); 
+                
                 hlsPlayer.loadSource(channel.url);
                 hlsPlayer.attachMedia(DOM.video);
                 
@@ -388,15 +417,22 @@
             } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
                 DOM.video.src = channel.url;
                 DOM.video.play();
-                DOM.qualityBtn.classList.add('hidden'); // Native handles quality automatically
+                DOM.qualityBtn.classList.add('hidden'); 
             }
         }
 
-        function renderChannels(channels) {
+        function renderChannels(channels, isFiltered = false) {
+            DOM.gridContainer.innerHTML = '';
+            
+            if (channels.length === 0) {
+                DOM.gridContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No channels found</p>';
+                return;
+            }
+
             channels.forEach((channel, index) => {
                 const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
                 const card = document.createElement('button');
-                card.className = "aspect-square bg-gray-900/50 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.2)] transition-all duration-300 group border border-white/5";
+                card.className = "aspect-square bg-gray-900/50 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.2)] transition-all duration-300 group border border-white/5 focus:outline-none focus:ring-2 focus:ring-cyan-500";
                 
                 const logoHtml = channel.logo 
                     ? `<img src="${channel.logo}" alt="${cleanName}" class="w-14 h-14 object-contain rounded-full bg-white p-1 mb-3 group-hover:scale-110 transition-transform">`
@@ -405,7 +441,7 @@
                 card.innerHTML = `${logoHtml}<span class="text-xs font-semibold text-gray-300 text-center truncate w-full group-hover:text-cyan-400 transition-colors">${cleanName}</span>`;
 
                 card.onclick = () => {
-                    playChannel(index);
+                    playChannel(index, channels);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 };
                 DOM.gridContainer.appendChild(card);
