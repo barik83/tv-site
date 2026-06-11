@@ -14,12 +14,18 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Premium Glassmorphism */
+        /* Premium Performance-Friendly Glassmorphism */
         .glass-panel {
-            background: rgba(15, 15, 15, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(20, 24, 33, 0.95); /* Fallback optimized for low-end devices to avoid GPU lagging */
             border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @supports (backdrop-filter: blur(10px)) {
+            .glass-panel {
+                background: rgba(15, 15, 15, 0.80);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
         }
 
         /* OLED True Black Layouts */
@@ -100,60 +106,51 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
     
-.simulated-landscape{
-position:fixed;
-inset:0;
-width:100vw;
-height:100vh;
-background:#000;
-z-index:99999;
-}
+        .simulated-landscape{
+            position:fixed;
+            inset:0;
+            width:100vw;
+            height:100vh;
+            background:#000;
+            z-index:99999;
+        }
+    </style>
 
-</style>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "26b93271-f3ed-4743-8979-f035093fc193",
+        notifyButton: { enable: true }
+      });
+    });
+    </script>
 
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "26b93271-f3ed-4743-8979-f035093fc193",
-    notifyButton: { enable: true }
-  });
-});
-</script>
+    <script>
+    window.IPTV_PRO_V2 = true;
+    window.channelCache = window.channelCache || {};
 
+    function getQualityTag(ch){
+     const q=(ch.quality||'').toString().toUpperCase();
+     if(q.includes('1080')||q.includes('FHD')) return 'FHD';
+     if(q.includes('720')||q.includes('HD')) return 'HD';
+     return 'ALL';
+    }
 
-<!-- IPTV PRO V2 Features Added:
-- IPTV PRO logo fallback
-- Channel numbering support CSS
-- HD/FHD filter helpers
-- Fast channel switching cache
--->
-<script>
-window.IPTV_PRO_V2 = true;
-window.channelCache = window.channelCache || {};
-
-function getQualityTag(ch){
- const q=(ch.quality||'').toString().toUpperCase();
- if(q.includes('1080')||q.includes('FHD')) return 'FHD';
- if(q.includes('720')||q.includes('HD')) return 'HD';
- return 'ALL';
-}
-
-function filterChannelsByQuality(list, quality){
- if(!quality || quality==='ALL') return list;
- return list.filter(c=>getQualityTag(c)===quality);
-}
-</script>
-<style>
-.channel-number-badge{
-position:absolute;top:4px;left:4px;
-padding:2px 6px;border-radius:10px;
-font-size:10px;font-weight:bold;
-background:#00E676;color:#000;
-}
-</style>
-
+    function filterChannelsByQuality(list, quality){
+     if(!quality || quality==='ALL') return list;
+     return list.filter(c=>getQualityTag(c)===quality);
+    }
+    </script>
+    <style>
+    .channel-number-badge{
+        position:absolute;top:4px;left:4px;
+        padding:2px 6px;border-radius:10px;
+        font-size:10px;font-weight:bold;
+        background:#00E676;color:#000;
+    }
+    </style>
 </head>
 <body id="app-body" class="bg-gray-950 text-white min-h-screen font-sans selection:bg-[#00E676] selection:text-black transition-colors duration-500">
 
@@ -183,6 +180,8 @@ background:#00E676;color:#000;
                 
                 <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline preload="metadata" muted></video>
 
+                <div id="video-brightness-filter" class="absolute inset-0 bg-black pointer-events-none z-[9] opacity-0 transition-opacity duration-100"></div>
+
                 <div id="touch-area" class="absolute inset-0 z-10 w-full h-[85%]"></div>
 
                 <div id="stream-loading-hud" class="absolute inset-0 bg-black/80 hidden flex-col items-center justify-center z-40 pointer-events-none transition-opacity duration-150">
@@ -207,8 +206,8 @@ background:#00E676;color:#000;
                 </button>
 
                 <div id="brightness-overlay" class="absolute left-16 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 backdrop-blur-sm p-4 rounded-full opacity-0 transition-opacity duration-200 z-20 pointer-events-none">
-                    <span id="brightness-val" class="text-xs font-bold text-white mb-2">30%</span>
-                    <div class="w-1 h-20 bg-white/20 rounded-full relative"><div id="brightness-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full" style="height: 30%;"></div></div>
+                    <span id="brightness-val" class="text-xs font-bold text-white mb-2">100%</span>
+                    <div class="w-1 h-20 bg-white/20 rounded-full relative"><div id="brightness-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full" style="height: 100%;"></div></div>
                 </div>
 
                 <div id="volume-overlay" class="absolute right-16 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 backdrop-blur-sm p-4 rounded-full opacity-0 transition-opacity duration-200 z-20 pointer-events-none">
@@ -353,6 +352,9 @@ background:#00E676;color:#000;
         let audioCtx = null, gainNode = null, sourceNode = null;
         let isAudioBoosted = false;
 
+        // Global JSON Data Memory Cache
+        let jsonCache = {};
+
         const categoryFiles = [
             { name: "Buno All", file: "./channels/bunoall.json" },
             { name: "Bangla News", file: "./channels/bangla-news.json" },
@@ -491,15 +493,19 @@ background:#00E676;color:#000;
             }
         });
 
-        // --- Gesture Engine Module (Default Volume Set to 80%) ---
+        // --- Optimized Gesture Engine Module (Default Volume Set to 80%) ---
         let isDragging = false, startY = 0, startX = 0, activeSide = null, startVal = 0;
-        let currentBrightness = 0.3, currentVolume = 0.8; // Default sound optimized to 80%
+        let currentBrightness = 1.0, currentVolume = 0.8; 
 
         function updateGestureUI(side, value) {
             const percentageInteger = Math.round(value * 100);
             if(side === 'left') {
                 DOM.bTxt.innerText = `${percentageInteger}%`; DOM.bFill.style.height = `${percentageInteger}%`;
-                DOM.video.style.filter = `brightness(${30 + (value * 120)}%)`;
+                // High Performance Solution: Dynamic pure black alpha filter panel adjustment (Zero GPU thrashing)
+                const targetOverlay = document.getElementById('video-brightness-filter');
+                if(targetOverlay) {
+                    targetOverlay.style.opacity = (1 - value) * 0.85;
+                }
             } else {
                 DOM.vTxt.innerText = `${percentageInteger}%`; DOM.vFill.style.height = `${percentageInteger}%`;
                 DOM.video.volume = value;
@@ -708,15 +714,16 @@ background:#00E676;color:#000;
             }
         }
 
-        // --- Stream Auto Healer Recovery Sync Engine ---
+        // --- Optimized Stream Auto Healer Recovery Sync Engine ---
         function initAutoHealer() {
             clearInterval(streamAutoHealerTicker);
             stuckCounter = 0;
             streamAutoHealerTicker = setInterval(() => {
-                if (DOM.video.paused) return;
+                if (DOM.video.paused || DOM.video.seeking) return;
                 if (DOM.video.currentTime === lastVideoTime) {
                     stuckCounter++;
-                    if (stuckCounter >= 3) { 
+                    // Increased from 3 to 8 seconds to safely handle slow/low internet drops without loop breaking
+                    if (stuckCounter >= 8) { 
                         stuckCounter = 0;
                         if (hlsPlayer) hlsPlayer.recoverMediaError();
                         else playChannel(currentPlayingIndex);
@@ -746,7 +753,6 @@ background:#00E676;color:#000;
             aspectRatios.forEach(cls => DOM.video.classList.remove(cls));
             DOM.video.classList.add(aspectRatios[currentAspectIdx]);
             DOM.aspectBtnTxt.innerText = aspectLabels[currentAspectIdx].split(' ')[0];
-            console.log(aspectLabels[currentAspectIdx]);
         };
 
         window.cyclePlaybackSpeed = function() {
@@ -777,7 +783,7 @@ background:#00E676;color:#000;
             if (!document.fullscreenElement) DOM.videoWrapper.requestFullscreen(); else document.exitFullscreen();
         });
 
-        // --- Category Tabs Framework ---
+        // --- Category Tabs Framework with Memory Caching Engine ---
         function initTabs() {
             DOM.tabsContainer.innerHTML = '';
             
@@ -827,10 +833,18 @@ background:#00E676;color:#000;
         }
 
         async function loadChannelData(fileName) {
+            // Memory Cache Verification to avoid redundant servers loading overhead
+            if (jsonCache[fileName]) {
+                currentChannelsData = jsonCache[fileName];
+                renderChannels(currentChannelsData);
+                return;
+            }
+
             DOM.gridContainer.innerHTML = '<div class="col-span-full text-center py-12"><i class="fa-solid fa-spinner animate-spin text-2xl text-[#00E676]"></i></div>';
             try {
                 const response = await fetch(fileName);
                 currentChannelsData = await response.json();
+                jsonCache[fileName] = currentChannelsData; // Inject data into global runtime cache
                 renderChannels(currentChannelsData);
             } catch (error) {
                 DOM.gridContainer.innerHTML = '<p class="text-red-400 col-span-full text-center py-8">Channels list unavailable or network issue.</p>';
@@ -843,7 +857,7 @@ background:#00E676;color:#000;
             renderChannels(filtered);
         });
 
-        // --- INSTANT EXTREME FAST STREAM HANDSHAKE INITIATOR ---
+        // --- INSTANT COLD-START STREAM HANDSHAKE INITIATOR ---
         function playChannel(index, dataArray = currentChannelsData) {
             if (index < 0 || index >= dataArray.length) return;
             const channel = dataArray[index];
@@ -851,10 +865,7 @@ background:#00E676;color:#000;
             const cleanName = channel.name.replace(/^(BD\s*\|\s*|IN\s*\|\s*|EN\s*\|\s*|OTHER\s*\|\s*|TR\s*\|\s*|ENT\s*\|\s*)/i, '').trim();
             
             DOM.placeholder.classList.add('hidden');
-            
-            // Push active label text onto localized outside component header bars
             document.getElementById('live-clock-panel').previousElementSibling.children[1].innerText = cleanName;
-
             DOM.streamLoadingHud.classList.replace('hidden', 'flex');
 
             const premiumNeonPalettes = ['rgba(0,230,118,0.22)', 'rgba(0,184,212,0.22)', 'rgba(213,0,249,0.22)', 'rgba(255,214,0,0.22)'];
@@ -875,18 +886,22 @@ background:#00E676;color:#000;
             if (Hls.isSupported()) {
                 if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
                 
-                // Fine-tuned extremely aggressive fragment buffering configs for 0s loading Handshakes
+                // Advanced adaptive buffer tuning to eliminate stalling loops under low internet speeds
                 hlsPlayer = new Hls({ 
                     enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 0,
-                    maxBufferLength: 1.0,           // Only queue 1 second max initially to run playback frames instantly
-                    maxMaxBufferLength: 3.0,
-                    liveSyncDuration: 0.5,
-                    liveMaxLatencyDuration: 1.5,
-                    startLevel: 0,                  // Forces instant play using lowest chunk format immediately
-                    testBandwidth: false,           // Completely skips blocking benchmarking delay pipelines
-                    progressive: true
+                    lowLatencyMode: false,          // True Low-Latency disabled to avoid high network crash drops
+                    backBufferLength: 30,
+                    maxBufferLength: 10.0,          // 10 seconds buffer target threshold (Protects playback on poor networks)
+                    maxMaxBufferLength: 30.0,       // Max ceiling buffer limit
+                    liveSyncDuration: 4.0,          // Distance from active live edge
+                    liveMaxLatencyDuration: 10.0,
+                    startLevel: -1,                 // Automatic adaptive bitrates quality handshakes
+                    testBandwidth: true,            
+                    progressive: true,
+                    manifestLoadingMaxRetry: 5,
+                    manifestLoadingRetryDelay: 1500,
+                    fragLoadingMaxRetry: 5,
+                    fragLoadingRetryDelay: 1500
                 }); 
                 
                 hlsPlayer.loadSource(channel.url); 
@@ -944,7 +959,7 @@ background:#00E676;color:#000;
                 card.className = "channel-card-peek aspect-square bg-gray-900/40 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 transition-all duration-300 border border-white/5 relative overflow-hidden group";
                 
                 const soundwaveHtml = `<div class="absolute bottom-1 right-2 flex items-end space-x-0.5 h-3 opacity-0 group-hover:opacity-100 transition-opacity"><span class="w-0.5 bg-[#00E676] animate-pulse h-2"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-3"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-1"></span></div>`;
-                const logoHtml = channel.logo ? `<img src="${channel.logo}" alt="" class="w-12 h-12 object-contain rounded-full bg-white p-1 mb-2 transform group-hover:scale-110 transition-transform">` : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-[#00E676] font-bold mb-2 group-hover:shadow-[0_0_8px_#00E676] transition-all">${cleanName.charAt(0)}</div>`;
+                const logoHtml = channel.logo ? `<img src="${channel.logo}" alt="" class="w-12 h-12 object-contain rounded-full bg-white p-1 mb-2 transform group-hover:scale-110 transition-transform" crossorigin="anonymous">` : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-[#00E676] font-bold mb-2 group-hover:shadow-[0_0_8px_#00E676] transition-all">${cleanName.charAt(0)}</div>`;
                 
                 card.innerHTML = `${logoHtml}<span class="text-[11px] font-medium text-gray-300 text-center truncate w-full group-hover:text-[#00E676] transition-colors">${cleanName}</span>${soundwaveHtml}`;
 
