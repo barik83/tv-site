@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ultima IPTV Max Ultimate - Cinematic Video Intro Engine</title>
+    <title>Ultima IPTV Max Pro - Extreme Fast Engine</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -99,18 +99,35 @@
             animation: spin 0.6s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+    
+.simulated-landscape{
+position:fixed;
+inset:0;
+width:100vw;
+height:100vh;
+background:#000;
+z-index:99999;
+}
+
+</style>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function(OneSignal) {
+  await OneSignal.init({
+    appId: "26b93271-f3ed-4743-8979-f035093fc193",
+    notifyButton: { enable: true }
+  });
+});
+</script>
+
 </head>
 <body id="app-body" class="bg-gray-950 text-white min-h-screen font-sans selection:bg-[#00E676] selection:text-black transition-colors duration-500">
 
-    <div id="loading-screen" class="fixed inset-0 bg-[#000000] flex flex-col items-center justify-center z-[9999] transition-opacity duration-700 overflow-hidden">
-        <video id="intro-splash-video" class="absolute inset-0 w-full h-full object-cover opacity-90" autoplay muted playsinline>
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-countdown-neon-lights-40071-large.mp4" type="video/mp4">
-        </video>
-        
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 glass-panel px-5 py-2 rounded-full text-[11px] font-bold tracking-widest text-[#00E676] neon-glow uppercase z-10 opacity-70 animate-pulse">
-            Initializing Premium IPTV Engine
-        </div>
+    <div id="loading-screen" class="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[9999] transition-opacity duration-500">
+        <div class="w-16 h-16 border-4 border-[#00E676] border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-4 text-[#00E676] font-semibold tracking-wider neon-glow animate-pulse">Initializing Premium IPTV Engine...</p>
     </div>
 
     <main class="w-full mx-auto pt-4 px-2 sm:px-4 pb-12 md:max-w-4xl lg:max-w-[1200px] xl:max-w-[1400px]">
@@ -132,7 +149,7 @@
 
             <div id="video-wrapper" class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-900 flex items-center justify-center group transition-all duration-300">
                 
-                <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline preload="auto"></video>
+                <video id="main-video-player" class="absolute inset-0 w-full h-full object-contain bg-black transition-all duration-300" playsinline preload="metadata" muted></video>
 
                 <div id="touch-area" class="absolute inset-0 z-10 w-full h-[85%]"></div>
 
@@ -163,12 +180,12 @@
                 </div>
 
                 <div id="volume-overlay" class="absolute right-16 top-1/2 -translate-y-1/2 flex flex-col items-center bg-black/60 backdrop-blur-sm p-4 rounded-full opacity-0 transition-opacity duration-200 z-20 pointer-events-none">
-                    <span id="volume-val" class="text-xs font-bold text-white mb-2">1%</span>
-                    <div class="w-1 h-20 bg-white/20 rounded-full relative"><div id="volume-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full" style="height: 1%;"></div></div>
+                    <span id="volume-val" class="text-xs font-bold text-white mb-2">80%</span>
+                    <div class="w-1 h-20 bg-white/20 rounded-full relative"><div id="volume-fill" class="absolute bottom-0 w-full bg-[#00E676] rounded-full" style="height: 80%;"></div></div>
                 </div>
 
                 <div id="channel-popup" class="absolute top-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[#00E676] font-bold text-lg shadow-xl opacity-0 translate-y-[-20px] transition-all duration-300 z-50 pointer-events-none neon-glow"><span id="popup-text">Channel Sync</span></div>
-                <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-black z-10 pointer-events-none"><i class="fa-solid fa-satellite-dish fa-4x text-[#00E676] mb-3 animate-pulse"></i><p class="text-sm font-semibold text-gray-300">Select an IPTV Stream to Broadcast</p></div>
+                <div id="player-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 bg-black z-10 pointer-events-none"><i class="fa-solid fa-satellite-dish fa-4x text-[#00E676] mb-3 animate-pulse"></i><p class="text-sm font-semibold text-gray-300">Select an IPTV Stream to Broadcast</p></div>
 
                 <div id="master-controls" class="absolute inset-0 z-30 opacity-0 transition-opacity duration-500 bg-gradient-to-t from-black/90 via-transparent to-black/40">
                     
@@ -258,13 +275,13 @@
             touchArea: document.getElementById('touch-area'),
             bOverlay: document.getElementById('brightness-overlay'), vOverlay: document.getElementById('volume-overlay'),
             bFill: document.getElementById('brightness-fill'), vFill: document.getElementById('volume-fill'),
-            bDot: document.getElementById('brightness-dot'), vDot: document.getElementById('volume-dot'),
+            bDot: document.getElementById('brightness-dot'),
             bTxt: document.getElementById('brightness-val'), vTxt: document.getElementById('volume-val'),
             volIcon: document.getElementById('vol-overlay-icon'),
             channelPopup: document.getElementById('channel-popup'), popupText: document.getElementById('popup-text'), 
-            qualityPanel: document.getElementById('quality-panel'), qualityBtn: document.getElementById('quality-btn'), 
+            qualityPanel: document.getElementById('quality-panel'), 
             playPauseBtn: document.getElementById('play-pause-btn'), speedBtn: document.getElementById('speed-btn'), 
-            aspectBtnTxt: document.getElementById('aspect-btn-txt'), hudText: document.getElementById('hud-text'), 
+            aspectBtnTxt: document.getElementById('aspect-btn-txt'), 
             tabsContainer: document.getElementById('category-tabs'), gridContainer: document.getElementById('channel-grid'), 
             searchInput: document.getElementById('channel-search'), rotateBtn: document.getElementById('rotate-btn'), 
             childLockBtn: document.getElementById('child-lock-btn'), nerdBtn: document.getElementById('nerd-btn'), 
@@ -311,26 +328,25 @@
             { name: "Live TV", file: "./channels/live-tv.json" }
         ];
 
-        // --- NEW: CINEMATIC DYNAMIC INTRO VIDEO DISMISS ENGINE ---
-        const splashVideo = document.getElementById('intro-splash-video');
-        let splashDismissed = false;
+        window.addEventListener('load', () => {
+            initOledTheme();
+            setTimeout(() => {
+                DOM.loader.style.opacity = "0";
+                setTimeout(() => DOM.loader.classList.add('hidden'), 500);
+            }, 800);
+        });
 
-        function dismissSplash() {
-            if (splashDismissed) return;
-            splashDismissed = true;
-            DOM.loader.style.opacity = "0";
-            setTimeout(() => DOM.loader.classList.add('hidden'), 700);
-        }
+        const scrollObserver = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting && currentPlayingIndex !== -1) {
+                DOM.videoWrapper.classList.add('sticky-mini-player');
+                DOM.masterControls.classList.add('hidden');
+            } else {
+                DOM.videoWrapper.classList.remove('sticky-mini-player');
+                DOM.masterControls.classList.remove('hidden');
+            }
+        }, { threshold: 0.1 });
+        scrollObserver.observe(document.querySelector('main'));
 
-        if (splashVideo) {
-            // ভিডিও শেষ হওয়ামাত্রই মেইন অ্যাপ ফেড-ইন হবে
-            splashVideo.addEventListener('ended', dismissSplash);
-            
-            // ৩.৫ সেকেন্ডের সেফটি মেকানিজম (ভিডিও লোড হতে বা আটকে গেলে নিজে থেকেই স্কিপ হবে)
-            setTimeout(dismissSplash, 3500);
-        }
-
-        // --- HUD Panels Engine ---
         function resetControlsTimer() {
             if (isChildLocked) return;
             DOM.masterControls.style.opacity = '1';
@@ -413,7 +429,7 @@
             }
         });
 
-        // --- Hardware Amplifier Booster (200% Output) ---
+        // --- Hardware Audio Amplifier Boost Engine ---
         function initAudioAmplifier() {
             if (audioCtx) return;
             try {
@@ -443,9 +459,9 @@
             }
         });
 
-        // --- Gesture Mapping Center (Volume/Brightness + Swipe Channel Change) ---
+        // --- Gesture Engine Module (Default Volume Set to 80%) ---
         let isDragging = false, startY = 0, startX = 0, activeSide = null, startVal = 0;
-        let currentBrightness = 0.3, currentVolume = 0.01; 
+        let currentBrightness = 0.3, currentVolume = 0.8; // Default sound optimized to 80%
 
         function updateGestureUI(side, value) {
             const percentageInteger = Math.round(value * 100);
@@ -455,6 +471,7 @@
             } else {
                 DOM.vTxt.innerText = `${percentageInteger}%`; DOM.vFill.style.height = `${percentageInteger}%`;
                 DOM.video.volume = value;
+                DOM.video.muted = false; 
             }
         }
 
@@ -470,11 +487,26 @@
             }
         });
 
+        let lastTappedTime = 0;
+        DOM.touchArea.addEventListener('click', () => {
+            if(isChildLocked) return;
+            
+            if(DOM.video.muted) {
+                DOM.video.muted = false;
+                DOM.video.volume = currentVolume;
+            }
+
+            let currentTick = Date.now();
+            if((currentTick - lastTappedTime) < 300) DOM.playPauseBtn.click();
+            lastTappedTime = currentTick;
+        });
+
         DOM.touchArea.addEventListener('pointermove', (e) => {
             if(!isDragging) return;
             const deltaY = startY - e.clientY;
             const deltaX = startX - e.clientX;
 
+            // Horizontal Swipe Recognition to change channels quickly
             if (Math.abs(deltaX) > 120 && Math.abs(deltaY) < 40) {
                 isDragging = false;
                 releaseDrag();
@@ -501,7 +533,9 @@
 
         const releaseDrag = () => { isDragging = false; hideOverlayTimer = setTimeout(() => { DOM.bOverlay.style.opacity = '0'; DOM.vOverlay.style.opacity = '0'; }, 1000); };
         ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt => DOM.touchArea.addEventListener(evt, releaseDrag));
-        updateGestureUI('left', currentBrightness); updateGestureUI('right', currentVolume);
+        
+        updateGestureUI('left', currentBrightness); 
+        updateGestureUI('right', currentVolume);
 
         // --- Diagnostics Stats HUD Ticker ---
         DOM.nerdBtn.addEventListener('click', (e) => {
@@ -520,7 +554,7 @@
             document.getElementById('stat-buf').innerText = `${bufferDuration}s`;
         }, 1000);
 
-        // --- Voice Assistant ---
+        // --- Speech Voice AI Assistant Engine ---
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             const voiceRunner = new SpeechEngine();
@@ -572,7 +606,7 @@
             }
         });
 
-        // --- Bookmarks and Storage Helpers ---
+        // --- Bookmarks & Sync History Frameworks ---
         DOM.favToggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentPlayingIndex === -1) return;
@@ -595,7 +629,7 @@
             localStorage.setItem('iptv_history', JSON.stringify(historyChannels));
         }
 
-        // --- External Playlist M3U Parser ---
+        // --- External M3U Cloud Playlist Parser ---
         DOM.playlistLoadBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const playlistUrl = DOM.playlistUrlInput.value.trim();
@@ -642,7 +676,7 @@
             }
         }
 
-        // --- Auto Healer ---
+        // --- Stream Auto Healer Recovery Sync Engine ---
         function initAutoHealer() {
             clearInterval(streamAutoHealerTicker);
             stuckCounter = 0;
@@ -660,7 +694,7 @@
             }, 1000);
         }
 
-        // --- Channel Up/Down Embedded Button Handlers ---
+        // --- Channel Up/Down Embedded Flanked Button Handlers ---
         DOM.nextChannelBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentChannelsData.length > 0) {
@@ -680,7 +714,7 @@
             aspectRatios.forEach(cls => DOM.video.classList.remove(cls));
             DOM.video.classList.add(aspectRatios[currentAspectIdx]);
             DOM.aspectBtnTxt.innerText = aspectLabels[currentAspectIdx].split(' ')[0];
-            DOM.hudText.innerText = aspectLabels[currentAspectIdx];
+            console.log(aspectLabels[currentAspectIdx]);
         };
 
         window.cyclePlaybackSpeed = function() {
@@ -773,11 +807,11 @@
 
         DOM.searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const filtered = currentChannelsData.filter(channel => channel.name.toLowerCase().includes(searchTerm));
+            const filtered = currentChannelsData.filter(channel => (channel.name || '').toLowerCase().includes(searchTerm));
             renderChannels(filtered);
         });
 
-        // --- INSTANT STREAM INITIATOR ENGINE ---
+        // --- INSTANT EXTREME FAST STREAM HANDSHAKE INITIATOR ---
         function playChannel(index, dataArray = currentChannelsData) {
             if (index < 0 || index >= dataArray.length) return;
             const channel = dataArray[index];
@@ -786,7 +820,7 @@
             
             DOM.placeholder.classList.add('hidden');
             
-            // উইন্ডোর বাইরে থাকা হেডার বারে চ্যানেলের নাম পুশ করার জন্য উইজেট টাইটেল আপডেট
+            // Push active label text onto localized outside component header bars
             document.getElementById('live-clock-panel').previousElementSibling.children[1].innerText = cleanName;
 
             DOM.streamLoadingHud.classList.replace('hidden', 'flex');
@@ -809,16 +843,17 @@
             if (Hls.isSupported()) {
                 if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
                 
+                // Fine-tuned extremely aggressive fragment buffering configs for 0s loading Handshakes
                 hlsPlayer = new Hls({ 
                     enableWorker: true,
                     lowLatencyMode: true,
                     backBufferLength: 0,
-                    maxBufferLength: 1.2,           
+                    maxBufferLength: 1.0,           // Only queue 1 second max initially to run playback frames instantly
                     maxMaxBufferLength: 3.0,
-                    liveSyncDuration: 0.6,
-                    liveMaxLatencyDuration: 1.8,
-                    startLevel: 0,                  
-                    testBandwidth: false,
+                    liveSyncDuration: 0.5,
+                    liveMaxLatencyDuration: 1.5,
+                    startLevel: 0,                  // Forces instant play using lowest chunk format immediately
+                    testBandwidth: false,           // Completely skips blocking benchmarking delay pipelines
                     progressive: true
                 }); 
                 
@@ -826,6 +861,8 @@
                 hlsPlayer.attachMedia(DOM.video);
                 
                 hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => { 
+                    DOM.video.volume = currentVolume;
+                    
                     const startPlayPromise = DOM.video.play();
                     if (startPlayPromise !== undefined) {
                         startPlayPromise.then(() => {
@@ -858,6 +895,7 @@
 
             } else if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
                 DOM.video.src = channel.url; 
+                DOM.video.volume = currentVolume;
                 DOM.video.play(); 
                 DOM.streamLoadingHud.classList.replace('flex', 'hidden');
                 DOM.video.style.opacity = '1';
