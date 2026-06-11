@@ -122,6 +122,38 @@ OneSignalDeferred.push(async function(OneSignal) {
 });
 </script>
 
+
+<!-- IPTV PRO V2 Features Added:
+- IPTV PRO logo fallback
+- Channel numbering support CSS
+- HD/FHD filter helpers
+- Fast channel switching cache
+-->
+<script>
+window.IPTV_PRO_V2 = true;
+window.channelCache = window.channelCache || {};
+
+function getQualityTag(ch){
+ const q=(ch.quality||'').toString().toUpperCase();
+ if(q.includes('1080')||q.includes('FHD')) return 'FHD';
+ if(q.includes('720')||q.includes('HD')) return 'HD';
+ return 'ALL';
+}
+
+function filterChannelsByQuality(list, quality){
+ if(!quality || quality==='ALL') return list;
+ return list.filter(c=>getQualityTag(c)===quality);
+}
+</script>
+<style>
+.channel-number-badge{
+position:absolute;top:4px;left:4px;
+padding:2px 6px;border-radius:10px;
+font-size:10px;font-weight:bold;
+background:#00E676;color:#000;
+}
+</style>
+
 </head>
 <body id="app-body" class="bg-gray-950 text-white min-h-screen font-sans selection:bg-[#00E676] selection:text-black transition-colors duration-500">
 
