@@ -1,0 +1,632 @@
+[
+  {
+    "name": "T SPORTS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/T-SPORTS-HD/index.m3u8?token=562358ad4a86e33305cb39bb6b604799d9570677-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR SPORTS 1 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.SPORTS1.HD/index.m3u8?token=d08ceb536c5bc5ddaa1d3a55337e6fedc8360fdb-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR SPORTS 2 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.SPORTS2.HD/index.m3u8?token=5cf3e4394bf63f75396801e1112bf24b3d310969-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "COLORS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/COLORS.HD/index.m3u8?token=7c79151c9e5671949ad5f46ed05d66e7f65a2acf-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "AND PICTURS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ANT.PICTURS.HD/index.m3u8?token=4c37e66cf0870e39869710d9c5d8102e8d9868ae-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY BBC EARTH HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.BBC.EARTH.HD/index.m3u8?token=a9459d7deb52b05f5eb922ff965386a6e3748ee6-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZEE TV HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZEE.TV.HD/index.m3u8?token=92f33d3a22c3da760f0f528b74463f95c1ce1db0-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "CARTOON NETWORK",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/CARTON.NETWORK.HD/index.m3u8?token=b0e994e71ec0c00a65edb48d4a215294fb76ccc4-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "TLC HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/TLC.HD/index.m3u8?token=02cdb801cf2f24b94d567515f92ab03becbbf537-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "COLORS CINEPLEX HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/COLORS.CINEPLEX.HD/index.m3u8?token=047ba98f97650480806882d5f3bcb2b6629cad51-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY ENT HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.ENT.HD/index.m3u8?token=cb5daaf2c314f746e5ac48d7f3337b1262da942f-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "COLORS BANGLA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/COLORS.BANGLA.HD/index.m3u8?token=fc8a00b2f7859cbb360a6a97680cbee05fc2e5b7-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZEE CINEMA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZEE.CINEMA.HD/index.m3u8?token=9ff047f65b94c7e454d08330baa3f70763e7f772-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZEE BANGLA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZEE.BANGLA.HD/index.m3u8?token=a434213fe841b11feb2b0d5e48cbbdc7e27d5c9e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "HISTORY TV HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/HISTORY.TV.18.HD/index.m3u8?token=c22eb3bda5ac519ce6dc412ad631cb595abb23d1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR SPORTS SELECT 2 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.SPORTS.SEL.2.HD/index.m3u8?token=24c432a5c3a55ace5442ae8319404ec320d82b39-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SUN BANGLA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SUN.BANGLA.HD/index.m3u8?token=0208beaac8fb00545ea8df09811d65bc0674d019-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR JALSHA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.JALSHA.HD/index.m3u8?token=81c7d4db5b6f56bbaee9ff6736fa1b2ceac78404-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "JALSHA MOVIES HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/JALSHA.MOVIES.HD/index.m3u8?token=f332ff1f267e6bfdee206e64c5f9c47053b94d9a-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR GOLD HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.GOLD.HD/index.m3u8?token=842cd754581ceea9570abf8df39409504f1db64b-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY MAX HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.MAX.HD/index.m3u8?token=db88122d2981b0d5d7e7314ad1ca3fb39885b3bb-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "DISCOVERY HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/DISCOVERY.HD/index.m3u8?token=ccf107a81585ede8646abc7ad0ad3c3aef214544-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NATGEO WILD HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NATGEO.WILD.HD/index.m3u8?token=157238a6224141a7f00378f36828cd02a618dfc9-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR PLUS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.PLUS.HD/index.m3u8?token=5a0f1211b4eb7367de36ea68c5294487b0f27b73-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NATGEO HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NATGEO.HD/index.m3u8?token=9b64712e1dad0ba66eb2db299ef7d2eaa32a5607-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ANIMAL PLANET HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ANIMAL.PLANET.HD/index.m3u8?token=27ca3825a4c2c4dcb1dc8f26bdefe63c1e84230e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR MOVIES SELECT HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.MOVIES.SEL.HD/index.m3u8?token=30ff05d150d7f15c7c51d41f1eecd1e162fc3f0e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR SELECT 1 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.SPORTS-SEL1.HD/index.m3u8?token=1909e259aaa8f3ef52233f83f14d3590bff0b1a1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY SPORTS 2 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.SPORTS2.HD/index.m3u8?token=d8c015fab490a8d71ae2c2c9a66f32bcf4c6e2e1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY SPORTS 3",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.SPORTS.3/index.m3u8?token=ebf137e6bbc44cbeb8cdc694f0750d1990ac6a65-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR SPORTS 3",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR-SPORTS.3/index.m3u8?token=67f3faeb3240feaf169d24424a0eef441e8a011d-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY PIX HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.PIX.HD/index.m3u8?token=9465eaae85cab7b6abc2c68989cbb4cf0e0fb184-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MNX HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MNX.HD/index.m3u8?token=3ccabe46983eed70b05b73c0f28bfbc6d5d63745-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ROMEDY NOW",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ROMEDY.NOW/index.m3u8?token=924473abd7ad0987715c00a79717528f83ac1c53-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MN PLUS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MN.PLUS.HD/index.m3u8?token=aac33e7772d704476980bfea79c2cc5d8524f5eb-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZEE CAFE HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZEE.CAFE.HD/index.m3u8?token=a287fee8c1be2e554041d615a23f0bf78a866076-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR MOVIES HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.MOVIES.HD/index.m3u8?token=9b18c89487935672e05abe4ed2d27368b27d1543-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MOVIES NOW HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MOVIES.NOW.HD/index.m3u8?token=596ef63d05ea44aeee07ff1027e9dfaca921cea7-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "EUROSPORTS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/EUROSPORTS.HD/index.m3u8?token=64fef6a03836ba6fec65b1885b9be9da0f12d8fd-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZOOM",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZOOM.MUSIC/index.m3u8?token=2c9732ba4f6b1db68f8f8ede33ad6054f8f19638-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZEE BANGLA CINEMA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZEE.BANGLA.CINEMA/index.m3u8?token=59ba4d9103d381995c0c6c88498687b3ac3979b9-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY AAT",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.AAT/index.m3u8?token=087d7b96a604aa07ef27428f9c8fe19935fbe3bc-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONIC",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONIC/index.m3u8?token=e859cb66f207ed6eee39b3cd4395e974afc0147c-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NICK",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NICK/index.m3u8?token=911d149a163f3f882abd0e09ed38b26eb925cbc8-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "COLORS BANGLA CINEMA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/COLORS.BANGLA.CINEMA/index.m3u8?token=7ce0290e24d820eeccc1efa814a5675bdef869d6-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "POGO",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/POGO/index.m3u8?token=8add2642c4d02c6213af76544c0f1568cb10491c-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "HUNGAMA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/HUNGAMA/index.m3u8?token=0cd4e0840aca66fdb2f11a189f7270ffb1796019-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "BAL BHARAT",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ETV.BAL.BHARAT/index.m3u8?token=425e8f7b9ff3960ed550b21e2b58fdd9df0eced1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NICK JR",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NICK.JR/index.m3u8?token=d6b33db287b2646c63cb719f1f6a0c31fd3e7830-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ZING",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ZING.MUSIC/index.m3u8?token=0c2358ab401f5a529f43193c5ef5005217fe24a6-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NAGORIK",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NAGORIK.TV.HD/index.m3u8?token=bcca265c418bf0d172fe2748625e89505cd6e31e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "BBC NEWS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/BBC.NEWS/index.m3u8?token=a0fbe21d1672caed2137888255f96a817563d0ee-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "GTV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/GAZI.TV.HD/index.m3u8?token=bcc0333791d29477776fddd5f89901940438a3d7-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "BEIN SPORTS 1 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/BEINSPORTS.1/index.m3u8?token=0e220c206effdb110e8ad1afed76c3fe79bc9a84-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "AND XPLORE",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/XPLOR.HD/index.m3u8?token=4ce0062812244d83c33bcc7ed02202bcb3bf9de5-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "TRAVEL XP",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/TRAVELXP.HD/index.m3u8?token=28c9877d04c8a425a193ee6e2cc0de7f59d59020-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "GOLF SPORTS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/GOLF.SPORTS/index.m3u8?token=7257f06f11331cba66166a804cd532b5ce7115ff-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "LOVE NATURE",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/LOVE.NATURE.HD/index.m3u8?token=8a67670a0f7f105da59f574203213fb662900321-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "DURANTA TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/DURANTA.TV.HD/index.m3u8?token=1e26b5489c8bafbf3eb08b5902c96956e0fae388-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR GOLD 2 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.GOLD2.HD/index.m3u8?token=333a06936dd2e6c560dbcf7a7782daeb5c31dbe9-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR GOLD SELECT HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.GOLD.SEL.HD/index.m3u8?token=64580dec754e4582c64b67bdbe4bdb66e773b7ce-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY SPORTS 4",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.SPORTS.4/index.m3u8?token=1439257f9ea2f0dc2e6c89ef9461611bfca73ce3-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY SPORTS 1 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.SPORTS.1HD/index.m3u8?token=d619261acc7b06e4534ccf5faac7f1c3867223d8-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SUPER HUNGAMA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SUPER.HUNGAMA/index.m3u8?token=1e559308cc8cecc0ad25c1bc0f928d6f7f84a223-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "JAMUNA TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/JAMUNA.TV/index.m3u8?token=eb40d580a11514370b7ed493a7e72e1a215071b3-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "INDEPENDENT TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/INDEPENDENT.TV/index.m3u8?token=674459234649772305c54c1284573416043685eb-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MAASRANGA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MASRANGA.TV.HD/index.m3u8?token=700990538f4c5657dade7c3d76c583f1e9003138-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SOMOY TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SOMOY.TV.HD/index.m3u8?token=d62ab9d9ab852d80a2863610798892cfea8feeeb-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ATN BANGLA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ATN.BANGLA.HD/index.m3u8?token=7e765cc7f3e48dc86047a79ba277df5aa1129b04-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "CHANNEL I",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/CHANNEL.I.HD/index.m3u8?token=255179c2c7115e3d0ffd6b41503f12466918c259-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "CHANNEL 24",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/CHANNEL.24.HD/index.m3u8?token=1b86592c7d4e622e7cef80099f0ff191d25f9cf2-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MADANI TV HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MADANI.TV.HD/index.m3u8?token=48bf5755826cfb30f34f2a6a47599f799f169264-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ENTERR 10",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ENTER10.BANGLA/index.m3u8?token=dccdf11f43d2550f29dc8989d5a96f0b97279551-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ALJAZEETA HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ALJAZEERA.HD/index.m3u8?token=7bcb3c733e7e055f2b2eaa8ecdc2fe9cc5abfe86-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "PEACE TV BANGLA",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/PEACE.TV.BANGLA.HD/index.m3u8?token=3609d23853f4880affc5b89961ffd90bad3008b1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "FAST SPORTS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/FAST.SPORTS.HD/index.m3u8?token=76efc42cc3ea5429d8a6758916207fad8cb7dfd3-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "A SPORTS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/A.SPORTS.HD/index.m3u8?token=04f2f294821c4f31d3d3a447e001329ff3ccce79-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "HUM TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/HUM.MASALA.TV/index.m3u8?token=8e3eca0ad8c3041198ec968e4c2ff9179e6eee24-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "GEO NEWS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/GEO.NEWS.HD/index.m3u8?token=826a323aa690f4839b16d4f4284ce7a1c209bfdf-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "LOTUS TV",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/Lotus.TV.HD/index.m3u8?token=1d92b85e059014fd56c9d53fca2638f9284960a0-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "PTV SPORTS HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/PTV-SPORTS-HD/index.m3u8?token=00a8b98e4af916c8be2fdd3d5c818d4458d267ea-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY YAY",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY.YAY/index.m3u8?token=b1f8d392d1a9439893029dfa053d574bc1f0bb41-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "ATN NEWS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ATN.NEWS.HD/index.m3u8?token=615ac9a12003525bb2c19783a897d4580d059505-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "AXN HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/AXN.HD/index.m3u8?token=d573be19b7cf27609c324ccedf16e6aa201fa6a2-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "STAR BHARAT HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/STAR.BHARAT.HD/index.m3u8?token=12105611d48b199de432afd147e17003b228541e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SONY SPORTS 5 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SONY-SPORTS.5HD/index.m3u8?token=4c378326ef0ac961052b4f5a736b4ef3e52e63fd-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "BBC EARTH HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/BBC.Earth.HD/index.m3u8?token=1cb9546665a0d7cbc731105bb62eb5ce354f8037-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SSC SPORTS 5 HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SSC.SPORTS.5.HD/index.m3u8?token=1ab2e249f7f745a54bc53632596d2f8480cd512e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "SSC SPORTS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/SSC.SPORTS.1.HD/index.m3u8?token=e9b2379b1f7f2de947c8923909a75e9964a4db3d-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MAX 2",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/AND.FLIX.HD/index.m3u8?token=db4964b89c0037f774b583a5adf05291cee67a67-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MAX 1",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/AND.PRIVE.HD/index.m3u8?token=d85e015ab1264a1d0483c423b587f1eb4bcb70db-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "FASHION",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/FASHIONTV.HD/index.m3u8?token=28dd8061c6ab88ca360a56eb1e898836fafea90e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "BTV.HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/BTV.HD/index.m3u8?token=9d0533cf8786e26115d97a81e88ea1cbd05918ac-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Ekattor Tv",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/EKATTOR.TV.HD/index.m3u8?token=965c9f2ed0f0bf3dda8787608f670ced5ef4765e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "DBC NEWS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/DBC.NEWS.HD/index.m3u8?token=b8c5d392ab379a01b2fda2570beda4568b20615e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "DBC NEWS",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/DBC.NEWS.HD/index.m3u8?token=b8c5d392ab379a01b2fda2570beda4568b20615e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Ekattor Tv",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/EKATTOR.TV.HD/index.m3u8?token=965c9f2ed0f0bf3dda8787608f670ced5ef4765e-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "9XM MUSIC",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/9XM.MUSIC/index.m3u8?token=b02bee2fdc1cc1bbd2dc53c01a242c1835633eb7-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "NEWS.24.HD",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/NEWS.24.HD/index.m3u8?token=bdc0bbf6269c1558f85bfef38b9c2d35e6493079-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Music India",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/Music.India/index.m3u8?token=bcdabc03767f91dafb4d354356c707cc10ef481d-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "MTV India",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/MTV.INDIA/index.m3u8?token=246903467222b79b995276de60022f667d6ea756-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Sangeet Bangla",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/Sangeet.Bangla/index.m3u8?token=e5c2bfc14260eb7f54f0d5be0d5e2c8558265008-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "DISNEY JUNIAR",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/DISNEY.JUNIAR/index.m3u8?token=555874b255240f642c0946989160c0b9efbf085a-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Asiah Tv",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/ASIAN.TV.HD/index.m3u8?token=89268f9345c8a6f69829e730bd68a72b5609fdca-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  },
+  {
+    "name": "Global Tv",
+    "logo": "",
+    "group": "",
+    "url": "http://redforce.live:8082/Global.TV.HD/index.m3u8?token=6245d81852aa36892df8503fbdbd4123108f58c1-feea95e32661ee5eb594fc00d63cf041-1781412250-1781401450&remote=no_check_ip"
+  }
+]
