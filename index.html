@@ -723,7 +723,7 @@
                 if (DOM.video.currentTime === lastVideoTime) {
                     stuckCounter++;
                     // Increased from 3 to 8 seconds to safely handle slow/low internet drops without loop breaking
-                    if (stuckCounter >= 8) { 
+                    if (stuckCounter >= 15) { 
                         stuckCounter = 0;
                         if (hlsPlayer) hlsPlayer.recoverMediaError();
                         else playChannel(currentPlayingIndex);
@@ -890,17 +890,20 @@
                 hlsPlayer = new Hls({ 
                     enableWorker: true,
                     lowLatencyMode: false,          // True Low-Latency disabled to avoid high network crash drops
-                    backBufferLength: 30,
-                    maxBufferLength: 10.0,          // 10 seconds buffer target threshold (Protects playback on poor networks)
-                    maxMaxBufferLength: 30.0,       // Max ceiling buffer limit
+                    backBufferLength: 90,
+                    maxBufferLength: 60,          // 10 seconds buffer target threshold (Protects playback on poor networks)
+                    maxMaxBufferLength: 120,       // Max ceiling buffer limit
                     liveSyncDuration: 4.0,          // Distance from active live edge
                     liveMaxLatencyDuration: 10.0,
                     startLevel: -1,                 // Automatic adaptive bitrates quality handshakes
                     testBandwidth: true,            
                     progressive: true,
-                    manifestLoadingMaxRetry: 5,
-                    manifestLoadingRetryDelay: 1500,
-                    fragLoadingMaxRetry: 5,
+                    manifestLoadingMaxRetry: 10,
+                    manifestLoadingRetryDelay: 2000,
+                    abrEwmaDefaultEstimate: 500000,
+                    abrBandWidthFactor: 0.7,
+                    abrBandWidthUpFactor: 0.5,
+                    fragLoadingMaxRetry: 10,
                     fragLoadingRetryDelay: 1500
                 }); 
                 
@@ -959,7 +962,7 @@
                 card.className = "channel-card-peek aspect-square bg-gray-900/40 backdrop-blur rounded-2xl flex flex-col items-center justify-center p-3 transition-all duration-300 border border-white/5 relative overflow-hidden group";
                 
                 const soundwaveHtml = `<div class="absolute bottom-1 right-2 flex items-end space-x-0.5 h-3 opacity-0 group-hover:opacity-100 transition-opacity"><span class="w-0.5 bg-[#00E676] animate-pulse h-2"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-3"></span><span class="w-0.5 bg-[#00E676] animate-pulse h-1"></span></div>`;
-                const logoHtml = channel.logo ? `<img src="${channel.logo}" alt="" class="w-12 h-12 object-contain rounded-full bg-white p-1 mb-2 transform group-hover:scale-110 transition-transform" crossorigin="anonymous">` : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-[#00E676] font-bold mb-2 group-hover:shadow-[0_0_8px_#00E676] transition-all">${cleanName.charAt(0)}</div>`;
+                const logoHtml = channel.logo ? `<img loading="lazy" decoding="async" onerror="this.style.display='none'" src="${channel.logo}" alt="" class="w-12 h-12 object-contain rounded-full bg-white p-1 mb-2 transform group-hover:scale-110 transition-transform" crossorigin="anonymous">` : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-[#00E676] font-bold mb-2 group-hover:shadow-[0_0_8px_#00E676] transition-all">${cleanName.charAt(0)}</div>`;
                 
                 card.innerHTML = `${logoHtml}<span class="text-[11px] font-medium text-gray-300 text-center truncate w-full group-hover:text-[#00E676] transition-colors">${cleanName}</span>${soundwaveHtml}`;
 
