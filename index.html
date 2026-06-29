@@ -26,6 +26,10 @@
         .tab-wrap::-webkit-scrollbar { display:none; }
         .tab-wrap button { flex:0 0 auto; padding:5px 14px; border-radius:20px; font-size:12px; background:#1a1a30; color:#aaa; border:1px solid #2a2a4a; white-space:nowrap; cursor:pointer; transition:0.2s; }
         .tab-wrap button.active { background:#00e676; color:#000; border-color:#00e676; }
+        .tab-wrap button.bangla-tab { background:#004d40; color:#00e676; border-color:#00e676; }
+        .tab-wrap button.bangla-tab.active { background:#00e676; color:#000; }
+        .tab-wrap button.sports-tab { background:#1a237e; color:#ffd54f; border-color:#ffd54f; }
+        .tab-wrap button.sports-tab.active { background:#ffd54f; color:#000; }
         .channel-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(100px,1fr)); gap:6px; max-height:400px; overflow-y:auto; padding-right:4px; }
         .channel-grid .ch { background:#1a1a30; border-radius:10px; padding:8px 4px; text-align:center; cursor:pointer; border:1px solid #2a2a4a; transition:0.15s; font-size:11px; line-height:1.2; }
         .channel-grid .ch:active { transform:scale(0.94); }
@@ -41,6 +45,8 @@
         @media (max-width:480px) { .channel-grid { grid-template-columns:repeat(3,1fr); } }
         .loading-text { text-align:center; color:#888; padding:20px; }
         .error-text { text-align:center; color:#ff6b6b; padding:20px; }
+        .badge-bangla { background:#00e676; color:#000; font-size:8px; padding:1px 6px; border-radius:10px; margin-left:4px; }
+        .badge-sports { background:#ffd54f; color:#000; font-size:8px; padding:1px 6px; border-radius:10px; margin-left:4px; }
     </style>
 </head>
 <body>
@@ -49,7 +55,7 @@
     <!-- হেডার -->
     <div class="card" style="text-align:center;padding:12px;">
         <h1 style="color:#00e676;font-size:22px;letter-spacing:1px;">⚡ সুপার ফাস্ট IPTV</h1>
-        <div style="font-size:12px;color:#888;">M3U লোড করুন · ক্যাটাগরি · সুপার ফাস্ট</div>
+        <div style="font-size:12px;color:#888;">বাংলা · খেলা · বিশ্ব — সব এক জায়গায়</div>
     </div>
 
     <!-- লোড ফর্ম -->
@@ -58,7 +64,11 @@
             <input type="text" id="m3uUrl" placeholder="M3U লিংক দিন..." value="https://iptv-org.github.io/iptv/index.m3u">
             <button id="loadBtn">🚀 লোড</button>
         </div>
-        <div style="font-size:11px;color:#666;margin-top:6px;">🔹 ২০,০০০+ চ্যানেল · ক্যাটাগরি অনুযায়ী সাজানো</div>
+        <div style="font-size:11px;color:#666;margin-top:6px;display:flex;flex-wrap:wrap;gap:8px;">
+            <span>🔹 <b>বাংলা</b>: iptv-org/bd.m3u</span>
+            <span>🔹 <b>খেলা</b>: কাস্টম স্ট্রিম</span>
+            <span>🔹 <b>সব</b>: ২০,০০০+ চ্যানেল</span>
+        </div>
     </div>
 
     <!-- প্লেয়ার -->
@@ -129,8 +139,23 @@
         let isPlaying = false;
         let isLoading = false;
 
+        // ===== ক্যাটাগরি অর্ডার (বাংলা প্রথম, তারপর খেলা) =====
+        const CATEGORY_ORDER = [
+            { id: 'bangla', label: '🇧🇩 বাংলা', class: 'bangla-tab' },
+            { id: 'sports', label: '⚽ খেলা', class: 'sports-tab' },
+            { id: 'All', label: '🌟 সব', class: '' }
+        ];
+
+        // ===== প্রি-লোড করা স্ট্রিম (খেলার জন্য) =====
+        const SPORTS_STREAMS = [
+            { name: 'FOX Sports USA', url: 'https://nhjjhhjhjjhfjj.pages.dev/1782613232/f1c0e9e8a0cd474396744490e359170c/3X6yUmQuRDmCzatTemcXcUW0dSkj1mciuKiqPuSzp_Q/fox-sports-1.m3u8' },
+            { name: 'FOX 4K USA', url: 'https://nhjjhhjhjjhfjj.pages.dev/1782612924/803e1fd1f4734294ac3c82f8fe38fbba/M7HR84ZtuTB0VixXVbhLBkOlHYVGROX_j5owv64t_3s/fox4k-usa.m3u8' },
+            { name: 'FOX Sports 4K', url: 'https://nhjjhhjhjjhfjj.pages.dev/1782613080/f627592d843645dd93ed293c8d6e317a/v1y7cPiVDACKjMFBr2Xuv3qjMhRqRXvFE0gYosCmxAg/fox-sports-1-4k.m3u8' },
+            { name: 'FOX USA', url: 'https://nhjjhhjhjjhfjj.pages.dev/17826131/64/f24e2dba327042279b769de40c9762a2/Sb_BZ4fmEg0gvT4VpnLXmJ-x_oktndhjeiK_rSqCZ6M/fox-usa.m3u8' }
+        ];
+
         // ===== পার্সার (দ্রুত) =====
-        function parseM3U(text) {
+        function parseM3U(text, source = 'default') {
             const lines = text.split('\n');
             const channels = [];
             let current = null;
@@ -142,7 +167,11 @@
                     const nameMatch = line.match(/,([^,]+)$/);
                     const logoMatch = line.match(/tvg-logo="([^"]+)"/);
                     const groupMatch = line.match(/group-title="([^"]+)"/);
-                    const group = groupMatch ? groupMatch[1].trim() : 'General';
+                    let group = groupMatch ? groupMatch[1].trim() : 'General';
+                    // বাংলা চ্যানেল চিহ্নিত করা
+                    if (source === 'bd' || /bangla|বাংলা|bd|bangladesh/i.test(group) || /bangla|বাংলা/i.test(nameMatch ? nameMatch[1] : '')) {
+                        group = '🇧🇩 বাংলা';
+                    }
                     catSet.add(group);
                     current = {
                         name: nameMatch ? nameMatch[1].trim() : 'Unknown',
@@ -162,31 +191,59 @@
             return { channels, categories };
         }
 
-        // ===== ট্যাব রেন্ডার (দ্রুত) =====
+        // ===== ট্যাব রেন্ডার (অর্ডার অনুযায়ী) =====
         function renderTabs(categories) {
             tabContainer.innerHTML = '';
-            categories.forEach(cat => {
+            
+            // প্রি-ডিফাইন্ড অর্ডার অনুযায়ী ট্যাব তৈরি
+            const orderedTabs = [];
+            const catSet = new Set(categories);
+            
+            // বাংলা ও খেলা ক্যাটাগরি থাকলে সেগুলো আগে দেখাবে
+            if (catSet.has('🇧🇩 বাংলা')) {
+                orderedTabs.push({ id: 'bangla', label: '🇧🇩 বাংলা', class: 'bangla-tab' });
+            }
+            if (catSet.has('⚽ খেলা') || catSet.has('Sports')) {
+                orderedTabs.push({ id: 'sports', label: '⚽ খেলা', class: 'sports-tab' });
+            }
+            // বাকি ক্যাটাগরি
+            const remaining = Array.from(catSet).filter(c => c !== 'All' && c !== '🇧🇩 বাংলا' && c !== '⚽ খেলা' && c !== 'Sports');
+            remaining.sort();
+            remaining.forEach(c => {
+                orderedTabs.push({ id: c, label: c, class: '' });
+            });
+            // সব ক্যাটাগরি
+            orderedTabs.unshift({ id: 'All', label: '🌟 সব', class: '' });
+
+            orderedTabs.forEach((tab, idx) => {
                 const btn = document.createElement('button');
-                btn.dataset.cat = cat;
-                btn.textContent = cat === 'All' ? '🌟 সব' : cat;
-                if (cat === currentCategory) btn.classList.add('active');
+                btn.dataset.cat = tab.id;
+                btn.textContent = tab.label;
+                if (tab.class) btn.className = tab.class;
+                if (tab.id === currentCategory) btn.classList.add('active');
                 btn.onclick = () => {
                     document.querySelectorAll('.tab-wrap button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    currentCategory = cat;
+                    currentCategory = tab.id;
                     applyFilter();
                 };
                 tabContainer.appendChild(btn);
             });
         }
 
-        // ===== ফিল্টার (দ্রুত) =====
+        // ===== ফিল্টার =====
         function applyFilter() {
             const search = searchInput.value.trim().toLowerCase();
             let filtered = allChannels;
-            if (currentCategory !== 'All') {
+            
+            if (currentCategory === 'bangla') {
+                filtered = filtered.filter(ch => ch.group === '🇧🇩 বাংলা');
+            } else if (currentCategory === 'sports') {
+                filtered = filtered.filter(ch => ch.group === '⚽ খেলা' || ch.group === 'Sports');
+            } else if (currentCategory !== 'All') {
                 filtered = filtered.filter(ch => ch.group === currentCategory);
             }
+            
             if (search) {
                 filtered = filtered.filter(ch => ch.name.toLowerCase().includes(search));
             }
@@ -195,7 +252,7 @@
             stats.textContent = filtered.length + ' টি চ্যানেল';
         }
 
-        // ===== চ্যানেল রেন্ডার (ডকুমেন্টফ্র্যাগমেন্ট + রিকোয়েস্টঅ্যানিমেশনফ্রেম) =====
+        // ===== চ্যানেল রেন্ডার =====
         function renderChannels(channels) {
             channelList.innerHTML = '';
             if (!channels || channels.length === 0) {
@@ -204,7 +261,6 @@
             }
 
             const frag = document.createDocumentFragment();
-            // লুপ দ্রুত করার জন্য সরাসরি innerHTML ব্যবহারের পরিবর্তে ফ্র্যাগমেন্ট
             channels.forEach((ch, idx) => {
                 const div = document.createElement('div');
                 div.className = 'ch';
@@ -212,9 +268,11 @@
                 const logoHtml = ch.logo
                     ? `<img loading="lazy" onerror="this.style.display='none'" src="${ch.logo}" alt="">`
                     : `<div style="width:32px;height:32px;border-radius:50%;background:#2a2a4a;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;color:#00e676;font-size:14px;margin-bottom:3px;">${name.charAt(0).toUpperCase()}</div>`;
+                const badge = ch.group === '🇧🇩 বাংলা' ? '<span class="badge-bangla">বাংলা</span>' : 
+                              (ch.group === '⚽ খেলা' || ch.group === 'Sports') ? '<span class="badge-sports">খেলা</span>' : '';
                 div.innerHTML = `
                     ${logoHtml}
-                    <div class="name">${name}</div>
+                    <div class="name">${name} ${badge}</div>
                     <div class="group">${ch.group}</div>
                 `;
                 div.onclick = () => playChannel(idx);
@@ -223,7 +281,7 @@
             channelList.appendChild(frag);
         }
 
-        // ===== প্লে চ্যানেল (HLS অপটিমাইজড) =====
+        // ===== প্লে চ্যানেল =====
         function playChannel(index) {
             if (index < 0 || index >= currentChannels.length) return;
             const ch = currentChannels[index];
@@ -265,32 +323,70 @@
             }
         }
 
-        // ===== M3U লোড (দ্রুত) =====
-        async function loadM3U(url) {
+        // ===== M3U লোড (একাধিক) =====
+        async function loadMultipleM3U(urls) {
             if (isLoading) return;
             isLoading = true;
-            channelList.innerHTML = '<div class="loading-text">⏳ লোড হচ্ছে...</div>';
-            try {
-                const resp = await fetch(url, { mode: 'cors' });
-                if (!resp.ok) throw new Error('Network error');
-                const text = await resp.text();
-                const { channels, categories } = parseM3U(text);
-                if (channels.length === 0) throw new Error('কোনো চ্যানেল নেই');
-                allChannels = channels;
-                currentCategory = 'All';
-                renderTabs(categories);
-                applyFilter();
-                stats.textContent = channels.length + ' টি চ্যানেল';
-            } catch (err) {
-                channelList.innerHTML = `<div class="error-text">❌ ${err.message}</div>`;
+            channelList.innerHTML = '<div class="loading-text">⏳ প্লেলিস্ট লোড হচ্ছে...</div>';
+            
+            let combinedChannels = [];
+            let allCategories = new Set();
+            
+            // স্পোর্টস স্ট্রিম যোগ
+            SPORTS_STREAMS.forEach(stream => {
+                combinedChannels.push({
+                    name: stream.name,
+                    logo: '',
+                    group: '⚽ খেলা',
+                    url: stream.url
+                });
+                allCategories.add('⚽ খেলা');
+            });
+
+            for (const url of urls) {
+                try {
+                    const resp = await fetch(url, { mode: 'cors' });
+                    if (!resp.ok) continue;
+                    const text = await resp.text();
+                    const source = url.includes('bd.m3u') ? 'bd' : 'default';
+                    const { channels, categories } = parseM3U(text, source);
+                    combinedChannels = combinedChannels.concat(channels);
+                    categories.forEach(c => allCategories.add(c));
+                } catch (err) {
+                    console.warn('Failed to load:', url, err);
+                }
             }
+
+            if (combinedChannels.length === 0) {
+                channelList.innerHTML = '<div class="error-text">❌ কোনো চ্যানেল পাওয়া যায়নি</div>';
+                isLoading = false;
+                return;
+            }
+
+            allChannels = combinedChannels;
+            currentCategory = 'All';
+            renderTabs([...allCategories]);
+            applyFilter();
+            stats.textContent = combinedChannels.length + ' টি চ্যানেল';
             isLoading = false;
         }
 
         // ===== ইভেন্ট =====
         loadBtn.onclick = () => {
             const url = m3uUrl.value.trim();
-            if (url) loadM3U(url);
+            if (url) {
+                // ডিফল্ট + বাংলা + কাস্টম
+                const urls = [
+                    'https://iptv-org.github.io/iptv/index.m3u',
+                    'https://iptv-org.github.io/iptv/countries/bd.m3u',
+                    'https://raw.githubusercontent.com/Monjil404/TVspo/refs/heads/main/tvs'
+                ];
+                // ইউজারের দেওয়া URL যোগ করা
+                if (url && !urls.includes(url)) {
+                    urls.push(url);
+                }
+                loadMultipleM3U(urls);
+            }
         };
 
         playBtn.onclick = () => {
@@ -326,8 +422,8 @@
 
         searchInput.oninput = applyFilter;
 
-        // ডিফল্ট লোড
-        loadM3U('https://iptv-org.github.io/iptv/index.m3u');
+        // ডিফল্ট লোড (সব প্লেলিস্ট একসাথে)
+        loadBtn.click();
 
         // এন্টার কী
         m3uUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') loadBtn.click(); });
